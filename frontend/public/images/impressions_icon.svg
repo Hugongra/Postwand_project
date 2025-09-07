@@ -1,0 +1,33 @@
+<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="400" height="400" fill="#f0f0f0"/>
+  
+  <!-- Document -->
+  <g transform="translate(60, 60)">
+    <!-- Document body with rounded corners and folded corner -->
+    <path d="M35 20 Q20 20 20 35 L20 245 Q20 260 35 260 L165 260 Q180 260 180 245 L180 80 L120 20 Q105 20 35 20" fill="#1fb6ff"/>
+    
+    <!-- Folded corner -->
+    <path d="M120 20 L120 80 L180 80 Z" fill="#00e5ff"/>
+    
+    <!-- Document lines -->
+    <rect x="40" y="120" width="80" height="8" rx="4" fill="#0066cc"/>
+    <rect x="40" y="140" width="100" height="8" rx="4" fill="#0066cc"/>
+    <rect x="40" y="160" width="80" height="8" rx="4" fill="#0066cc"/>
+  </g>
+  
+  <!-- Magnifying glass -->
+  <g transform="translate(220, 180)">
+    <!-- Yellow circle background -->
+    <circle cx="40" cy="40" r="50" fill="#ffd700"/>
+    
+    <!-- Glass lens -->
+    <circle cx="35" cy="35" r="20" fill="none" stroke="#1a365d" stroke-width="6"/>
+    
+    <!-- Handle -->
+    <line x1="50" y1="50" x2="65" y2="65" stroke="#1a365d" stroke-width="6" stroke-linecap="round"/>
+    
+    <!-- Inner lens reflection -->
+    <circle cx="35" cy="35" r="12" fill="#ffed4a"/>
+  </g>
+</svg>
