@@ -144,7 +144,7 @@ def make_session_permanent():
 
 APP_URL = ""
 
-s
+
 
 
 def check_access_token_expiration(access_token):

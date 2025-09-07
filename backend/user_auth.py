@@ -324,17 +324,22 @@ def login():
         return jsonify({'error': 'Invalid email or password'}), 401
 
 def google_sign_in():
+    print("=== GOOGLE SIGN IN REQUEST ===")
     try:
         credential = request.json.get('credential')
+        print(f"Credential received: {bool(credential)}")
         
         if not credential:
+            print("ERROR: No credential provided")
             return jsonify({"error": "No token provided"}), 400
             
         # Sign in with Google ID token
+        print("Attempting Supabase auth...")
         response = supabase.auth.sign_in_with_id_token({
             "provider": "google",
             "token": credential
         })
+        print(f"Supabase response: user={bool(response.user)}, session={bool(response.session)}")
         
         if not response.user or not response.session:
             return jsonify({"error": "Authentication failed"}), 400
@@ -408,7 +413,7 @@ def logout():
     
     response = jsonify({"success": True, "message": "Logged out successfully"})
     response.set_cookie('threads_session', '', expires=0, secure=True, 
-                        httponly=True, samesite='None', 
+                        only=True, samesite='None', 
                         domain='.threads-dev.local')
     response.set_cookie('threads_session_check', '', expires=0, secure=True, 
                         httponly=False, samesite='None', 
