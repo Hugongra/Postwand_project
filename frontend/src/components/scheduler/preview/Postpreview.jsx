@@ -511,13 +511,13 @@ const PostPreview = ({
     let mediaMessage;
     switch (activePlatform) {
       case 'youtube':
-        mediaMessage = 'Upload video content';
+        mediaMessage = t('postPreview.uploadVideoContent');
         break;
       case 'tiktok':
-        mediaMessage = 'Upload media content';
+        mediaMessage = t('postPreview.uploadMediaContent');
         break;
       default:
-        mediaMessage = 'Upload media content';
+        mediaMessage = t('postPreview.uploadMediaContent');
         break;
     }
     
@@ -525,7 +525,7 @@ const PostPreview = ({
       <div>
         {renderPlatformTabs()}
         <div className="h-28 max-w-md mx-auto bg-gray-200/50 shadow-sm rounded-lg p-4">
-          <p className="text-gray-700">{mediaMessage} for {activePlatform.charAt(0).toUpperCase() + activePlatform.slice(1)}</p>
+          <p className="text-gray-700">{mediaMessage} {t('postPreview.for')} {activePlatform.charAt(0).toUpperCase() + activePlatform.slice(1)}</p>
         </div>
       </div>
     );
@@ -537,7 +537,7 @@ const PostPreview = ({
       <div>
         {renderPlatformTabs()}
         <div className="h-28 max-w-md mx-auto bg-gray-200/50 shadow-sm rounded-lg p-4">
-          <p className="text-gray-700">Select post type for {activePlatform.charAt(0).toUpperCase() + activePlatform.slice(1)}</p>
+          <p className="text-gray-700">{t('postPreview.selectPostTypeFor', { platform: activePlatform.charAt(0).toUpperCase() + activePlatform.slice(1) })}</p>
         </div>
       </div>
     );

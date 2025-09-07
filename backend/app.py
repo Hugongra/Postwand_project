@@ -1448,6 +1448,108 @@ def load_image_chat(chat_id):
         print(f"Error loading image chat: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
+# BRAND EXTRACTION ENDPOINTS
+@app.route(f'{APP_URL}/api/extract-brand', methods=['POST'])
+@login_required
+@subscription_required
+def api_extract_brand():
+    """Extract brand assets (logo, images, colors, brand info) from a website URL"""
+    try:
+        data = request.json
+        url = data.get('url')
+        
+        if not url:
+            return jsonify({'error': 'URL is required'}), 400
+        
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'User not authenticated'}), 401
+        
+        # Normalize URL
+        from brand_extraction.logo_extraction import normalize_url
+        normalized_url = normalize_url(url)
+        
+        # Step 1: Extract website assets (logo and images)
+        print(f"Extracting assets from {normalized_url}")
+        assets = extract_website_assets(normalized_url, supabase_admin, user_id, image_limit=10)
+        
+        # Step 2: Extract colors
+        print("Extracting colors...")
+        color_extractor = color_extraction()
+        colors = color_extractor.extract_colors_from_website(
+            url=normalized_url,
+            logo_url=assets.get('logo'),
+            image_urls=assets.get('images', [])
+        )
+        
+        # Step 3: Extract brand information using LLM
+        print("Extracting brand information...")
+        brand_analyzer = info_extraction()
+        brand_info = brand_analyzer.analyze_brand(normalized_url)
+        
+        # Prepare the response data
+        result = {
+            'success': True,
+            'url': normalized_url,
+            'assets': assets,
+            'colors': colors,
+            'brand_info': brand_info
+        }
+        
+        # Store the brand profile in database
+        try:
+            brand_profile_data = {
+                'user_id': user_id,
+                'website_url': normalized_url,
+                'logo_url': assets.get('logo'),
+                'image_urls': assets.get('images', []),
+                'colors': colors,
+                'brand_info': brand_info,
+                'created_at': datetime.now(timezone.utc).isoformat(),
+                'updated_at': datetime.now(timezone.utc).isoformat()
+            }
+            
+            # Check if brand profile already exists
+            existing = supabase.table('brand_profiles').select('id').eq('user_id', user_id).eq('website_url', normalized_url).execute()
+            
+            if existing.data:
+                # Update existing profile
+                supabase.table('brand_profiles').update(brand_profile_data).eq('id', existing.data[0]['id']).execute()
+            else:
+                # Create new profile
+                supabase.table('brand_profiles').insert(brand_profile_data).execute()
+            
+            # Invalidate cache
+            invalidate_brand_cache(user_id)
+            
+        except Exception as db_error:
+            print(f"Warning: Failed to save brand profile to database: {str(db_error)}")
+            # Continue without failing the entire request
+        
+        return jsonify(result), 200
+        
+    except Exception as e:
+        print(f"Error in brand extraction: {str(e)}")
+        return jsonify({'error': f'Brand extraction failed: {str(e)}'}), 500
+
+@app.route(f'{APP_URL}/api/brand-profile', methods=['GET'])
+@app.route(f'{APP_URL}/api/brand-profile/<brand_name>', methods=['GET'])
+@login_required
+@subscription_required  
+def api_get_brand_profile(brand_name=None):
+    """Get brand profile from database"""
+    try:
+        brand_profile = get_cached_brand_profile(brand_name)
+        
+        if brand_profile:
+            return jsonify({'brand_profile': brand_profile}), 200
+        else:
+            return jsonify({'error': 'Brand profile not found'}), 404
+            
+    except Exception as e:
+        print(f"Error getting brand profile: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
 #MAIN
 if __name__ == '__main__':
     # Original threads-dev.local configuration (commented out)

@@ -1,4 +1,5 @@
 
+import { useTranslation } from 'react-i18next';
 import { ThumbsUp } from 'lucide-react';
 import { RiShareForwardLine } from 'react-icons/ri';
 const FacebookReel = ({ 
@@ -9,6 +10,7 @@ const FacebookReel = ({
   setContainerRef,
   formatContent
 }) => {
+  const { t } = useTranslation();
     return (
       <div 
         ref={setContainerRef}
@@ -41,7 +43,7 @@ const FacebookReel = ({
         ) : (
           <div className="w-full h-full bg-gray-800 flex items-center justify-center text-gray-400">
             <p className="text-center p-4">
-              Upload a video for your reel
+              {t('postPreview.uploadVideoForReel')}
             </p>
           </div>
         )}

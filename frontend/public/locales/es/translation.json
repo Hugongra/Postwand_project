@@ -613,7 +613,19 @@
     "generatingImage": "Generando imagen...",
     "selectPlatform": "Selecciona al menos una plataforma",
     "selectPage": "Selecciona una página para {{platform}}",
-    "selectPostType": "Selecciona un tipo de publicación"
+    "selectPostType": "Selecciona un tipo de publicación",
+    "uploadVideoContent": "Sube contenido de video",
+    "uploadMediaContent": "Sube contenido multimedia",
+    "selectPostTypeFor": "Selecciona tipo de publicación para {{platform}}",
+    "postContentPlaceholder": "El contenido de tu publicación aparecerá aquí...",
+    "captionPlaceholder": "Tu descripción aparecerá aquí...",
+    "threadsPostPlaceholder": "El contenido de tu publicación de Threads aparecerá aquí...",
+    "addImageOrVideoStory": "Añade imagen o video para tu historia",
+    "uploadVideoForReel": "Sube un video para tu reel",
+    "justNow": "Ahora",
+    "yourVideoTitle": "Título de tu video",
+    "yourShortTitle": "Título de tu Short",
+    "for": "para"
   },
   "imageLibrary": {
     "title": "Biblioteca de Imágenes",

@@ -647,7 +647,19 @@
     "generatingImage": "Generating image...",
     "selectPlatform": "Select at least one platform",
     "selectPage": "Select a page for {{platform}}",
-    "selectPostType": "Select a post type"
+    "selectPostType": "Select a post type",
+    "uploadVideoContent": "Upload video content",
+    "uploadMediaContent": "Upload media content",
+    "selectPostTypeFor": "Select post type for {{platform}}",
+    "postContentPlaceholder": "Your post content will appear here...",
+    "captionPlaceholder": "Your caption will appear here...",
+    "threadsPostPlaceholder": "Your threads post content will appear here...",
+    "addImageOrVideoStory": "Add image or video for your story",
+    "uploadVideoForReel": "Upload a video for your reel",
+    "justNow": "Just now",
+    "yourVideoTitle": "Your Video Title",
+    "yourShortTitle": "Your Short Title",
+    "for": "for"
   },
   "imageLibrary": {
     "title": "Image Library",

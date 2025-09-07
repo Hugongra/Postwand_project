@@ -448,11 +448,22 @@ const CalendarCell = ({isToday, viewMode, posts = [], date, onPostDrop, isCompac
     // Create selectedPlatforms array
     const selectedPlatforms = [platform];
     
-    // Create selectedPages object
+    // Create selectedPages object with platform-specific post type fields
     const selectedPages = {
-      [platform]: pageInfo.id,
-      post_type: post.post_type || 'regularpost'
+      [platform]: pageInfo.id
     };
+    
+    // Map the post_type to the correct platform-specific field
+    const postType = post.post_type || 'post';
+    if (platform === 'facebook' || platform === 'instagram') {
+      selectedPages.meta_post_type = postType;
+    } else if (platform === 'linkedin') {
+      selectedPages.linkedin_post_type = postType;
+    } else if (platform === 'youtube') {
+      selectedPages.youtube_post_type = postType;
+    } else if (platform === 'tiktok') {
+      selectedPages.tiktok_post_type = postType;
+    }
     
     // Prepare platform-specific data
     let platformData = {};
@@ -475,8 +486,10 @@ const CalendarCell = ({isToday, viewMode, posts = [], date, onPostDrop, isCompac
       selectedPlatforms,
       selectedPages,
       content,
-      imageUrl,
+      imageUrl: imageUrl,
+      imageUrls: imageUrl ? [imageUrl] : [],
       videoUrl,
+      postType: postType,
       ...platformData
     };
   };

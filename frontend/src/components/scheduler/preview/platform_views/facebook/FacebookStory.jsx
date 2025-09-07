@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 const FacebookStory = ({ 
@@ -12,6 +13,7 @@ const FacebookStory = ({
     formatContent,
     imagePlaceholder
   }) => {
+    const { t } = useTranslation();
     // Use imageUrls if available, otherwise fall back to single imageUrl
     const images = imageUrls.length > 0 ? imageUrls : (imageUrl ? [imageUrl] : []);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -72,7 +74,7 @@ const FacebookStory = ({
              </div>
           ) : (
             <div className="w-full h-full bg-gray-800 flex items-center justify-center text-gray-400">
-              <p>Add image or video for your story</p>
+              <p>{t('postPreview.addImageOrVideoStory')}</p>
             </div>
           )}
   

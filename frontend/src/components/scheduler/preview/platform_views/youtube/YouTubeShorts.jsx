@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { FaThumbsUp, FaThumbsDown, FaShare, FaComment, FaEllipsisV } from 'react-icons/fa';
 import { MdPlayArrow, MdVolumeUp, MdMoreVert } from 'react-icons/md';
 
@@ -13,11 +14,12 @@ const YouTubeShorts = ({
   formatContent,
   youtubeMetadata = {}
 }) => {
+  const { t } = useTranslation();
   const channelName = activePage?.name || 'Your Channel';
   const profilePicture = activePage?.profile_picture;
   
   // Use YouTube metadata if available
-  const title = youtubeMetadata.title || 'Your Short Title';
+  const title = youtubeMetadata.title || t('postPreview.yourShortTitle');
   const description = youtubeMetadata.description || content;
   const tags = youtubeMetadata.tags;
 
@@ -130,7 +132,7 @@ const YouTubeShorts = ({
         </div>
 
         {/* Title (if available) */}
-        {title && title !== 'Your Short Title' && (
+        {title && title !== t('postPreview.yourShortTitle') && (
           <div className="text-white text-sm font-semibold mb-2 leading-tight">
             {title}
           </div>

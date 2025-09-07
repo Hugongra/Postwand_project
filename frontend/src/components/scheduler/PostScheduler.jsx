@@ -1339,7 +1339,7 @@ const PostScheduler = ({
                   >
                     <Wand2 size={16} className='mr-2 text-[rgba(219,39,119,1)]'/> 
                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-500">
-                      Actions
+                      {t('common.actions')}
                     </span>
                   </button>
 
@@ -1359,7 +1359,7 @@ const PostScheduler = ({
                         }}
                         disabled={isGeneratingPost || isImprovingPost || isAnimating}
                       >
-                        <CircleFadingArrowUp size={16} className='mr-2'/>  Improve
+                        <CircleFadingArrowUp size={16} className='mr-2'/>  {t('common.improve')}
                       </button>
                       <button 
                         type="button"
@@ -1370,7 +1370,7 @@ const PostScheduler = ({
                         }}
                         disabled={isGeneratingPost || isImprovingPost || isAnimating}
                       >
-                         <ScrollText size={16} className='mr-2'/>Expand
+                         <ScrollText size={16} className='mr-2'/>{t('common.expand')}
                       </button>
                       <button 
                         type="button"
@@ -1381,7 +1381,7 @@ const PostScheduler = ({
                         }}
                         disabled={isGeneratingPost || isImprovingPost || isAnimating}
                       >
-                        <ScissorsLineDashed size={16} className='mr-2'/> Shorten
+                        <ScissorsLineDashed size={16} className='mr-2'/> {t('common.shorten')}
                       </button>
                       <button 
                         type="button"
@@ -1392,7 +1392,7 @@ const PostScheduler = ({
                         }}
                         disabled={isGeneratingPost || isImprovingPost || isAnimating}
                       >
-                        <MessageSquare size={16} className='mr-2'/> Ask
+                        <MessageSquare size={16} className='mr-2'/> {t('common.ask')}
                       </button>
                     </div>
                   )}

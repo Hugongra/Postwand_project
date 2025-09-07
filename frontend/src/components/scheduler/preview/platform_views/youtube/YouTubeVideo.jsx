@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { FaThumbsUp, FaThumbsDown, FaShare, FaDownload, FaEllipsisH } from 'react-icons/fa';
 import { MdPlayArrow } from 'react-icons/md';
 
@@ -13,11 +14,12 @@ const YouTubeVideo = ({
   formatContent,
   youtubeMetadata = {}
 }) => {
+  const { t } = useTranslation();
   const channelName = activePage?.name || 'Your Channel';
   const profilePicture = activePage?.profile_picture;
   
   // Use YouTube metadata if available
-  const title = youtubeMetadata.title || (content ? content.split('\n')[0].substring(0, 100) : 'Your Video Title');
+  const title = youtubeMetadata.title || (content ? content.split('\n')[0].substring(0, 100) : t('postPreview.yourVideoTitle'));
   const description = youtubeMetadata.description || content;
   const tags = youtubeMetadata.tags;
 

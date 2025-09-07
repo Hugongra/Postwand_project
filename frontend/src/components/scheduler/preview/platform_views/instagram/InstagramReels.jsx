@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { FaRegHeart } from 'react-icons/fa';
 
 const InstagramReels = ({ 
@@ -10,6 +11,7 @@ const InstagramReels = ({
   setContainerRef,
   formatContent
 }) => {
+  const { t } = useTranslation();
     return (
       <div 
         ref={setContainerRef}
@@ -43,7 +45,7 @@ const InstagramReels = ({
         ) : (
           <div className="w-full h-full bg-gray-800 flex items-center justify-center text-gray-400">
             <p className="text-center p-4">
-              Upload a video for your reel
+              {t('postPreview.uploadVideoForReel')}
             </p>
           </div>
         )}

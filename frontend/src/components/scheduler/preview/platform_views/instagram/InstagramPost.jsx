@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { FaRegHeart } from 'react-icons/fa';
 import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
@@ -9,7 +10,8 @@ const InstagramPost = ({
   scale,    
   setContainerRef,
   formatContent
-}) => { 
+}) => {
+  const { t } = useTranslation(); 
   // Use imageUrls if available, otherwise fall back to single imageUrl
   const images = imageUrls.length > 0 ? imageUrls : (imageUrl ? [imageUrl] : []);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -135,7 +137,7 @@ const InstagramPost = ({
         {/* Caption */}
         <div className="mt-1 text-sm">
           <span className="font-semibold mr-2">{activePage.name}</span>
-          {content ? formatContent(content) : <span className="text-gray-400">Your caption will appear here...</span>}
+          {content ? formatContent(content) : <span className="text-gray-400">{t('postPreview.captionPlaceholder')}</span>}
         </div>
 
         {/* Comments */}

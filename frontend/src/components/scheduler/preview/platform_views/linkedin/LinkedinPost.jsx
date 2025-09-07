@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Globe, MessageCircle,ThumbsUp, Heart, Lightbulb } from 'lucide-react';
 import { SlLike } from "react-icons/sl";
 import { FaRegCommentDots } from "react-icons/fa";
@@ -13,6 +14,7 @@ const LinkedInPost = ({
   formatContent,
   imagePlaceholder
 }) => {
+  const { t } = useTranslation();
   return (
     <div 
       ref={setContainerRef}
@@ -62,7 +64,7 @@ const LinkedInPost = ({
       {/* Content */}
       <div className="px-3 pb-3">
         <p className="text-sm leading-relaxed text-gray-900">
-          {content ? formatContent(content) : <span className="text-gray-400">Your post content will appear here...</span>}
+          {content ? formatContent(content) : <span className="text-gray-400">{t('postPreview.postContentPlaceholder')}</span>}
         </p>
       </div>
       

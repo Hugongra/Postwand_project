@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { FaRegHeart } from 'react-icons/fa';
 import { FaRegCommentAlt } from 'react-icons/fa';
 import { RiShareForwardLine } from 'react-icons/ri';
@@ -13,6 +14,7 @@ const ThreadsPost = ({
   formatContent,
   imagePlaceholder
 }) => {
+  const { t } = useTranslation();
   return (
     <div 
       ref={setContainerRef}
@@ -35,13 +37,13 @@ const ThreadsPost = ({
           )}
           <div>
             <p className="font-medium">{activePage.name}</p>
-            <p className="text-xs text-gray-500">Just now</p>
+            <p className="text-xs text-gray-500">{t('postPreview.justNow')}</p>
           </div>
         </div>
       </div>
       
       <p className="px-4 text-[15px] leading-normal">
-        {content ? formatContent(content) : <span className="text-gray-400">Your threads post content will appear here...</span>}
+        {content ? formatContent(content) : <span className="text-gray-400">{t('postPreview.threadsPostPlaceholder')}</span>}
       </p>      
       
       {isGeneratingImage ? (

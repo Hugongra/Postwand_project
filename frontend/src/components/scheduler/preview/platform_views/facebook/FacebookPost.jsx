@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { ImEarth } from 'react-icons/im';
 import { FaRegCommentAlt } from 'react-icons/fa';
 import { RiShareForwardLine } from 'react-icons/ri';
@@ -14,6 +15,7 @@ const FacebookPost = ({
   setContainerRef,
   formatContent
 }) => {
+  const { t } = useTranslation();
   // Use imageUrls if available, otherwise fall back to single imageUrl
   const images = imageUrls.length > 0 ? imageUrls : (imageUrl ? [imageUrl] : []);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -79,7 +81,7 @@ const FacebookPost = ({
       </div>
       
       <p className="px-4 text-[15px] leading-normal">
-        {content ? formatContent(content) : <span className="text-gray-400">Your post content will appear here...</span>}
+        {content ? formatContent(content) : <span className="text-gray-400">{t('postPreview.postContentPlaceholder')}</span>}
       </p>      
       
         {images.length > 0 ? (
