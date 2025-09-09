@@ -3,7 +3,7 @@ import { Button } from "../../../ui/button";
 import { Trash2 } from "lucide-react";
 import { Camera } from "lucide-react";
 import { Image } from "lucide-react";
-import { API_BASE_URL } from '../../config_url.js';
+import { API_BASE_URL } from '../../../config_url.js';
 import { Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { IoCloudUploadOutline } from "react-icons/io5";
