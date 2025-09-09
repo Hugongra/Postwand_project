@@ -40,9 +40,9 @@ const Login = ({ onLogin }) => {
       
       window.google.accounts.id.initialize({
         client_id: '571535075302-87ga0u6mdta81cvbif83cul5834sg8fv.apps.googleusercontent.com',
-        callback: 'handleSignInWithGoogle', // Use string reference to global function
-        ux_mode: 'redirect',              // Use redirect mode to avoid COOP issues
-        use_fedcm_for_prompt: true,       // Enable FedCM for compliance
+        callback: handleSignInWithGoogle, // Use direct function reference
+        ux_mode: 'popup',                 // Use popup mode
+        use_fedcm_for_prompt: false,      // Disable FedCM temporarily to avoid issues
         auto_select: false,
         cancel_on_tap_outside: false,
         context: 'signin'
