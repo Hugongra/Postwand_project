@@ -26,22 +26,41 @@ const Login = ({ onLogin }) => {
       if (document.body.contains(script)) {
         document.body.removeChild(script);
       }
+      // Clean up global callback
+      if (window.handleSignInWithGoogle) {
+        delete window.handleSignInWithGoogle;
+      }
     };
   }, []);
 
   const initializeGoogleOneTap = () => {
     if (window.google) {
-      // Make callback globally accessible
+      // Make callback globally accessible before initializing
       window.handleSignInWithGoogle = handleSignInWithGoogle;
       
       window.google.accounts.id.initialize({
         client_id: '571535075302-87ga0u6mdta81cvbif83cul5834sg8fv.apps.googleusercontent.com',
-        callback: handleSignInWithGoogle,
-        ux_mode: 'popup',             // Force popup mode
-        use_fedcm_for_prompt: false,  // Disable FedCM to avoid COOP issues
-        auto_select: false,           // Disable auto-select to prevent popup issues
-        cancel_on_tap_outside: false
+        callback: 'handleSignInWithGoogle', // Use string reference to global function
+        ux_mode: 'redirect',              // Use redirect mode to avoid COOP issues
+        use_fedcm_for_prompt: true,       // Enable FedCM for compliance
+        auto_select: false,
+        cancel_on_tap_outside: false,
+        context: 'signin'
       });
+
+      // Render the button
+      window.google.accounts.id.renderButton(
+        document.getElementById('google-signin-button'),
+        {
+          type: 'standard',
+          shape: 'rectangular',
+          theme: 'outline',
+          text: 'signin_with',
+          size: 'large',
+          logo_alignment: 'left',
+          width: '100%'
+        }
+      );
     }
   };
 
@@ -151,31 +170,12 @@ const Login = ({ onLogin }) => {
           </h2>
           
           <div className="mt-6 w-full">
-        {/* One Tap Configuration - only these attributes belong here */}
-        <div
-          id="g_id_onload"
-          data-client_id="571535075302-87ga0u6mdta81cvbif83cul5834sg8fv.apps.googleusercontent.com"
-          data-context="signin"
-          data-ux_mode="popup"
-          data-callback="handleSignInWithGoogle"
-          data-auto_select="false"
-          data-itp_support="true"
-          data-use_fedcm_for_prompt="false"
-          data-cancel_on_tap_outside="false"
-        ></div>
-        
-        {/* Button Configuration - shape goes here, not in g_id_onload */}
-        <div
-          className="g_id_signin"
-          data-type="standard"
-          data-shape="square"
-          data-theme="outline"
-          data-text="signin_with"
-          data-size="large"
-          data-logo_alignment="left"
-          style={{ width: '100%' }}
-        ></div>
-      </div>
+            <div 
+              id="google-signin-button" 
+              className="w-full flex justify-center"
+              style={{ minHeight: '44px' }}
+            ></div>
+          </div>
 
           <div className="mt-6 relative">
             <div className="absolute inset-0 flex items-center">
