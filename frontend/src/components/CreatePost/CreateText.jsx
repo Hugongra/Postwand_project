@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { API_BASE_URL } from '../config_url.js';
 import { Upload, 
   ArrowUp, 
   Loader2, 
@@ -119,7 +120,7 @@ export const CreateText = () => {
     }
     
     try {
-      const response = await fetch('https://app.postwand.io/api/chat/action', {
+      const response = await fetch(`${API_BASE_URL}/api/chat/action`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -160,7 +161,7 @@ export const CreateText = () => {
     }
     
     try {
-      const response = await fetch('https://app.postwand.io/api/chat/action', {
+      const response = await fetch(`${API_BASE_URL}/api/chat/action`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -226,7 +227,7 @@ export const CreateText = () => {
     setInput('');
     
     try {
-      const response = await fetch('https://app.postwand.io/api/chat/send', {
+      const response = await fetch(`${API_BASE_URL}/api/chat/send`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -337,7 +338,7 @@ export const CreateText = () => {
   useEffect(() => {
     const loadChatHistory = async () => {
       try {
-        const response = await fetch('https://app.postwand.io/api/chat/history', { credentials: 'include' });
+        const response = await fetch(`${API_BASE_URL}/api/chat/history`, { credentials: 'include' });
         const data = await response.json();
         
         if (data.success && data.history.length > 0) {

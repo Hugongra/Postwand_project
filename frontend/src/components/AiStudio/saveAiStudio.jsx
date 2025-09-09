@@ -3,6 +3,7 @@ import { CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ArrowRight, ArrowLeft, ChevronRight } from 'lucide-react';
+import { API_BASE_URL } from '../config_url.js';
 import { cn } from "@/lib/utils";
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -246,7 +247,7 @@ const AiStudio = ({ setPostContent, setImagePreview, brands }) => {
     setStatusMessages({ ...statusMessages, general: null });
     
     try {
-      const response = await fetch(`https://app.postwand.io/api/generate-posts-variations`, {
+      const response = await fetch(`${API_BASE_URL}/api/generate-posts-variations`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -309,7 +310,7 @@ const AiStudio = ({ setPostContent, setImagePreview, brands }) => {
     setStatusMessages({ ...statusMessages, general: null });
     
     try {
-      const response = await fetch(`https://app.postwand.io/api/generate-image`, {
+      const response = await fetch(`${API_BASE_URL}/api/generate-image`, {
         method: 'POST',
         headers: {  
           'Content-Type': 'application/json'
@@ -385,7 +386,7 @@ const AiStudio = ({ setPostContent, setImagePreview, brands }) => {
     setStatusMessages({ ...statusMessages, save: null });
     
     try {
-      const response = await fetch(`https://app.postwand.io/api/save-image`, {
+      const response = await fetch(`${API_BASE_URL}/api/save-image`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

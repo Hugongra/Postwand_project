@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon } from "lucide-react";
 import CalendarCell from './CalendarCell';
+import { API_BASE_URL } from '../config_url.js';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import FacebookIcon from '/SM_icons/facebook.svg';
 import InstagramIcon from '/SM_icons/instagram.svg';
@@ -61,7 +62,7 @@ const CustomCalendar = ({ isLoggedIn, facebookData, instagramData, threadsData }
 
   const fetchPosts = async () => {
     try {
-        const response = await fetch(`https://app.postwand.io/api/get_scheduled_posts`, {
+        const response = await fetch(`${API_BASE_URL}/api/get_scheduled_posts`, {
         headers: {
           'Content-Type': 'application/json'
         },
@@ -111,7 +112,7 @@ const CustomCalendar = ({ isLoggedIn, facebookData, instagramData, threadsData }
         return p;
       }));
 
-      const response = await fetch(`https://app.postwand.io/api/reschedule_post`, {
+      const response = await fetch(`${API_BASE_URL}/api/reschedule_post`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -155,7 +156,7 @@ const CustomCalendar = ({ isLoggedIn, facebookData, instagramData, threadsData }
       // Update UI immediately for a responsive feel
       setPosts(prevPosts => prevPosts.filter(p => p.id !== post.id));
       
-      const response = await fetch(`https://app.postwand.io/api/delete_post`, {
+      const response = await fetch(`${API_BASE_URL}/api/delete_post`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

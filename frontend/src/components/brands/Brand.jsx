@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import BrandSkeletonLoader from '../skeletons/BrandSkeletonLoader';
+import { API_BASE_URL } from '../config_url.js';
 
 const Brand = ({ brandName, extractedData }) => {
     const [brandData, setBrandData] = useState(null);
@@ -27,8 +28,8 @@ const Brand = ({ brandName, extractedData }) => {
                 
                 // Otherwise, fetch from the database
                 const url = brandName 
-                    ? `https://app.postwand.io/api/brand-profile/${encodeURIComponent(brandName)}`
-                    : 'https://app.postwand.io/api/brand-profile';
+                    ? `${API_BASE_URL}/api/brand-profile/${encodeURIComponent(brandName)}`
+                    : `${API_BASE_URL}/api/brand-profile`;
                 
                 const response = await fetch(url, {
                     method: 'GET',

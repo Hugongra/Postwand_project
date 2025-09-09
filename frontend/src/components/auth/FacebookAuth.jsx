@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
+import { API_BASE_URL } from '../config_url.js';
 import FacebookIcon from '/SM_icons/facebook.svg';
 import InstagramIcon from '/SM_icons/instagram.svg';
 import ThreadsIcon from '/SM_icons/threads.svg';
@@ -269,7 +270,7 @@ const SocialMediaAuth = ({ onAuth, facebookPages, instagramAccounts, threadsAcco
       }
       
       // Use the correct API endpoint for code exchange
-      const apiEndpoint = 'https://app.postwand.io/api/auth/linkedin';
+      const apiEndpoint = `${API_BASE_URL}/api/auth/linkedin`;
    
       
       const response = await fetch(apiEndpoint, {
@@ -338,7 +339,7 @@ const SocialMediaAuth = ({ onAuth, facebookPages, instagramAccounts, threadsAcco
       }
       
       // Exchange code for tokens via backend
-      const response = await fetch('https://app.postwand.io/api/auth/youtube', {
+      const response = await fetch(`${API_BASE_URL}/api/auth/youtube`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -456,8 +457,8 @@ const SocialMediaAuth = ({ onAuth, facebookPages, instagramAccounts, threadsAcco
         if (response.authResponse) {
           try {
             // Send token to backend for processing
-            console.log("DEBUG: About to call Facebook auth endpoint:", "https://app.postwand.io/api/auth/facebook");
-            const backendResponse = await fetch(`https://app.postwand.io/api/auth/facebook`, {
+            console.log("DEBUG: About to call Facebook auth endpoint:", `${API_BASE_URL}/api/auth/facebook`);
+            const backendResponse = await fetch(`${API_BASE_URL}/api/auth/facebook`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -520,7 +521,7 @@ const SocialMediaAuth = ({ onAuth, facebookPages, instagramAccounts, threadsAcco
         if (response.authResponse) {
           try {
             // Send token to backend for processing
-              const backendResponse = await fetch(`https://app.postwand.io/api/auth/instagram`, {
+              const backendResponse = await fetch(`${API_BASE_URL}/api/auth/instagram`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -770,7 +771,7 @@ const SocialMediaAuth = ({ onAuth, facebookPages, instagramAccounts, threadsAcco
       }
       
       // Exchange code for token via backend
-      const response = await fetch(`https://app.postwand.io/api/auth/instagram-business/exchange`, {
+      const response = await fetch(`${API_BASE_URL}/api/auth/instagram-business/exchange`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -902,7 +903,7 @@ const SocialMediaAuth = ({ onAuth, facebookPages, instagramAccounts, threadsAcco
         facebookAccounts: { ...(prev.facebookAccounts || {}), [loadingAccountId]: true } 
       }));
       
-      const response = await fetch('https://app.postwand.io/api/auth/disconnect', {
+      const response = await fetch(`${API_BASE_URL}/api/auth/disconnect`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -949,7 +950,7 @@ const SocialMediaAuth = ({ onAuth, facebookPages, instagramAccounts, threadsAcco
         instagramAccounts: { ...(prev.instagramAccounts || {}), [loadingAccountId]: true } 
       }));
       
-      const response = await fetch('https://app.postwand.io/api/auth/disconnect', {
+      const response = await fetch(`${API_BASE_URL}/api/auth/disconnect`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -995,7 +996,7 @@ const SocialMediaAuth = ({ onAuth, facebookPages, instagramAccounts, threadsAcco
     
     try {
       // Get TikTok auth URL from our backend - use localhost since that's where we're logged in
-        const response = await fetch(`https://app.postwand.io/api/auth/tiktok`, {
+        const response = await fetch(`${API_BASE_URL}/api/auth/tiktok`, {
         method: 'GET',
         credentials: 'include',
         headers: {
@@ -1107,7 +1108,7 @@ const SocialMediaAuth = ({ onAuth, facebookPages, instagramAccounts, threadsAcco
         tiktokAccounts: { ...(prev.tiktokAccounts || {}), [loadingAccountId]: true } 
       }));
       
-      const response = await fetch('https://app.postwand.io/api/auth/disconnect', {
+      const response = await fetch(`${API_BASE_URL}/api/auth/disconnect`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -1154,7 +1155,7 @@ const SocialMediaAuth = ({ onAuth, facebookPages, instagramAccounts, threadsAcco
         linkedinAccounts: { ...(prev.linkedinAccounts || {}), [loadingAccountId]: true } 
       }));
       
-      const response = await fetch('https://app.postwand.io/api/auth/disconnect', {
+      const response = await fetch(`${API_BASE_URL}/api/auth/disconnect`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -1201,7 +1202,7 @@ const SocialMediaAuth = ({ onAuth, facebookPages, instagramAccounts, threadsAcco
         youtubeAccounts: { ...(prev.youtubeAccounts || {}), [loadingAccountId]: true } 
       }));
       
-      const response = await fetch('https://app.postwand.io/api/auth/disconnect', {
+      const response = await fetch(`${API_BASE_URL}/api/auth/disconnect`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

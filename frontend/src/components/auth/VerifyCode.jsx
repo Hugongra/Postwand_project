@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Mail, RefreshCw, CheckCircle, AlertCircle, ExternalLink } from 'lucide-react';
+import { API_BASE_URL } from '../config_url.js';
 
 const VerifyCode = ({ email: propEmail, onVerificationSuccess, onBackToRegister, embedded = false, password = null, onLogin = null }) => {
   const location = useLocation();
@@ -91,7 +92,7 @@ const VerifyCode = ({ email: propEmail, onVerificationSuccess, onBackToRegister,
     setError('');
         
     try {
-      const response = await fetch('https://localhost:5001/api/verify-code', {
+      const response = await fetch(`${API_BASE_URL}/api/verify-code`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -134,7 +135,7 @@ const VerifyCode = ({ email: propEmail, onVerificationSuccess, onBackToRegister,
   // Add a function to log in the user directly
   const loginUser = async (email, password, onLogin) => {
     try {
-      const response = await fetch(`https://app.postwand.io/api/auth/login`, {
+      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -163,7 +164,7 @@ const VerifyCode = ({ email: propEmail, onVerificationSuccess, onBackToRegister,
     setError('');
     
     try {
-      const response = await fetch('https://app.postwand.io/api/send-verification-code', {
+      const response = await fetch(`${API_BASE_URL}/api/send-verification-code`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

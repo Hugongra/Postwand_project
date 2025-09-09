@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { API_BASE_URL } from './config_url.js';
 
 const TokenUsage = () => {
   const { t } = useTranslation();
@@ -15,7 +16,7 @@ const TokenUsage = () => {
     const fetchTokenUsage = async () => {
       try {
         setLoading(true);
-        const response = await fetch('https://app.postwand.io/api/usage/tokens', {
+        const response = await fetch(`${API_BASE_URL}/api/usage/tokens`, {
           credentials: 'include'
         });
         

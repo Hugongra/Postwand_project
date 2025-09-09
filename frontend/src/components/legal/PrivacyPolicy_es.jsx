@@ -49,6 +49,7 @@ const PrivacyPolicy = () => {
           <li>¿CUÁLES SON SUS DERECHOS DE PRIVACIDAD?</li>
           <li>CONTROLES PARA FUNCIONES DE NO SEGUIMIENTO</li>
           <li>¿TIENEN LOS RESIDENTES DE ESTADOS UNIDOS DERECHOS DE PRIVACIDAD ESPECÍFICOS?</li>
+          <li>ACCESO Y USO DE DATOS DE GOOGLE</li>
           <li>¿REALIZAMOS ACTUALIZACIONES A ESTA POLÍTICA?</li>
           <li>¿CÓMO PUEDE CONTACTARNOS SOBRE ESTA POLÍTICA?</li>
           <li>¿CÓMO PUEDE REVISAR, ACTUALIZAR O ELIMINAR LOS DATOS QUE RECOPILAMOS DE USTED?</li>
@@ -159,12 +160,74 @@ const PrivacyPolicy = () => {
           </section>
           
           <section>
-            <h2 className="text-xl font-bold mb-3 text-purple-800">14. ¿REALIZAMOS ACTUALIZACIONES A ESTA POLÍTICA?</h2>
+            <h2 className="text-xl font-bold mb-3 text-purple-800">14. ACCESO Y USO DE DATOS DE GOOGLE</h2>
+            
+            <h3 className="text-lg font-semibold mb-2 text-purple-700">Qué Datos de Usuario de Google Accedemos</h3>
+            <p className="mb-3">Nuestra aplicación accede a los siguientes datos de usuario de Google a través de las API de Google:</p>
+            <ul className="list-disc pl-6 mb-4 space-y-1">
+              <li>Información básica del perfil (nombre, dirección de correo electrónico, foto de perfil)</li>
+              <li>Credenciales de autenticación de la cuenta de Google</li>
+              <li>Información y metadatos del canal de YouTube</li>
+              <li>Permisos y capacidades de carga de YouTube</li>
+            </ul>
+            
+            <h3 className="text-lg font-semibold mb-2 text-purple-700">Cómo Usamos los Datos de Usuario de Google</h3>
+            <p className="mb-3">Utilizamos los datos de usuario de Google exclusivamente para los siguientes propósitos:</p>
+            <ul className="list-disc pl-6 mb-3 space-y-1">
+              <li><strong>Autenticación:</strong> Para proporcionar funcionalidad de inicio de sesión seguro y verificar la identidad del usuario</li>
+              <li><strong>Integración con YouTube:</strong> Para permitir a los usuarios subir y gestionar contenido en sus canales de YouTube a través de nuestra plataforma</li>
+              <li><strong>Gestión de Cuentas:</strong> Para mantener las cuentas de usuario y proporcionar experiencias de servicio personalizadas</li>
+            </ul>
+            <p className="mb-4">No utilizamos los datos de usuario de Google para publicidad, marketing a terceros, o cualquier propósito que no sea los explícitamente declarados anteriormente.</p>
+            
+            <h3 className="text-lg font-semibold mb-2 text-purple-700">Compartir Datos y Divulgación a Terceros</h3>
+            <p className="mb-3">Mantenemos un control estricto sobre los datos de usuario de Google y no los compartimos con terceros, excepto en las siguientes circunstancias limitadas:</p>
+            <ul className="list-disc pl-6 mb-3 space-y-1">
+              <li><strong>Requisitos Legales:</strong> Cuando sea requerido por ley, orden judicial o regulación gubernamental</li>
+              <li><strong>Consentimiento del Usuario:</strong> Con autorización explícita del usuario para integraciones o características específicas</li>
+              <li><strong>Proveedores de Servicios:</strong> Con proveedores de servicios de confianza que nos asisten en nuestras operaciones bajo acuerdos estrictos de confidencialidad y que tienen prohibido usar los datos para cualquier otro propósito</li>
+            </ul>
+            <p className="mb-4">No vendemos, alquilamos, arrendamos o comercializamos de otra manera los datos de usuario de Google bajo ninguna circunstancia.</p>
+            
+            <h3 className="text-lg font-semibold mb-2 text-purple-700">Medidas de Protección y Seguridad de Datos</h3>
+            <p className="mb-3">Implementamos medidas de seguridad integrales para proteger los datos de usuario de Google:</p>
+            <ul className="list-disc pl-6 mb-4 space-y-1">
+              <li><strong>Encriptación:</strong> Toda la transmisión de datos está protegida usando encriptación SSL/TLS</li>
+              <li><strong>Infraestructura Segura:</strong> Los datos se almacenan en servidores seguros con controles de acceso multicapa</li>
+              <li><strong>Limitación de Acceso:</strong> El acceso a los datos de usuario de Google está restringido a personal autorizado en base a la necesidad de saber</li>
+              <li><strong>Auditorías de Seguridad Regulares:</strong> Realizamos evaluaciones y actualizaciones de seguridad regulares para mantener estándares de protección de datos</li>
+              <li><strong>Seguridad de Autenticación:</strong> Los tokens OAuth de Google se almacenan de forma segura y se actualizan regularmente según las mejores prácticas</li>
+              <li><strong>Monitoreo:</strong> Monitoreo continuo para intentos de acceso no autorizado y amenazas de seguridad</li>
+            </ul>
+            
+            <h3 className="text-lg font-semibold mb-2 text-purple-700">Retención y Eliminación de Datos</h3>
+            <p className="mb-3">Nuestras prácticas de retención de datos para datos de usuario de Google:</p>
+            <ul className="list-disc pl-6 mb-4 space-y-1">
+              <li><strong>Período de Retención:</strong> Retenemos los datos de usuario de Google solo durante el tiempo necesario para proporcionar nuestros servicios o según lo requerido por ley</li>
+              <li><strong>Control del Usuario:</strong> Los usuarios pueden revocar el acceso a sus datos de Google en cualquier momento a través de la configuración de su cuenta de Google o contactándonos directamente</li>
+              <li><strong>Eliminación de Cuenta:</strong> Cuando un usuario elimina su cuenta, todos los datos de usuario de Google asociados se eliminan permanentemente de nuestros sistemas dentro de 30 días</li>
+              <li><strong>Limpieza Automática:</strong> Las cuentas inactivas y los datos de Google asociados se revisan automáticamente y pueden eliminarse después de 24 meses de inactividad</li>
+              <li><strong>Solicitudes de Eliminación de Datos:</strong> Los usuarios pueden solicitar la eliminación inmediata de sus datos de usuario de Google contactando a nuestro equipo de soporte</li>
+            </ul>
+            
+            <h3 className="text-lg font-semibold mb-2 text-purple-700">Derechos y Control del Usuario</h3>
+            <p className="mb-3">Los usuarios mantienen control completo sobre sus datos de Google:</p>
+            <ul className="list-disc pl-6 mb-4 space-y-1">
+              <li><strong>Acceso:</strong> Los usuarios pueden solicitar acceso a sus datos de Google almacenados en cualquier momento</li>
+              <li><strong>Corrección:</strong> Los usuarios pueden solicitar correcciones a datos inexactos</li>
+              <li><strong>Eliminación:</strong> Los usuarios pueden solicitar la eliminación de sus datos</li>
+              <li><strong>Portabilidad:</strong> Los usuarios pueden solicitar una copia de sus datos en un formato portable</li>
+              <li><strong>Revocación:</strong> Los usuarios pueden revocar nuestro acceso a su cuenta de Google en cualquier momento a través de la configuración de seguridad de Google</li>
+            </ul>
+          </section>
+          
+          <section>
+            <h2 className="text-xl font-bold mb-3 text-purple-800">15. ¿REALIZAMOS ACTUALIZACIONES A ESTA POLÍTICA?</h2>
             <p className="mb-4">Sí, actualizaremos esta política según sea necesario para mantenernos en cumplimiento con las leyes relevantes.</p>
           </section>
           
           <section>
-            <h2 className="text-xl font-bold mb-3 text-purple-800">15. ¿CÓMO PUEDE CONTACTARNOS SOBRE ESTA POLÍTICA?</h2>
+            <h2 className="text-xl font-bold mb-3 text-purple-800">16. ¿CÓMO PUEDE CONTACTARNOS SOBRE ESTA POLÍTICA?</h2>
             <p className="mb-3">Si tiene preguntas o comentarios sobre esta política, puede enviarnos un correo electrónico a <a href="mailto:albert@postwand.io" className="text-purple-600 hover:underline">albert@postwand.io</a> o contactarnos por correo postal a:</p>
             <div className="mb-4 pl-4 border-l-2 border-purple-200">
               <p>Albert Albert Molina</p>
@@ -175,11 +238,11 @@ const PrivacyPolicy = () => {
           </section>
           
           <section>
-            <h2 className="text-xl font-bold mb-3 text-purple-800">16. ¿CÓMO PUEDE REVISAR, ACTUALIZAR O ELIMINAR LOS DATOS QUE RECOPILAMOS DE USTED?</h2>
+            <h2 className="text-xl font-bold mb-3 text-purple-800">17. ¿CÓMO PUEDE REVISAR, ACTUALIZAR O ELIMINAR LOS DATOS QUE RECOPILAMOS DE USTED?</h2>
             <p className="mb-4">Según las leyes aplicables de su país o estado de residencia en EE. UU., puede tener derecho a solicitar acceso, actualizar o eliminar su información personal. Para solicitar revisar, actualizar o eliminar su información personal, complete y envíe una solicitud de acceso de sujeto de datos.</p>
           </section>
           <section> 
-            <h2 className="text-xl font-bold mb-3 text-purple-800">17. ¿CÓMO PUEDE ELIMINAR SUS DATOS DE META?</h2>
+            <h2 className="text-xl font-bold mb-3 text-purple-800">18. ¿CÓMO PUEDE ELIMINAR SUS DATOS DE META?</h2>
             <p className="mb-4">El usuario podrá eliminar sus datos de Meta relacionados accediendo a su perfil y haciendo click en el botón "ELIMINAR MIS DATOS"</p>
           </section>
         </div>

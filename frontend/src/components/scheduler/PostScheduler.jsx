@@ -8,6 +8,7 @@ import EmojiPicker from 'emoji-picker-react';
 import SocialPlatformSelector from './SocialPlatformSelector';
 import { AiWriterDialog } from './dialogs/AiWriterDialog';
 import Platform from './platform/Platform';
+import { API_BASE_URL } from '../config_url.js';
 import NotificationCard from './NotificationCard';
 import AccountSelect from './platform/AccountSelect';
 import { useTranslation } from 'react-i18next';
@@ -294,7 +295,7 @@ const PostScheduler = ({
 
   const checkUploadStatus = async (taskId) => {
     try {
-              const response = await fetch(`https://app.postwand.io/api/upload-status/${taskId}`, {
+              const response = await fetch(`${API_BASE_URL}/api/upload-status/${taskId}`, {
         credentials: 'include'
       });
       
@@ -473,7 +474,7 @@ const PostScheduler = ({
     console.log("Submitting post with image:", post.image);
  
     try {
-        const response = await fetch(`https://app.postwand.io/api/schedule`, {
+        const response = await fetch(`${API_BASE_URL}/api/schedule`, {
         method: 'POST',
         credentials: 'include',
         body: formData
@@ -555,7 +556,7 @@ const PostScheduler = ({
     // Create polling interval
     const interval = setInterval(async () => {
       try {
-        const response = await fetch(`https://app.postwand.io/api/task/${taskId}`, {
+        const response = await fetch(`${API_BASE_URL}/api/task/${taskId}`, {
           credentials: 'include'
         });
         
@@ -646,7 +647,7 @@ const PostScheduler = ({
   const handleGeneratePost = async () => {
     setIsGeneratingPost(true);
     try {
-          const response = await fetch(`https://app.postwand.io/api/generate-posts`, {
+          const response = await fetch(`${API_BASE_URL}/api/generate-posts`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -741,7 +742,7 @@ const PostScheduler = ({
     }
     
     try {
-          const response = await fetch(`https://app.postwand.io/api/chat/action`, {
+          const response = await fetch(`${API_BASE_URL}/api/chat/action`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',

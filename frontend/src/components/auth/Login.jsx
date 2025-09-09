@@ -3,6 +3,7 @@ import { Mail, Lock, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import PostwandLogoColor from '/images/postwand_logo_color.png';
+import { API_BASE_URL } from '../config_url.js';
 
 const Login = ({ onLogin }) => {
   const { t } = useTranslation();
@@ -49,7 +50,7 @@ const Login = ({ onLogin }) => {
     setIsLoading(true);
 
     try {
-      const result = await fetch(`https://app.postwand.io/api/auth/google-sign-in`, {
+      const result = await fetch(`${API_BASE_URL}/api/auth/google-sign-in`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -109,7 +110,7 @@ const Login = ({ onLogin }) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`https://app.postwand.io/api/auth/login`, {
+      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

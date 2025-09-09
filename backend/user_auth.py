@@ -393,7 +393,19 @@ def google_sign_in():
         })
         
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        print(f"Google Sign-In Error: {str(e)}")
+        print(f"Error type: {type(e).__name__}")
+        import traceback
+        print(f"Traceback: {traceback.format_exc()}")
+        
+        # Return more specific error messages based on the error type
+        error_message = str(e)
+        if "Invalid token" in error_message or "JWT" in error_message:
+            return jsonify({"error": "Invalid Google token. Please try signing in again."}), 400
+        elif "Network" in error_message or "Connection" in error_message:
+            return jsonify({"error": "Network error. Please check your connection and try again."}), 500
+        else:
+            return jsonify({"error": "Authentication failed. Please try again."}), 500
 
 def logout():
     if request.method == 'OPTIONS':

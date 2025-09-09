@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Routes, Route, useLocation, useSearchParams, useNavigate, Outlet, Navigate } from "react-router-dom";
+import { API_BASE_URL } from './components/config_url.js';
 import Login from "./components/auth/Login";
 import FacebookAuth from "./components/auth/FacebookAuth";
 import PostCreator from "./components/scheduler/PostCreator"; 
@@ -143,7 +144,7 @@ function App() {
   const fetchAndUpdateAuthStatus = async () => {
     setIsSocialLoading(true);
     try {
-      const response = await fetch(`https://app.postwand.io/api/auth/status`, {
+      const response = await fetch(`${API_BASE_URL}/api/auth/status`, {
         credentials: 'include'
       });
       
@@ -275,7 +276,7 @@ function App() {
       console.log('After clear - localStorage keys:', Object.keys(localStorage));
       
       // Then call the logout endpoint
-      const response = await fetch(`https://app.postwand.io/api/auth/logout`, {
+      const response = await fetch(`${API_BASE_URL}/api/auth/logout`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -421,7 +422,7 @@ function App() {
   // Replace the fetchClientSecret function with this improved version
   const fetchClientSecret = async () => {
     try {
-      const response = await fetch('https://app.postwand.io/api/create-checkout-session', {
+      const response = await fetch(`${API_BASE_URL}/api/create-checkout-session`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -771,7 +772,7 @@ function CheckoutReturn() {
       return;
     }
 
-    fetch(`https://app.postwand.io/api/session-status?session_id=${sessionId}`, {
+    fetch(`${API_BASE_URL}/api/session-status?session_id=${sessionId}`, {
       credentials: 'include'
     })
       .then((res) => res.json())

@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { ArrowUp, Upload, Image as ImageIcon, Loader2, ArrowRight, Pencil, Wand2, Plus, Image, Palette} from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../config_url.js';
 import { IoPricetagsOutline } from "react-icons/io5";
 
 const CHAT_MODES = {
@@ -124,7 +125,7 @@ export const CreateImages = () => {
 
   const loadChatSessions = async () => {
     try {
-      const response = await fetch('https://app.postwand.io/api/chat-images', { credentials: 'include' });
+      const response = await fetch(`${API_BASE_URL}/api/chat-images`, { credentials: 'include' });
       const data = await response.json();
       
       if (data.chats) {
@@ -145,7 +146,7 @@ export const CreateImages = () => {
     setShowModeSelector(false);
     setShowChatHistory(false);
     try {
-      const response = await fetch(`https://app.postwand.io/api/chat-images/${chatId}`, { credentials: 'include' });
+      const response = await fetch(`${API_BASE_URL}/api/chat-images/${chatId}`, { credentials: 'include' });
       const data = await response.json();
       
       if(data.chat_id) {
@@ -201,7 +202,7 @@ export const CreateImages = () => {
         reader.onload = async (event) => {
           const dataUrl = event.target.result;
           
-          const response = await fetch('https://app.postwand.io/api/save-chat-image', {
+          const response = await fetch(`${API_BASE_URL}/api/save-chat-image`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
@@ -238,7 +239,7 @@ export const CreateImages = () => {
     await new Promise(resolve => setTimeout(resolve, 100));
     
     try {
-      const response = await fetch('https://app.postwand.io/api/generate-image-openai', {
+      const response = await fetch(`${API_BASE_URL}/api/generate-image-openai`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -297,7 +298,7 @@ export const CreateImages = () => {
       formData.append('prompt', input);
       formData.append('chat_id', chatId);
 
-        const response = await fetch('https://app.postwand.io/api/edit-image', {
+        const response = await fetch(`${API_BASE_URL}/api/edit-image`, {
         method: 'POST',
         credentials: 'include',
         body: formData

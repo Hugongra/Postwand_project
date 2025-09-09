@@ -1,5 +1,6 @@
 import { Plus, Globe, X, ArrowLeft, Ellipsis, Trash2 } from "lucide-react";
 import { useState, useEffect } from "react";
+import { API_BASE_URL } from '../config_url.js';
 
 import FacebookAuth from '../auth/FacebookAuth';
 import Brand from './Brand'; // Import the Brand component
@@ -75,7 +76,7 @@ const BrandStyle = ({ facebookData, instagramData, threadsData }) => {
     const fetchAvailableBrands = async () => {
         try {
             setLoadingBrands(true);
-                    const response = await fetch('https://app.postwand.io/api/brands', {
+                    const response = await fetch(`${API_BASE_URL}/api/brands`, {
                 method: 'GET',
                 credentials: 'include',
             });
@@ -173,7 +174,7 @@ const BrandStyle = ({ facebookData, instagramData, threadsData }) => {
         try {
             setLoadingStep("Extracting logos and images...");
             
-            const response = await fetch('https://app.postwand.io/api/extract-brand', {
+            const response = await fetch(`${API_BASE_URL}/api/extract-brand`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -246,7 +247,7 @@ const BrandStyle = ({ facebookData, instagramData, threadsData }) => {
     const handleDeleteBrand = async (brandId) => {
         try {
             setLoadingBrands(true);
-            const response = await fetch(`https://localhost:5001/api/brands/${brandId}`, {
+            const response = await fetch(`${API_BASE_URL}/api/brands/${brandId}`, {
                 method: 'DELETE',
                 credentials: 'include',
             });

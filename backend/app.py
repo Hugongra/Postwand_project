@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, session, send_from_directory
+from flask import Flask, request, jsonify, session, send_from_directory, make_response
 from flask_cors import CORS
 from datetime import datetime, timezone, timedelta
 import requests
@@ -122,17 +122,18 @@ app.config.update(
 )
 
 
-# Simple localhost CORS configuration
+# CORS configuration for production
 CORS(app, 
      supports_credentials=True,
      origins=[
-         "https://localhost:5173",           # For Google Auth
-         "https://tiktok-dev.local:5173",     # For TikTok Auth
-         "https://app.postwand.io"
+         #"https://localhost:5173",           # For local development
+         #"https://tiktok-dev.local:5173",     # For TikTok Auth
+         "https://app.postwand.io",          # Production frontend
+         "https://accounts.google.com"       # Allow Google OAuth popup
      ],
-     allow_headers=["Content-Type", "Authorization", "X-CSRFToken"],
+     allow_headers=["Content-Type", "Authorization", "X-CSRFToken", "X-Requested-With"],
      expose_headers=["Content-Type", "X-CSRFToken"],
-     methods=['GET', 'POST', 'OPTIONS', 'DELETE'],
+     methods=['GET', 'POST', 'OPTIONS', 'DELETE', 'PUT', 'PATCH'],
      max_age=600)
 
 
@@ -141,6 +142,14 @@ CORS(app,
 def make_session_permanent():
     session.permanent = True  # This makes the session use PERMANENT_SESSION_LIFETIME
 
+# Add COOP headers to allow Google OAuth popups
+@app.after_request
+def add_coop_headers(response):
+    # Allow same-origin popups for Google OAuth
+    response.headers['Cross-Origin-Opener-Policy'] = 'same-origin-allow-popups'
+    # Also set COEP to allow cross-origin resources
+    response.headers['Cross-Origin-Embedder-Policy'] = 'unsafe-none'
+    return response
 
 APP_URL = ""
 
@@ -210,8 +219,6 @@ def api_logout():
 
 @app.route(f'{APP_URL}/auth/google-sign-in', methods=['POST', 'OPTIONS'])
 def api_google_sign_in():
-    if request.method == 'OPTIONS':
-        return '', 204
     return google_sign_in()
 
 

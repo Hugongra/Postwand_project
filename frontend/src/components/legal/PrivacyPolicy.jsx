@@ -62,6 +62,7 @@ const PrivacyPolicy = () => {
           <li>WHAT ARE YOUR PRIVACY RIGHTS?</li>
           <li>CONTROLS FOR DO-NOT-TRACK FEATURES</li>
           <li>DO UNITED STATES RESIDENTS HAVE SPECIFIC PRIVACY RIGHTS?</li>
+          <li>GOOGLE DATA ACCESS AND USAGE</li>
           <li>DO WE MAKE UPDATES TO THIS NOTICE?</li>
           <li>HOW CAN YOU CONTACT US ABOUT THIS NOTICE?</li>
           <li>HOW CAN YOU REVIEW, UPDATE, OR DELETE THE DATA WE COLLECT FROM YOU?</li>
@@ -172,12 +173,74 @@ const PrivacyPolicy = () => {
           </section>
           
           <section>
-            <h2 className="text-xl font-bold mb-3 text-purple-800">14. DO WE MAKE UPDATES TO THIS NOTICE?</h2>
+            <h2 className="text-xl font-bold mb-3 text-purple-800">14. GOOGLE DATA ACCESS AND USAGE</h2>
+            
+            <h3 className="text-lg font-semibold mb-2 text-purple-700">What Google User Data We Access</h3>
+            <p className="mb-3">Our application accesses the following Google user data through Google APIs:</p>
+            <ul className="list-disc pl-6 mb-4 space-y-1">
+              <li>Basic profile information (name, email address, profile picture)</li>
+              <li>Google account authentication credentials</li>
+              <li>YouTube channel information and metadata</li>
+              <li>YouTube upload permissions and capabilities</li>
+            </ul>
+            
+            <h3 className="text-lg font-semibold mb-2 text-purple-700">How We Use Google User Data</h3>
+            <p className="mb-3">We use Google user data exclusively for the following purposes:</p>
+            <ul className="list-disc pl-6 mb-3 space-y-1">
+              <li><strong>Authentication:</strong> To provide secure login functionality and verify user identity</li>
+              <li><strong>YouTube Integration:</strong> To enable users to upload and manage content on their YouTube channels through our platform</li>
+              <li><strong>Account Management:</strong> To maintain user accounts and provide personalized service experiences</li>
+            </ul>
+            <p className="mb-4">We do not use Google user data for advertising, marketing to third parties, or any purposes other than those explicitly stated above.</p>
+            
+            <h3 className="text-lg font-semibold mb-2 text-purple-700">Data Sharing and Third-Party Disclosure</h3>
+            <p className="mb-3">We maintain strict control over Google user data and do not share it with third parties, except in the following limited circumstances:</p>
+            <ul className="list-disc pl-6 mb-3 space-y-1">
+              <li><strong>Legal Requirements:</strong> When required by law, court order, or government regulation</li>
+              <li><strong>User Consent:</strong> With explicit user authorization for specific integrations or features</li>
+              <li><strong>Service Providers:</strong> With trusted service providers who assist in our operations under strict confidentiality agreements and who are prohibited from using the data for any other purpose</li>
+            </ul>
+            <p className="mb-4">We do not sell, rent, lease, or otherwise commercialize Google user data under any circumstances.</p>
+            
+            <h3 className="text-lg font-semibold mb-2 text-purple-700">Data Protection and Security Measures</h3>
+            <p className="mb-3">We implement comprehensive security measures to protect Google user data:</p>
+            <ul className="list-disc pl-6 mb-4 space-y-1">
+              <li><strong>Encryption:</strong> All data transmission is protected using SSL/TLS encryption</li>
+              <li><strong>Secure Infrastructure:</strong> Data is stored on secure servers with multi-layered access controls</li>
+              <li><strong>Access Limitation:</strong> Access to Google user data is restricted to authorized personnel on a need-to-know basis</li>
+              <li><strong>Regular Security Audits:</strong> We conduct regular security assessments and updates to maintain data protection standards</li>
+              <li><strong>Authentication Security:</strong> Google OAuth tokens are securely stored and regularly refreshed according to best practices</li>
+              <li><strong>Monitoring:</strong> Continuous monitoring for unauthorized access attempts and security threats</li>
+            </ul>
+            
+            <h3 className="text-lg font-semibold mb-2 text-purple-700">Data Retention and Deletion</h3>
+            <p className="mb-3">Our data retention practices for Google user data:</p>
+            <ul className="list-disc pl-6 mb-4 space-y-1">
+              <li><strong>Retention Period:</strong> We retain Google user data only for as long as necessary to provide our services or as required by law</li>
+              <li><strong>User Control:</strong> Users can revoke access to their Google data at any time through their Google Account settings or by contacting us directly</li>
+              <li><strong>Account Deletion:</strong> When a user deletes their account, all associated Google user data is permanently removed from our systems within 30 days</li>
+              <li><strong>Automatic Cleanup:</strong> Inactive accounts and associated Google data are automatically reviewed and may be deleted after 24 months of inactivity</li>
+              <li><strong>Data Deletion Requests:</strong> Users can request immediate deletion of their Google user data by contacting our support team</li>
+            </ul>
+            
+            <h3 className="text-lg font-semibold mb-2 text-purple-700">User Rights and Control</h3>
+            <p className="mb-3">Users maintain full control over their Google data:</p>
+            <ul className="list-disc pl-6 mb-4 space-y-1">
+              <li><strong>Access:</strong> Users can request access to their stored Google data at any time</li>
+              <li><strong>Correction:</strong> Users can request corrections to inaccurate data</li>
+              <li><strong>Deletion:</strong> Users can request deletion of their data</li>
+              <li><strong>Portability:</strong> Users can request a copy of their data in a portable format</li>
+              <li><strong>Revocation:</strong> Users can revoke our access to their Google account at any time through Google's security settings</li>
+            </ul>
+          </section>
+          
+          <section>
+            <h2 className="text-xl font-bold mb-3 text-purple-800">15. DO WE MAKE UPDATES TO THIS NOTICE?</h2>
             <p className="mb-4">Yes, we will update this notice as necessary to stay compliant with relevant laws.</p>
           </section>
           
           <section>
-            <h2 className="text-xl font-bold mb-3 text-purple-800">15. HOW CAN YOU CONTACT US ABOUT THIS NOTICE?</h2>
+            <h2 className="text-xl font-bold mb-3 text-purple-800">16. HOW CAN YOU CONTACT US ABOUT THIS NOTICE?</h2>
             <p className="mb-3">If you have questions or comments about this notice, you may email us at <a href="mailto:albert@postwand.io" className="text-purple-600 hover:underline">albert@postwand.io</a> or contact us by post at:</p>
             <div className="mb-4 pl-4 border-l-2 border-purple-200">
               <p>POSTWAND LLC</p>
@@ -188,11 +251,11 @@ const PrivacyPolicy = () => {
           </section>
           
           <section>
-            <h2 className="text-xl font-bold mb-3 text-purple-800">16. HOW CAN YOU REVIEW, UPDATE, OR DELETE THE DATA WE COLLECT FROM YOU?</h2>
+            <h2 className="text-xl font-bold mb-3 text-purple-800">17. HOW CAN YOU REVIEW, UPDATE, OR DELETE THE DATA WE COLLECT FROM YOU?</h2>
             <p className="mb-4">Based on the applicable laws of your country or state of residence in the US, you may have the right to request access to, update, or delete your personal information. To request to review, update, or delete your personal information, please fill out and submit a data subject access request.</p>
           </section>
           <section>
-            <h2 className="text-xl font-bold mb-3 text-purple-800">17. DELETION OF META RELATED DATA?</h2>
+            <h2 className="text-xl font-bold mb-3 text-purple-800">18. DELETION OF META RELATED DATA?</h2>
             <p className="mb-4">The user will be able to delete their meta related data by going to the profiñe and clicking on the "DELELTE MY DATA" button</p>
           </section>
         </div>

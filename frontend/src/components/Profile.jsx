@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { Globe } from 'lucide-react';
 import { BarChart3 } from 'lucide-react';
 import TokenUsage from './TokenUsage';
+import { API_BASE_URL } from './config_url.js';
 // Load Stripe outside of a component's render to avoid recreating it on each render
 const stripePromise = loadStripe('your_stripe_public_key'); // Replace with your actual key
 
@@ -32,7 +33,7 @@ const PaymentMethodForm = ({ onSuccess }) => {
     
     try {
       // Create a setup intent
-      const setupResponse = await fetch('https://app.postwand.io/api/create-setup-intent', {
+      const setupResponse = await fetch(`${API_BASE_URL}/api/create-setup-intent`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include'
@@ -57,7 +58,7 @@ const PaymentMethodForm = ({ onSuccess }) => {
       }
       
       // Update payment method on server
-      const updateResponse = await fetch('https://app.postwand.io/api/update-payment-method', {
+      const updateResponse = await fetch(`${API_BASE_URL}/api/update-payment-method`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -244,7 +245,7 @@ export const Profile = ({ user }) => {
     setIsLoadingSubscription(true);
     
     try {
-      const response = await fetch('https://app.postwand.io/api/subscription/status', {
+      const response = await fetch(`${API_BASE_URL}/api/subscription/status`, {
         credentials: 'include'
       });
       
@@ -265,7 +266,7 @@ export const Profile = ({ user }) => {
     setIsLoadingSubscription(true);
     
     try {
-      const response = await fetch('https://app.postwand.io/api/payment-methods', {
+      const response = await fetch(`${API_BASE_URL}/api/payment-methods`, {
         credentials: 'include'
       });
       
@@ -286,7 +287,7 @@ export const Profile = ({ user }) => {
     setIsLoadingSubscription(true);
     
     try {
-      const response = await fetch('https://app.postwand.io/api/billing-history', {
+      const response = await fetch(`${API_BASE_URL}/api/billing-history`, {
         credentials: 'include'
       });
       
@@ -329,7 +330,7 @@ export const Profile = ({ user }) => {
     setError('');
     
     try {
-      const response = await fetch('https://app.postwand.io/api/subscription/cancel', {
+      const response = await fetch(`${API_BASE_URL}/api/subscription/cancel`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include'
@@ -358,7 +359,7 @@ export const Profile = ({ user }) => {
     setError('');
     
     try {
-      const response = await fetch('https://app.postwand.io/api/subscription/reactivate', {
+      const response = await fetch(`${API_BASE_URL}/api/subscription/reactivate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include'
@@ -389,7 +390,7 @@ export const Profile = ({ user }) => {
     setSuccess('');
     
     try {
-      const response = await fetch('https://app.postwand.io/api/user/update-profile', {
+      const response = await fetch(`${API_BASE_URL}/api/user/update-profile`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -427,7 +428,7 @@ export const Profile = ({ user }) => {
     setSuccess('');
     
     try {
-      const response = await fetch('https://app.postwand.io/api/user/change-password', {
+      const response = await fetch(`${API_BASE_URL}/api/user/change-password`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -467,7 +468,7 @@ export const Profile = ({ user }) => {
     setSuccess('');
     
     try {
-      const response = await fetch('https://app.postwand.io/api/user/delete-data', {
+      const response = await fetch(`${API_BASE_URL}/api/user/delete-data`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -507,7 +508,7 @@ export const Profile = ({ user }) => {
       localStorage.setItem('userLanguage', newLanguage);
       
       // Update language preference on server
-      const response = await fetch('https://app.postwand.io/api/user/update-language', {
+      const response = await fetch(`${API_BASE_URL}/api/user/update-language`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

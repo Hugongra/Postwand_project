@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { API_BASE_URL } from '../config_url.js';
 import { Send, X, MessageCircle, ArrowUp, Loader2 } from 'lucide-react';
 import { useTranslations } from '../../hooks/useTranslations';
 
@@ -215,7 +216,7 @@ const ChatComponent = ({ isOpen, onClose, whiteboardName }) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`https://app.postwand.io/api/viral-chat`, {
+      const response = await fetch(`${API_BASE_URL}/api/viral-chat`, {
         method: 'POST',
         headers: {  
           'Content-Type': 'application/json',

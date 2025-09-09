@@ -1,6 +1,7 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
+import { API_BASE_URL } from './components/config_url.js';
 
 // Check browser language
 const browserLang = navigator.language || navigator.userLanguage;
@@ -72,7 +73,7 @@ const loadTranslations = async () => {
     // COMMENTED OUT - Check if user is logged in and has a language preference
     /*
     try {
-      const authResponse = await fetch('https://app.postwand.io/api/auth/status', {
+      const authResponse = await fetch(`${API_BASE_URL}/api/auth/status`, {
         credentials: 'include'
       });
       

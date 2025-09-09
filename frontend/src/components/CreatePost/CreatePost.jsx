@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslations } from '../../hooks/useTranslations';
 import { SiOpenai } from "react-icons/si";
 import fluxLogo from '/images/flux_logo.svg';
+import { API_BASE_URL } from '../config_url.js';
 
 const CHAT_MODES = {
   GENERATE: 'generate',
@@ -93,7 +94,7 @@ export const CreatePost = () => {
 
   const loadChatSessions = async () => {
     try {
-      const response = await fetch('https://app.postwand.io/api/chat-images', { credentials: 'include' });
+      const response = await fetch(`${API_BASE_URL}/api/chat-images`, { credentials: 'include' });
       const data = await response.json();
       
       if (data.chats) {
@@ -114,7 +115,7 @@ export const CreatePost = () => {
     setShowModeSelector(false);
     setShowChatHistory(false);
     try {
-      const response = await fetch(`https://app.postwand.io/api/chat-images/${chatId}`, { credentials: 'include' });
+      const response = await fetch(`${API_BASE_URL}/api/chat-images/${chatId}`, { credentials: 'include' });
       const data = await response.json();
       
       if(data.chat_id) {
@@ -170,7 +171,7 @@ export const CreatePost = () => {
         reader.onload = async (event) => {
           const dataUrl = event.target.result;
           
-          const response = await fetch('https://app.postwand.io/api/save-chat-image', {
+          const response = await fetch(`${API_BASE_URL}/api/save-chat-image`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
@@ -207,7 +208,7 @@ export const CreatePost = () => {
     await new Promise(resolve => setTimeout(resolve, 100));
     
     try {
-      const response = await fetch('https://app.postwand.io/api/generate-image-chat', {
+      const response = await fetch(`${API_BASE_URL}/api/generate-image-chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -243,7 +244,7 @@ export const CreatePost = () => {
 
   const handleSaveImage = async (image_url) => {
     try {
-      const response = await fetch('https://app.postwand.io/api/save-chat-image-library', {
+      const response = await fetch(`${API_BASE_URL}/api/save-chat-image-library`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -281,7 +282,7 @@ export const CreatePost = () => {
 
         formData.append('chat_id', chatId);
       
-        const response = await fetch('https://app.postwand.io/api/remove-background', {
+        const response = await fetch(`${API_BASE_URL}/api/remove-background`, {
           method: 'POST',
           credentials: 'include',
           body: formData
@@ -331,7 +332,7 @@ export const CreatePost = () => {
       formData.append('chat_id', chatId);
       formData.append('model', chatModel);
 
-      const response = await fetch('https://app.postwand.io/api/edit-image', {
+      const response = await fetch(`${API_BASE_URL}/api/edit-image`, {
         method: 'POST',
         credentials: 'include',
         body: formData

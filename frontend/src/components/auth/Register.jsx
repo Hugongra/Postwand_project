@@ -4,6 +4,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import VerifyCode from './VerifyCode';
 import { useTranslation } from 'react-i18next';
 import PostwandLogoColor from '/images/postwand_logo_color.png';
+import { API_BASE_URL } from '../config_url.js';
 
 const Register = ({ onLogin }) => {
   const { t } = useTranslation();
@@ -65,7 +66,7 @@ const Register = ({ onLogin }) => {
     setIsLoading(true);
 
     try {
-      const result = await fetch(`https://app.postwand.io/api/auth/google-sign-in`, {
+      const result = await fetch(`${API_BASE_URL}/api/auth/google-sign-in`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -130,7 +131,7 @@ const Register = ({ onLogin }) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`https://app.postwand.io/api/auth/register`, {
+      const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -152,7 +153,7 @@ const Register = ({ onLogin }) => {
 
       // Send verification code after successful registration
       try {
-        await fetch(`https://app.postwand.io/api/send-verification-code`, {
+        await fetch(`${API_BASE_URL}/api/send-verification-code`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -184,7 +185,7 @@ const Register = ({ onLogin }) => {
     setIsLoading(true);
     
     try {
-      const response = await fetch(`https://app.postwand.io/api/auth/login`, {
+      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

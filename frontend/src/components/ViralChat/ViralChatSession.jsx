@@ -3,6 +3,7 @@ import { X, MessageCircle, Save, Upload, Trash2, Share2, List, Plus, Edit, Copy 
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import ChatComponent from './ChatComponent';
 import { ArrowLeft } from 'lucide-react';
+import { API_BASE_URL } from '../config_url.js';
 import { useTranslations } from '../../hooks/useTranslations';
 
 export default function DraggableWhiteboard({returnToAiStudio}) {
@@ -56,7 +57,7 @@ export default function DraggableWhiteboard({returnToAiStudio}) {
   // Fetch whiteboards from backend
   const fetchWhiteboards = async () => {
     try {
-      const response = await fetch('https://app.postwand.io/api/whiteboards', {
+      const response = await fetch(`${API_BASE_URL}/api/whiteboards`, {
         method: 'GET',
         credentials: 'include',
         headers: {
@@ -80,7 +81,7 @@ export default function DraggableWhiteboard({returnToAiStudio}) {
   const loadWhiteboardFromServer = async (id) => {
     const actualLoad = async () => {
       try {
-        const response = await fetch(`https://app.postwand.io/api/whiteboards/${id}`, {
+        const response = await fetch(`${API_BASE_URL}/api/whiteboards/${id}`, {
           method: 'GET',
           credentials: 'include',
           headers: {
@@ -197,7 +198,7 @@ export default function DraggableWhiteboard({returnToAiStudio}) {
         payload.id = currentWhiteboardId;
       }
       
-      const response = await fetch('https://app.postwand.io/api/whiteboards', {
+      const response = await fetch(`${API_BASE_URL}/api/whiteboards`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -255,7 +256,7 @@ export default function DraggableWhiteboard({returnToAiStudio}) {
     }
     
     try {
-      const response = await fetch(`https://app.postwand.io/api/whiteboards/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/whiteboards/${id}`, {
         method: 'DELETE',
         credentials: 'include',
         headers: {
@@ -303,7 +304,7 @@ export default function DraggableWhiteboard({returnToAiStudio}) {
         payload.shared_with_email = shareEmail;
       }
       
-      const response = await fetch(`https://app.postwand.io/api/whiteboards/${currentWhiteboardId}/share`, {
+      const response = await fetch(`${API_BASE_URL}/api/whiteboards/${currentWhiteboardId}/share`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -616,7 +617,7 @@ export default function DraggableWhiteboard({returnToAiStudio}) {
         showNotification('Transcribing video... This may take a moment.', 'info');
         transcribingVideosRef.current.add(elementId);
         setTranscribingVideos(new Set(transcribingVideosRef.current));
-        const response = await fetch('https://app.postwand.io/api/transcript-video', {
+        const response = await fetch(`${API_BASE_URL}/api/transcript-video`, {
           method: 'POST',
           credentials: 'include',
           headers: {
@@ -959,7 +960,7 @@ export default function DraggableWhiteboard({returnToAiStudio}) {
     
 
       // Send to backend
-      const response = await fetch('https://app.postwand.io/api/brain', {
+      const response = await fetch(`${API_BASE_URL}/api/brain`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
