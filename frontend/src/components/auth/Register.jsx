@@ -31,40 +31,31 @@ const Register = ({ onLogin }) => {
   }, [location]);
 
   useEffect(() => {
-    // Load Google One Tap script
+    // Load Google Sign-In script
     const script = document.createElement('script');
     script.src = 'https://accounts.google.com/gsi/client';
     script.async = true;
-    script.onload = initializeGoogleOneTap;
+    script.onload = initializeGoogleSignIn;
     document.body.appendChild(script);
 
     return () => {
       if (document.body.contains(script)) {
         document.body.removeChild(script);
       }
-      // Clean up global callback
-      if (window.handleSignUpWithGoogle) {
-        delete window.handleSignUpWithGoogle;
-      }
     };
   }, []);
 
-  const initializeGoogleOneTap = () => {
+  const initializeGoogleSignIn = () => {
     if (window.google) {
-      // Make callback globally accessible before initializing
-      window.handleSignUpWithGoogle = handleSignUpWithGoogle;
-      
       window.google.accounts.id.initialize({
         client_id: '571535075302-87ga0u6mdta81cvbif83cul5834sg8fv.apps.googleusercontent.com',
-        callback: handleSignUpWithGoogle, // Use direct function reference
-        ux_mode: 'popup',                 // Use popup mode
-        use_fedcm_for_prompt: false,      // Disable FedCM temporarily to avoid issues
+        callback: handleSignUpWithGoogle,
+        ux_mode: 'popup',
         auto_select: false,
-        cancel_on_tap_outside: false,
-        context: 'signup'
+        cancel_on_tap_outside: false
       });
 
-      // Render the button
+      // Render the sign-up button
       window.google.accounts.id.renderButton(
         document.getElementById('google-signup-button'),
         {
