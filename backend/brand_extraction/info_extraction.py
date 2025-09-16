@@ -138,6 +138,12 @@ class LLMBrandAnalyzer:
         5. brand_character: Array of 2-4 keyword strings (e.g., ["Innovative", "Supportive", "Empowering"])
         6. language_style: Array of 3-5 keyword strings (e.g., ["Direct", "Conversational", "Informal", "Motivational"])
         7. company_description: String providing a comprehensive paragraph describing what the company does, their mission, values, and overall brand identity (3-4 sentences)
+        8. product_features: Object with these exact keys:
+           - "main_products_services": array of strings (e.g., ["AI Content Creation", "Social Media Management", "Brand Analytics"])
+           - "key_features": array of strings (e.g., ["Real-time collaboration", "AI-powered suggestions", "Multi-platform publishing"])
+           - "unique_selling_points": array of strings (e.g., ["No design skills required", "10x faster content creation", "Built-in brand compliance"])
+           - "benefits": array of strings (e.g., ["Save time", "Increase engagement", "Improve brand consistency"])
+           - "pricing_model": string (e.g., "subscription", "freemium", "one-time", "custom", "not-specified")
 
         Example of the exact JSON structure expected:
         {{
@@ -155,10 +161,17 @@ class LLMBrandAnalyzer:
           "tone_emotion": ["Encouraging", "Empowering", "Optimistic", "Supportive"],
           "brand_character": ["Innovative", "Supportive", "Empowering"],
           "language_style": ["Direct", "Conversational", "Informal", "Motivational"],
-          "company_description": "This company provides AI-powered content creation tools designed to help marketers and content creators streamline their workflow. They focus on empowering individuals and small teams to produce high-quality content efficiently. Their mission centers around democratizing content creation through innovative technology while maintaining a supportive, user-friendly approach that values creativity and productivity."
+          "company_description": "This company provides AI-powered content creation tools designed to help marketers and content creators streamline their workflow. They focus on empowering individuals and small teams to produce high-quality content efficiently. Their mission centers around democratizing content creation through innovative technology while maintaining a supportive, user-friendly approach that values creativity and productivity.",
+          "product_features": {{
+            "main_products_services": ["AI Content Creation", "Social Media Management", "Brand Analytics"],
+            "key_features": ["Real-time collaboration", "AI-powered suggestions", "Multi-platform publishing", "Brand template library"],
+            "unique_selling_points": ["No design skills required", "10x faster content creation", "Built-in brand compliance"],
+            "benefits": ["Save time", "Increase engagement", "Improve brand consistency", "Scale content production"],
+            "pricing_model": "freemium"
+          }}
         }}
 
-        IMPORTANT: Always return all fields in exactly this format. Each array should contain separate single keywords.
+        IMPORTANT: Always return all fields in exactly this format. Each array should contain separate single keywords, except for product_features which should contain descriptive phrases. For product_features, extract actual features mentioned on the website or infer them from the content provided.
         """
 
         try:

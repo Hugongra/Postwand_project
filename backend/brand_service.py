@@ -6,12 +6,12 @@ from redis_cache import cache_result
 supabase = get_supabase_client()
 
 @cache_result("user_brand_profile", expiration=7200*10)  # Cache for 10 hours
-def get_brand_profile(brand=None):
+def get_brand_profile(brand_id=None):
     """
     Get the latest brand profile for the current user from Supabase with caching.
     
     Args:
-        user_id: Optional user ID. If not provided, gets from Flask session.
+        brand_id: Optional brand ID. If not provided, gets from Flask session.
         
     Returns:
         dict: Brand profile data or None if no brand profile found
@@ -26,11 +26,16 @@ def get_brand_profile(brand=None):
             return None
             
         # Get the latest brand profile for this user
-        result = supabase.table('brand_profiles').select('*').eq('user_id', user_id).eq('website_url', brand).execute()
+        if brand_id:
+            # Get specific brand by ID
+            result = supabase.table('brand_profiles').select('*').eq('user_id', user_id).eq('id', brand_id).execute()
+        else:
+            # Get the most recent brand profile for the user
+            result = supabase.table('brand_profiles').select('*').eq('user_id', user_id).order('created_at', desc=True).limit(1).execute()
         
         if result.data and len(result.data) > 0:
             brand_profile = result.data[0]
-            print(f"Retrieved brand profile for user {user_id}: {brand_profile.get('website_url', 'Unknown')}")
+            print(f"Retrieved brand profile for user {user_id}: {brand_profile.get('id', 'Unknown')}")
             return brand_profile
         else:
             print(f"No brand profile found for user {user_id}")

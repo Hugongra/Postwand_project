@@ -67,7 +67,7 @@ const Home = () => {
     <div className="w-full h-full m-auto p-2 md:px-0 md:pr-2 bg-primary">
       {/* Hero Banner Section */}
       <div className="grid grid-cols-1 relative w-full h-auto rounded-lg overflow-hidden">
-        <div className="absolute z-5 p-5 space-y-3 max-w-md  h-full flex flex-col justify-end">
+        <div className="absolute z-5 p-5 space-y-3 max-w-md  h-full flex flex-col justify-start md:justify-end">
           <h1 className="text-3xl font-bold text-gray-700 mt-2 md:mt-4 lg:mt-6">
             {t('brands.startNewBrandTitle')}
           </h1>
@@ -85,11 +85,11 @@ const Home = () => {
       </div>
 
       {/* Content Section */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 min-h-[25rem]">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-3 min-h-[25rem]">
         
         {/* AI Content Generation Section */}
         <div className="md:col-span-2 bg-white rounded-lg p-3 md:p-6 flex flex-col">
-          <h2 className="text-2xl font-bold text-gray-700 mb-4">{t('common.create')} {t('social.content')}</h2>
+          <h2 className="text-2xl font-bold text-gray-700 mb-4 text-sm">{t('common.create')} {t('social.content')}</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 flex-grow">
             {/* Generate Ideas */}
             <div 
@@ -135,7 +135,7 @@ const Home = () => {
           </div>
         </div>
         <div className="md:col-span-1 bg-white rounded-lg p-6 h-auto min-h-[20rem]">
-          <h2 className="text-xl font-bold mb-4">{t('social.connectSocialAccount')}</h2>
+          <h2 className="text-xl font-bold mb-4 text-sm">{t('social.connectSocialAccount')}</h2>
           <div className="space-y-1">
             {/* Facebook Connection Row */}
             <button 
@@ -144,7 +144,7 @@ const Home = () => {
             >
               <div className="flex items-center">
                 <img src={FacebookIcon} className="h-5 w-5 flex-shrink-0 mr-3" />
-                <span className="font-medium">{t('social.connectAccount')} {t('social.platforms.facebook')}</span>
+                <span className="font-medium text-sm">{t('social.connectAccount')} {t('social.platforms.facebook')}</span>
               </div>
               <FaChevronRight size={15} className="text-gray-400" />
             </button>
@@ -156,7 +156,7 @@ const Home = () => {
             >
               <div className="flex items-center">
                 <img src={InstagramIcon} className="h-5 w-5 flex-shrink-0 mr-3" />
-                <span className="font-medium">{t('social.connectAccount')} {t('social.platforms.instagram')}</span>
+                <span className="font-medium text-sm">{t('social.connectAccount')} {t('social.platforms.instagram')}</span>
               </div>
               <FaChevronRight size={15} className="text-gray-400" />
             </button>
@@ -168,7 +168,7 @@ const Home = () => {
             >
               <div className="flex items-center">
                 <FaTwitter size={24} style={{ color: '#1DA1F2' }} className="mr-3" />
-                <span className="font-medium">{t('social.connectAccount')} {t('social.platforms.twitter')}</span>
+                <span className="font-medium text-sm">{t('social.connectAccount')} {t('social.platforms.twitter')}</span>
               </div>
               <FaChevronRight size={15} className="text-gray-400" />
             </button>
@@ -180,7 +180,7 @@ const Home = () => {
             >
               <div className="flex items-center">
                 <img src={ThreadsIcon} className="h-5 w-5 flex-shrink-0 mr-3" />
-                <span className="font-medium">{t('social.connectAccount')} Threads</span>
+                <span className="font-medium text-sm">{t('social.connectAccount')} Threads</span>
               </div>
               <FaChevronRight size={15} className="text-gray-400" />
             </button>
@@ -192,7 +192,7 @@ const Home = () => {
             >
               <div className="flex items-center">
                 <img src={LinkedinIcon} className="h-5 w-5 flex-shrink-0 mr-3" />
-                <span className="font-medium">{t('social.connectAccount')} {t('social.platforms.linkedin')}</span>
+                <span className="font-medium text-sm">{t('social.connectAccount')} {t('social.platforms.linkedin')}</span>
               </div>
               <FaChevronRight size={15} className="text-gray-400" />
             </button>
@@ -204,7 +204,7 @@ const Home = () => {
             >
               <div className="flex items-center">
                 <img src={YoutubeIcon} className="h-5 w-5 flex-shrink-0 mr-3" />
-                <span className="font-medium">{t('social.connectAccount')} {t('social.platforms.youtube')}</span> 
+                <span className="font-medium text-sm">{t('social.connectAccount')} {t('social.platforms.youtube')}</span> 
               </div>
               <FaChevronRight size={15} className="text-gray-400" />
             </button>
@@ -216,7 +216,7 @@ const Home = () => {
             >
               <div className="flex items-center">
                   <img src={TiktokIcon} className="h-5 w-5 flex-shrink-0 mr-3" />
-                <span className="font-medium">{t('social.connectAccount')} {t('social.platforms.tiktok')}</span>
+                <span className="font-medium text-sm">{t('social.connectAccount')} {t('social.platforms.tiktok')}</span>
               </div>
               <FaChevronRight size={15} className="text-gray-400" />
             </button>

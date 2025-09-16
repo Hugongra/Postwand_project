@@ -30,6 +30,8 @@ import AIStudio2 from "./components/skeletons/AIStudio2";
 import CreateText from "./components/CreatePost/CreateText";
 import CreatePost from "./components/CreatePost/CreatePost"; 
 import CreateImages from "./components/CreatePost/CreateImages";
+import CreateAd from "./components/AiStudio/CreateAd";
+import AdTypeSelector from "./components/AiStudio/AdTypeSelector";
 import "./App.css";
 import Messages from "./components/messages/Messages";
 import { CardTitle } from "./components/ui/card";
@@ -638,6 +640,8 @@ function App() {
             <Route path="images" element={<CreatePost />} />
             <Route path="text" element={<CreateText />} />
             <Route path="post" element={<CreatePost />} />
+            <Route path="ad-type-selector" element={<AdTypeSelector />} />
+            <Route path="create-ad" element={<CreateAd />} />
           </Route>
           
           <Route path="/social-accounts" element={

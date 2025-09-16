@@ -13,7 +13,7 @@ TIKTOK_UPLOAD_INIT_URL = f"{TIKTOK_API_BASE}/v2/post/publish/inbox/video/init/"
 TIKTOK_VIDEO_UPLOAD_URL = f"{TIKTOK_API_BASE}/v2/post/publish/video/init/"
 TIKTOK_CONTENT_POST_URL = f"{TIKTOK_API_BASE}/v2/post/publish/content/init/"  # For photos
 
-def _upload_video_to_tiktok(content, access_token, video_url, title=None, privacy_level="SELF_ONLY", disable_comment=False, disable_duet=False, disable_stitch=False, auto_add_music=False, brand_content_toggle=False, brand_organic_toggle=False, page_id=None, user_id=None):
+def _upload_video_to_tiktok(content, access_token, video_url, title=None, privacy_level=None, disable_comment=True, disable_duet=True, disable_stitch=True, auto_add_music=False, brand_content_toggle=False, brand_organic_toggle=False, page_id=None, user_id=None):
     """
     Internal function to upload videos to TikTok
     
@@ -83,19 +83,18 @@ def _upload_video_to_tiktok(content, access_token, video_url, title=None, privac
         if not creator_info:
             return False, {"error": "Failed to get creator info. Please check your TikTok authentication."}, None
             
-        # Step 2: Determine valid privacy level
+        # Step 2: Validate privacy level is provided
+        if not privacy_level:
+            return False, {"error": "Privacy level must be specified"}, None
+            
         available_privacy_levels = creator_info.get('privacy_level_options', [])
         logging.info(f"Available privacy levels for this account: {available_privacy_levels}")
         
-        # Use SELF_ONLY if it's available, otherwise use the first available option
-        if 'SELF_ONLY' in available_privacy_levels:
-            actual_privacy_level = 'SELF_ONLY'
-        elif available_privacy_levels:
-            actual_privacy_level = available_privacy_levels[0]
-            logging.warning(f"SELF_ONLY not available, using: {actual_privacy_level}")
-        else:
-            return False, {"error": "No privacy level options available for this account."}, None
+        # Validate provided privacy level is available
+        if privacy_level not in available_privacy_levels:
+            return False, {"error": f"Privacy level '{privacy_level}' not available. Available options: {available_privacy_levels}"}, None
             
+        actual_privacy_level = privacy_level
         logging.info(f"Using privacy level: {actual_privacy_level}")
         
         # Step 3: Download video temporarily
@@ -237,7 +236,7 @@ def _upload_video_to_tiktok(content, access_token, video_url, title=None, privac
         logging.error(f"Unexpected error in TikTok upload: {str(e)}")
         return False, {"error": f"Unexpected error: {str(e)}"}, None
 
-def _post_photos_to_tiktok(content, access_token, image_urls, title=None, description=None, privacy_level="SELF_ONLY", disable_comment=False, auto_add_music=True, brand_content_toggle=False, brand_organic_toggle=False, photo_cover_index=0):
+def _post_photos_to_tiktok(content, access_token, image_urls, title=None, description=None, privacy_level=None, disable_comment=True, auto_add_music=True, brand_content_toggle=False, brand_organic_toggle=False, photo_cover_index=0):
     """
     Internal function to post photos to TikTok
     
@@ -280,19 +279,18 @@ def _post_photos_to_tiktok(content, access_token, image_urls, title=None, descri
         if not creator_info:
             return False, {"error": "Failed to get creator info. Please check your TikTok authentication."}, None
             
-        # Step 3: Determine valid privacy level
+        # Step 3: Validate privacy level is provided
+        if not privacy_level:
+            return False, {"error": "Privacy level must be specified"}, None
+            
         available_privacy_levels = creator_info.get('privacy_level_options', [])
         logging.info(f"Available privacy levels for this account: {available_privacy_levels}")
         
-        # Use SELF_ONLY if it's available, otherwise use the first available option
-        if 'SELF_ONLY' in available_privacy_levels:
-            actual_privacy_level = 'SELF_ONLY'
-        elif available_privacy_levels:
-            actual_privacy_level = available_privacy_levels[0]
-            logging.warning(f"SELF_ONLY not available, using: {actual_privacy_level}")
-        else:
-            return False, {"error": "No privacy level options available for this account."}, None
+        # Validate provided privacy level is available
+        if privacy_level not in available_privacy_levels:
+            return False, {"error": f"Privacy level '{privacy_level}' not available. Available options: {available_privacy_levels}"}, None
             
+        actual_privacy_level = privacy_level
         logging.info(f"Using privacy level: {actual_privacy_level}")
         
         # Step 4: Prepare post data
@@ -382,6 +380,112 @@ def _post_photos_to_tiktok(content, access_token, image_urls, title=None, descri
     except Exception as e:
         logging.error(f"Unexpected error in TikTok photo upload: {str(e)}")
         return False, {"error": f"Unexpected error: {str(e)}"}, None
+
+def get_creator_info_for_ui(account_id, user_id):
+    """
+    Get creator info for UI display with token refresh handling
+    
+    Args:
+        account_id (str): TikTok account ID
+        user_id (str): User ID for database lookup
+        
+    Returns:
+        dict: Response with success status and data or error
+    """
+    try:
+        from database import get_supabase_client
+        import os
+        
+        supabase = get_supabase_client()
+        
+        # Get TikTok account data from database
+        tiktok_accounts = supabase.table('tiktok_accounts').select('*').eq('tiktok_id', account_id).eq('user_id', user_id).execute()
+        
+        if not tiktok_accounts.data:
+            return {'success': False, 'error': 'TikTok account not found'}
+            
+        account = tiktok_accounts.data[0]
+        access_token = account.get('access_token')
+        
+        if not access_token:
+            return {'success': False, 'error': 'No access token available'}
+            
+        # Validate token and refresh if needed
+        if not validate_tiktok_token(access_token):
+            logging.warning("TikTok token is invalid, attempting refresh...")
+            
+            refresh_token = account.get('refresh_token')
+            if not refresh_token:
+                return {'success': False, 'error': 'Token expired. Please re-authenticate.'}
+                
+            # Refresh the token
+            client_key = os.getenv('TIKTOK_CLIENT_KEY')
+            client_secret = os.getenv('TIKTOK_CLIENT_SECRET')
+            
+            new_token_data = refresh_tiktok_token(refresh_token, client_key, client_secret)
+            
+            if new_token_data:
+                access_token = new_token_data['access_token']
+                # Update database
+                supabase.table('tiktok_accounts').update({
+                    'access_token': access_token,
+                    'refresh_token': new_token_data.get('refresh_token', refresh_token)
+                }).eq('id', account['id']).execute()
+                logging.info("TikTok token refreshed successfully")
+            else:
+                return {'success': False, 'error': 'Failed to refresh token. Please re-authenticate.'}
+        
+        # Get creator info with validation
+        creator_info = get_creator_info_with_validation(access_token)
+        
+        if not creator_info:
+            return {'success': False, 'error': 'Failed to get creator info'}
+            
+        # Return formatted response
+        return {
+            'success': True,
+            'data': {
+                'display_name': account.get('display_name', 'TikTok User'),
+                'can_post': creator_info.get('can_post', True),
+                'privacy_level_options': creator_info.get('privacy_level_options', []),
+                'max_video_duration_sec': creator_info.get('max_video_duration_sec', 600),
+                'comment_disabled': creator_info.get('comment_disabled', False),
+                'duet_disabled': creator_info.get('duet_disabled', False),
+                'stitch_disabled': creator_info.get('stitch_disabled', False)
+            }
+        }
+        
+    except Exception as e:
+        logging.error(f"Error in get_creator_info_for_ui: {str(e)}")
+        return {'success': False, 'error': str(e)}
+
+def get_creator_info_with_validation(access_token):
+    """
+    Get creator info and validate posting capabilities
+    
+    Args:
+        access_token (str): The TikTok access token
+        
+    Returns:
+        dict: Creator info with validation results, or None if failed
+    """
+    try:
+        creator_info = get_creator_info(access_token)
+        if not creator_info:
+            return None
+            
+        # Add posting validation
+        can_post = creator_info.get('can_make_more_posts', True)
+        max_video_duration = creator_info.get('max_video_post_duration_sec', 600)
+        
+        return {
+            **creator_info,
+            'can_post': can_post,
+            'max_video_duration_sec': max_video_duration
+        }
+    except Exception as e:
+        logging.error(f"Error getting creator info with validation: {str(e)}")
+        return None
 
 def get_creator_info(access_token):
     """
@@ -508,7 +612,7 @@ def validate_tiktok_token(access_token):
         logging.error(f"Error validating TikTok token: {str(e)}")
         return False
 
-def post_to_tiktok(content, access_token, video_url, title=None, privacy_level="SELF_ONLY", page_id=None, user_id=None, **kwargs):
+def post_to_tiktok(content, access_token, video_url, title=None, privacy_level=None, page_id=None, user_id=None, **kwargs):
     """
     Post a video to TikTok (private visibility for unaudited API clients)
     
@@ -536,7 +640,7 @@ def post_to_tiktok(content, access_token, video_url, title=None, privacy_level="
         **kwargs
     )
 
-def post_to_tiktok_video(content, access_token, video_url, title=None, privacy_level="SELF_ONLY", page_id=None, user_id=None, **kwargs):
+def post_to_tiktok_video(content, access_token, video_url, title=None, tiktok_compliance=None, page_id=None, user_id=None, **kwargs):
     """
     Post a video to TikTok (alias for standard posting)
     
@@ -553,18 +657,32 @@ def post_to_tiktok_video(content, access_token, video_url, title=None, privacy_l
     Returns:
         tuple: (success, result_or_error, result_data)
     """
+    # Extract compliance parameters
+    compliance = tiktok_compliance or {}
+    privacy_level = compliance.get('privacy_level', 'SELF_ONLY')
+    disable_comment = compliance.get('disable_comment', True)
+    disable_duet = compliance.get('disable_duet', True)
+    disable_stitch = compliance.get('disable_stitch', True)
+    brand_content_toggle = compliance.get('brand_content_toggle', False)
+    brand_organic_toggle = compliance.get('brand_organic_toggle', False)
+    
     return post_to_tiktok(
         content=content,
         access_token=access_token,
         video_url=video_url,
         title=title,
         privacy_level=privacy_level,
+        disable_comment=disable_comment,
+        disable_duet=disable_duet,
+        disable_stitch=disable_stitch,
+        brand_content_toggle=brand_content_toggle,
+        brand_organic_toggle=brand_organic_toggle,
         page_id=page_id,
         user_id=user_id,
         **kwargs
     )
 
-def post_to_tiktok_photo(content, access_token, image_urls, title=None, description=None, privacy_level="SELF_ONLY", **kwargs):
+def post_to_tiktok_photo(content, access_token, image_urls, title=None, description=None, privacy_level=None, **kwargs):
     """
     Post photos to TikTok
     

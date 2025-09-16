@@ -17,14 +17,14 @@ export default defineConfig({
   },
   server: {
     host: '0.0.0.0',  // Listen on all interfaces
-    port: 5173,
+    port: 5174,  // Changed port to avoid conflicts
     https: {
       key: fs.readFileSync('../localhost+3-key.pem'),  // Multi-domain certificate key
       cert: fs.readFileSync('../localhost+3.pem'),     // Multi-domain certificate
     },
     proxy: {
       '/api': {
-        target: 'https://localhost:5001',
+        target: 'https://localhost:5001',  // Back to https since we have SSL
         changeOrigin: true,
         secure: false,
       }

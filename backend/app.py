@@ -126,10 +126,10 @@ app.config.update(
 CORS(app, 
      supports_credentials=True,
      origins=[
-         #"https://localhost:5173",           # For local development
-         #"https://tiktok-dev.local:5173",     # For TikTok Auth
-         "https://app.postwand.io",          # Production frontend
-         "https://accounts.google.com"       # Allow Google OAuth popup
+         "https://localhost:5174",           # For local development
+         "https://tiktok-dev.local:5174",     # For TikTok Auth
+         "https://accounts.google.com",      # Allow Google OAuth popup
+         #"https://app.postwand.io",          # Production frontend
      ],
      allow_headers=["Content-Type", "Authorization", "X-CSRFToken", "X-Requested-With"],
      expose_headers=["Content-Type", "X-CSRFToken"],
@@ -145,13 +145,19 @@ def make_session_permanent():
 # Add COOP headers to allow Google OAuth popups
 @app.after_request
 def add_coop_headers(response):
-    # Allow same-origin popups for Google OAuth
-    response.headers['Cross-Origin-Opener-Policy'] = 'same-origin-allow-popups'
-    # Also set COEP to allow cross-origin resources
+    # For localhost development, completely remove COOP to allow Google OAuth popups
+    # For production, use same-origin-allow-popups for better security
+    if request.host.startswith('localhost') or 'localhost' in request.host:
+        # Don't set COOP header at all for localhost - this is most permissive
+        pass
+    else:
+        response.headers['Cross-Origin-Opener-Policy'] = 'same-origin-allow-popups'
+    
+    # Always set COEP to allow cross-origin resources
     response.headers['Cross-Origin-Embedder-Policy'] = 'unsafe-none'
     return response
 
-APP_URL = ""
+APP_URL = "/api"
 
 
 
@@ -219,6 +225,14 @@ def api_logout():
 
 @app.route(f'{APP_URL}/auth/google-sign-in', methods=['POST', 'OPTIONS'])
 def api_google_sign_in():
+    if request.method == 'OPTIONS':
+        return '', 204
+    
+    # Debug logging for Content-Type issue
+    print(f"DEBUG: Content-Type: {request.content_type}")
+    print(f"DEBUG: Headers: {dict(request.headers)}")
+    print(f"DEBUG: Request data: {request.get_data()}")
+    
     return google_sign_in()
 
 
@@ -308,6 +322,30 @@ def tiktok_auth():
 def tiktok_callback():
     from meta_auth.tiktok_auth import handle_tiktok_callback
     return handle_tiktok_callback()
+
+@app.route(f'{APP_URL}/tiktok/creator-info', methods=['POST'])
+@login_required
+def get_tiktok_creator_info():
+    """Get TikTok creator info for validation and UI display"""
+    try:
+        data = request.get_json()
+        account_id = data.get('account_id')
+        user_id = session.get('user_id')
+        
+        if not account_id:
+            return jsonify({'error': 'Account ID is required'}), 400
+            
+        from scheduler.tiktok import get_creator_info_for_ui
+        result = get_creator_info_for_ui(account_id, user_id)
+        
+        if result['success']:
+            return jsonify(result), 200
+        else:
+            return jsonify(result), 400
+        
+    except Exception as e:
+        logging.error(f"Error getting TikTok creator info: {str(e)}")
+        return jsonify({'error': str(e)}), 500
 
 #SCHEDULE POSTS ENDPOINTS
 @app.route(f'{APP_URL}/schedule', methods=['POST'])
@@ -1456,7 +1494,74 @@ def load_image_chat(chat_id):
         return jsonify({'error': str(e)}), 500
 
 # BRAND EXTRACTION ENDPOINTS
-@app.route(f'{APP_URL}/api/extract-brand', methods=['POST'])
+@app.route(f'{APP_URL}/brands', methods=['GET'])
+@login_required
+@subscription_required
+def api_get_brands():
+    """Get all brand profiles for the current user"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'User not authenticated'}), 401
+        
+        # Get all brand profiles for this user
+        result = supabase.table('brand_profiles').select('*').eq('user_id', user_id).order('created_at', desc=True).execute()
+        
+        # Format the response to match what the frontend expects
+        brands = []
+        for brand_profile in result.data:
+            # Extract domain name from website_url for the name
+            website_url = brand_profile.get('website_url', '')
+            try:
+                from urllib.parse import urlparse
+                parsed = urlparse(website_url if website_url.startswith('http') else f'https://{website_url}')
+                domain_name = parsed.hostname.replace('www.', '') if parsed.hostname else website_url
+                clean_name = domain_name.split('.')[0] if '.' in domain_name else domain_name
+                name = clean_name.capitalize()
+            except:
+                name = website_url
+            
+            brands.append({
+                'id': brand_profile['id'],
+                'name': name,
+                'website_url': brand_profile['website_url'],
+                'logo_url': brand_profile.get('logo_url'),
+                'created_at': brand_profile['created_at'],
+                'updated_at': brand_profile['updated_at']
+            })
+        
+        return jsonify({'brands': brands}), 200
+        
+    except Exception as e:
+        print(f"Error getting brands: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route(f'{APP_URL}/brands/<brand_id>', methods=['DELETE'])
+@login_required
+@subscription_required
+def api_delete_brand(brand_id):
+    """Delete a brand profile"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'User not authenticated'}), 401
+        
+        # Check if brand belongs to user and delete it
+        result = supabase.table('brand_profiles').delete(count='exact').eq('id', brand_id).eq('user_id', user_id).execute()
+        
+        if result.count == 0:
+            return jsonify({'error': 'Brand not found or unauthorized'}), 404
+        
+        # Invalidate cache
+        invalidate_brand_cache(user_id)
+        
+        return jsonify({'message': 'Brand deleted successfully'}), 200
+        
+    except Exception as e:
+        print(f"Error deleting brand: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route(f'{APP_URL}/extract-brand', methods=['POST'])
 @login_required
 @subscription_required
 def api_extract_brand():
@@ -1482,8 +1587,7 @@ def api_extract_brand():
         
         # Step 2: Extract colors
         print("Extracting colors...")
-        color_extractor = color_extraction()
-        colors = color_extractor.extract_colors_from_website(
+        colors = color_extraction(
             url=normalized_url,
             logo_url=assets.get('logo'),
             image_urls=assets.get('images', [])
@@ -1505,8 +1609,14 @@ def api_extract_brand():
         
         # Store the brand profile in database
         try:
+            # Extract domain from normalized URL
+            from urllib.parse import urlparse
+            parsed_url = urlparse(normalized_url)
+            domain = parsed_url.netloc.replace('www.', '') if parsed_url.netloc else normalized_url
+            
             brand_profile_data = {
                 'user_id': user_id,
+                'domain': domain,
                 'website_url': normalized_url,
                 'logo_url': assets.get('logo'),
                 'image_urls': assets.get('images', []),
@@ -1516,8 +1626,8 @@ def api_extract_brand():
                 'updated_at': datetime.now(timezone.utc).isoformat()
             }
             
-            # Check if brand profile already exists
-            existing = supabase.table('brand_profiles').select('id').eq('user_id', user_id).eq('website_url', normalized_url).execute()
+            # Check if brand profile already exists (use domain for faster lookup due to index)
+            existing = supabase.table('brand_profiles').select('id').eq('user_id', user_id).eq('domain', domain).execute()
             
             if existing.data:
                 # Update existing profile
@@ -1539,14 +1649,16 @@ def api_extract_brand():
         print(f"Error in brand extraction: {str(e)}")
         return jsonify({'error': f'Brand extraction failed: {str(e)}'}), 500
 
-@app.route(f'{APP_URL}/api/brand-profile', methods=['GET'])
-@app.route(f'{APP_URL}/api/brand-profile/<brand_name>', methods=['GET'])
+@app.route(f'{APP_URL}/brand-profile', methods=['GET'])
+@app.route(f'{APP_URL}/brand-profile/<brand_id>', methods=['GET'])
 @login_required
 @subscription_required  
-def api_get_brand_profile(brand_name=None):
+def api_get_brand_profile(brand_id=None):
     """Get brand profile from database"""
     try:
-        brand_profile = get_cached_brand_profile(brand_name)
+        
+        
+        brand_profile = get_cached_brand_profile(brand_id)
         
         if brand_profile:
             return jsonify({'brand_profile': brand_profile}), 200
@@ -1570,23 +1682,23 @@ if __name__ == '__main__':
     #     debug=True
     # )
     
-    # Simple localhost configuration
-    #app.run(
-    #    host='localhost',  # This works for both domains due to hosts file
-    #    port=5001,
-    #    debug=True,
-    #    ssl_context=(
-    #        '../localhost+3.pem',      # Certificate that covers both localhost and tiktok-dev.local
-    #        '../localhost+3-key.pem'   # Key for the multi-domain certificate
-    #    ),
-    #)
+    # Listen on all interfaces to work with both localhost and tiktok-dev.local
+    app.run(
+        host='0.0.0.0',  # Listen on all interfaces so both localhost and tiktok-dev.local work
+        port=5001,
+        debug=True,
+        ssl_context=(
+           '../localhost+3.pem',      # Certificate that covers both localhost and tiktok-dev.local
+            '../localhost+3-key.pem'   # Key for the multi-domain certificate
+        ),
+    )
 
     #For production, get port from environment variable or use default
-    port = int(os.environ.get('PORT', 5000))
+    #port = int(os.environ.get('PORT', 5000))
     #Listen on all interfaces (0.0.0.0)
     #Don't use SSL context in production - the platform handles HTTPS
     #Disable debug mode
-    app.run(host='0.0.0.0', port=port, debug=False)
+    #app.run(host='0.0.0.0', port=port, debug=False)
 
 
 

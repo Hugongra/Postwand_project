@@ -20,7 +20,7 @@ const LINKEDIN_REDIRECT_URI = import.meta.env.VITE_LINKEDIN_REDIRECT_URI
 const LINKEDIN_APP_ID = import.meta.env.VITE_LINKEDIN_APP_ID
 
 const TIKTOK_APP_ID = import.meta.env.VITE_TIKTOK_APP_ID || "your_tiktok_app_id";
-const TIKTOK_REDIRECT_URI = import.meta.env.VITE_TIKTOK_REDIRECT_URI || "https://app.postwand.io/api/auth/tiktok/callback";
+const TIKTOK_REDIRECT_URI = import.meta.env.VITE_TIKTOK_REDIRECT_URI || "https://tiktok-dev.local:5001/api/auth/tiktok/callback";
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 const YOUTUBE_REDIRECT_URI = import.meta.env.VITE_YOUTUBE_REDIRECT_URI || "https://app.postwand.io/api/auth/youtube";

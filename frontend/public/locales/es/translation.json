@@ -26,6 +26,7 @@
     "share": "Compartir",
     "copy": "Copiar",
     "paste": "Pegar",
+    "remove": "Eliminar",
     "processing": "Procesando...",
     "settings": "Ajustes",
     "unknownError": "Error desconocido",
@@ -292,7 +293,35 @@
     },
     "platformType": "Tipo de plataforma",
     "tone": "Tono",
-    "addLocation": "Añadir ubicación"
+    "addLocation": "Añadir ubicación",
+    "createAd": {
+      "title": "Crear Anuncio",
+      "subtitle": "Genera anuncios profesionales para tus productos y servicios",
+      "formTitle": "Detalles del Anuncio",
+      "adConcept": "Concepto del Anuncio",
+      "adConceptPlaceholder": "Describe el concepto de tu anuncio, audiencia objetivo, mensaje clave y resultado deseado...",
+      "productImage": "Imagen del Producto",
+      "uploadPrompt": "Haz clic para subir o arrastra y suelta la imagen de tu producto",
+      "supportedFormats": "PNG, JPG, JPEG hasta 10MB",
+      "shortcuts": "Plantillas de Anuncios",
+      "shortcutsDesc": "Elige entre plantillas de anuncios prediseñadas para comenzar rápidamente",
+      "photoshoot": "Sesión de Fotos del Producto",
+      "facebookAd": "Anuncio de Facebook",
+      "instagramStory": "Historia de Instagram",
+      "bannerAd": "Anuncio Banner",
+      "videoAd": "Anuncio de Video",
+      "carouselAd": "Anuncio Carrusel",
+      "enterConceptFirst": "Por favor, ingresa un concepto de anuncio primero",
+      "selectType": "Seleccionar Tipo de Anuncio",
+      "selectTypeDesc": "Elige cómo quieres crear tu anuncio",
+      "generateFromImage": "Generar anuncio para tu producto",
+      "generateFromImageDesc": "Sube una imagen del producto y deja que la IA cree anuncios impresionantes con varias plantillas y atajos",
+      "copyFromReference": "Copiar Anuncio de Referencia",
+      "copyFromReferenceDesc": "Sube tu imagen del producto y un anuncio de referencia para crear anuncios con estilos similares",
+      "getStarted": "Comenzar"
+    },
+    "generateAd": "Generar Anuncio",
+    "copyAd": "Copiar Estilo de Anuncio"
   },
   "brands": {
     "startNewBrandTitle": "Crea una nueva identidad de marca",
@@ -717,7 +746,14 @@
     },
     "usage": {
       "title": "Uso de Tokens de API",
-      "description": "Monitorea tu uso de tokens de API para este período de facturación. Tu uso se reinicia al comienzo de cada ciclo de facturación."
+      "description": "Monitorea tu uso de tokens de API para este período de facturación. Tu uso se reinicia al comienzo de cada ciclo de facturación.",
+      "tokenUsage": "Uso de Tokens",
+      "totalUsage": "Uso Total",
+      "tokens": "tokens",
+      "errorTitle": "Error al Cargar el Uso",
+      "nearLimit": "Estás cerca de tu límite de uso",
+      "approachingLimit": "Te estás acercando a tu límite de uso",
+      "resetsMonthly": "El uso se reinicia mensualmente"
     },
     "legal": {
       "title": "Políticas Legales",

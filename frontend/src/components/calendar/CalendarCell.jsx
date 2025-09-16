@@ -5,12 +5,15 @@ import PostPreview from "../scheduler/preview/Postpreview";
 import FacebookIcon from '/SM_icons/facebook.svg';
 import InstagramIcon from '/SM_icons/instagram.svg';
 import ThreadsIcon from '/SM_icons/threads.svg';
+import TiktokIcon from '/SM_icons/tiktok.svg';
+import YoutubeIcon from '/SM_icons/youtube.svg';
+import LinkedinIcon from '/SM_icons/linkedin.svg';
 import { PlusIcon } from 'lucide-react';
 import DateTimePicker from '../scheduler/DateTimePicker';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
-const CalendarCell = ({isToday, viewMode, posts = [], date, onPostDrop, isCompact, isDayView, onDateClick, platformsData = { facebook: { pages: [] }, instagram: { accounts: [] }, threads: { accounts: [] } }, onPostDelete, isMobile = false }) => {
+const CalendarCell = ({isToday, viewMode, posts = [], date, onPostDrop, isCompact, isDayView, onDateClick, platformsData = { facebook: { pages: [] }, instagram: { accounts: [] }, threads: { accounts: [] }, linkedin: { accounts: [] }, youtube: { channels: [] }, tiktok: { accounts: [] } }, onPostDelete, isMobile = false }) => {
   const [selectedPost, setSelectedPost] = useState(null);
   const [hoveredPost, setHoveredPost] = useState(null);
   const [showHoverCard, setShowHoverCard] = useState(false);
@@ -20,7 +23,6 @@ const CalendarCell = ({isToday, viewMode, posts = [], date, onPostDrop, isCompac
   const [hoverDirection, setHoverDirection] = useState({ horizontal: 'right', vertical: 'top' });
   const hoverTimerRef = useRef(null);
   const hoverCardRef = useRef(null);
-  const [videoThumbnails, setVideoThumbnails] = useState({});
   const [isHovering, setIsHovering] = useState(false);
   const [showDateTimePicker, setShowDateTimePicker] = useState(false);
   const [selectedScheduleDate, setSelectedScheduleDate] = useState(date);
@@ -109,80 +111,7 @@ const CalendarCell = ({isToday, viewMode, posts = [], date, onPostDrop, isCompac
     };
   }, []);
 
-  // Generate thumbnails for videos when posts change
-  useEffect(() => {
-    const generateThumbnails = async () => {
-      const newThumbnails = { ...videoThumbnails };
-      let updated = false;
-      
-      for (const post of posts) {
-        if (post.video_url && !videoThumbnails[post.id]) {
-          try {
-            const thumbnail = await generateVideoThumbnail(post.video_url);
-            if (thumbnail) {
-              newThumbnails[post.id] = thumbnail;
-              updated = true;
-            }
-          } catch (error) {
-            console.error('Error generating thumbnail:', error);
-          }
-        }
-      }
-      
-      if (updated) {
-        setVideoThumbnails(newThumbnails);
-      }
-    };
-    
-    generateThumbnails();
-  }, [posts]);
   
-  // Function to generate a thumbnail from a video URL
-  const generateVideoThumbnail = (videoUrl) => {
-    return new Promise((resolve, reject) => {
-      const video = document.createElement('video');
-      video.crossOrigin = 'anonymous';
-      video.src = videoUrl;
-      video.muted = true;
-      video.onloadeddata = () => {
-        try {
-          // Seek to the first frame
-          video.currentTime = 0.1;
-        } catch (e) {
-          reject(e);
-        }
-      };
-      
-      video.onseeked = () => {
-        try {
-          // Create canvas and draw the video frame
-          const canvas = document.createElement('canvas');
-          canvas.width = video.videoWidth;
-          canvas.height = video.videoHeight;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-          
-          // Get data URL and clean up
-          const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
-          video.pause();
-          resolve(dataUrl);
-        } catch (e) {
-          reject(e);
-        }
-      };
-      
-      video.onerror = (e) => {
-        reject(e);
-      };
-      
-      // Set a timeout in case the video fails to load
-      setTimeout(() => {
-        if (!video.videoWidth) {
-          reject(new Error('Video load timeout'));
-        }
-      }, 3000);
-    });
-  };
 
   const formatTime = (dateString) => {
     try {
@@ -443,6 +372,36 @@ const CalendarCell = ({isToday, viewMode, posts = [], date, onPostDrop, isCompac
           profilePicture: threadsAccount.profile_picture || threadsAccount.profile_pic_url
         };
       }
+    } else if (platform === 'linkedin' && platformsData.linkedin?.accounts?.length > 0) {
+      const linkedinAccount = platformsData.linkedin.accounts.find(a => a.account_id === pageId);
+      if (linkedinAccount) {
+        pageInfo = {
+          ...pageInfo,
+          name: linkedinAccount.name,
+          profile_picture: linkedinAccount.picture || linkedinAccount.profile_picture,
+          profilePicture: linkedinAccount.picture || linkedinAccount.profile_picture
+        };
+      }
+    } else if (platform === 'youtube' && platformsData.youtube?.channels?.length > 0) {
+      const youtubeChannel = platformsData.youtube.channels.find(c => c.channel_id === pageId);
+      if (youtubeChannel) {
+        pageInfo = {
+          ...pageInfo,
+          name: youtubeChannel.title || youtubeChannel.name,
+          profile_picture: youtubeChannel.profile_picture || youtubeChannel.thumbnails?.default?.url,
+          profilePicture: youtubeChannel.profile_picture || youtubeChannel.thumbnails?.default?.url
+        };
+      }
+    } else if (platform === 'tiktok' && platformsData.tiktok?.accounts?.length > 0) {
+      const tiktokAccount = platformsData.tiktok.accounts.find(a => a.account_id === pageId);
+      if (tiktokAccount) {
+        pageInfo = {
+          ...pageInfo,
+          name: tiktokAccount.display_name || tiktokAccount.name,
+          profile_picture: tiktokAccount.avatar_url || tiktokAccount.profile_picture,
+          profilePicture: tiktokAccount.avatar_url || tiktokAccount.profile_picture
+        };
+      }
     }
     
     // Create selectedPlatforms array
@@ -454,15 +413,24 @@ const CalendarCell = ({isToday, viewMode, posts = [], date, onPostDrop, isCompac
     };
     
     // Map the post_type to the correct platform-specific field
-    const postType = post.post_type || 'post';
+    const platformPostType = post.post_type || 'post';
     if (platform === 'facebook' || platform === 'instagram') {
-      selectedPages.meta_post_type = postType;
+      selectedPages.meta_post_type = platformPostType;
     } else if (platform === 'linkedin') {
-      selectedPages.linkedin_post_type = postType;
+      selectedPages.linkedin_post_type = platformPostType;
     } else if (platform === 'youtube') {
-      selectedPages.youtube_post_type = postType;
+      selectedPages.youtube_post_type = platformPostType;
     } else if (platform === 'tiktok') {
-      selectedPages.tiktok_post_type = postType;
+      selectedPages.tiktok_post_type = platformPostType;
+    }
+    
+    // Determine the general content type for PostPreview
+    // This should be 'text', 'image', or 'video' based on the media content
+    let contentType = 'text'; // Default to text
+    if (videoUrl) {
+      contentType = 'video';
+    } else if (imageUrl) {
+      contentType = 'image';
     }
     
     // Prepare platform-specific data
@@ -480,6 +448,18 @@ const CalendarCell = ({isToday, viewMode, posts = [], date, onPostDrop, isCompac
       platformData.threadsData = { 
         accounts: [pageInfo]
       };
+    } else if (platform === 'linkedin') {
+      platformData.linkedinData = { 
+        accounts: [pageInfo]
+      };
+    } else if (platform === 'youtube') {
+      platformData.youtubeData = { 
+        channels: [pageInfo]
+      };
+    } else if (platform === 'tiktok') {
+      platformData.tiktokData = { 
+        accounts: [pageInfo]
+      };
     }
     
     return {
@@ -489,7 +469,7 @@ const CalendarCell = ({isToday, viewMode, posts = [], date, onPostDrop, isCompac
       imageUrl: imageUrl,
       imageUrls: imageUrl ? [imageUrl] : [],
       videoUrl,
-      postType: postType,
+      postType: contentType, // Use the content type ('text', 'image', 'video') instead of platform post type
       ...platformData
     };
   };
@@ -561,41 +541,25 @@ const CalendarCell = ({isToday, viewMode, posts = [], date, onPostDrop, isCompac
                 <div className="flex items-center justify-between space-x-1">
                   
                   <div className="flex items-center space-x-2">
-                    {post.image_url && (
+                    {post.image_url ? (
                       <img 
                         src={post.image_url} 
                         alt="" 
-                        className="w-10 h-10 object-cover rounded-sm bg-gray-100"
+                        className="w-10 h-10 p-2 object-cover rounded-sm bg-gray-100"
                         onError={(e) => {
-                          e.target.src = '/images/no-photos.svg';
+                          // If image fails and there's a video, show video icon, otherwise show no-photos
+                          e.target.src = post.video_url ? '/images/video.svg' : '/images/no-photos.svg';
                         }}
                       />
-                    )}
-                    {post.video_url && !post.image_url && (
-                      <div className="w-10 h-10 relative rounded-sm overflow-hidden">
-                        {videoThumbnails[post.id] ? (
-                          <div className="relative bg-gray-300">
-                            <img 
-                              src={videoThumbnails[post.id]} 
-                              alt="Video thumbnail" 
-                              className="w-10 h-10 object-cover bg-gray-100"
-                              onError={(e) => {
-                                e.target.src = '/images/no-photos.svg';
-                                
-                              }}
-                            />
-                           
-                          </div>
-                        ) : (
-                          // Fallback while thumbnail is loading
-                          <div className="w-10 h-10 bg-gray-200 flex items-center justify-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-gray-600">
-                              <path fillRule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clipRule="evenodd" />
-                            </svg>
-                          </div>
-                        )}
+                    ) : post.video_url ? (
+                      <div className="w-10 h-10 flex items-center justify-center">
+                        <img 
+                          src="/images/video.svg" 
+                          alt="Video" 
+                          className="w-10 h-10"
+                        />
                       </div>
-                    )}
+                    ) : null}
                     <span className="flex items-center font-medium text-xs h-8 w-16 text-gray-500" >
                       {formatTime(post.scheduled_time)}
                     </span>
@@ -606,7 +570,10 @@ const CalendarCell = ({isToday, viewMode, posts = [], date, onPostDrop, isCompac
                     {post.platform === 'facebook' && <img src={FacebookIcon} alt="Facebook" className="w-4 h-4 mr-1" />}
                     {post.platform === 'instagram' && <img src={InstagramIcon} alt="Instagram" className="w-4 h-4 mr-1" />}
                     {post.platform === 'threads' && <img src={ThreadsIcon} alt="Threads" className="w-4 h-4 mr-1" />}
-                    {!['facebook', 'instagram', 'threads'].includes(post.platform) && post.platform}
+                    {post.platform === 'tiktok' && <img src={TiktokIcon} alt="TikTok" className="w-4 h-4 mr-1" />}
+                    {post.platform === 'youtube' && <img src={YoutubeIcon} alt="YouTube" className="w-4 h-4 mr-1" />}
+                    {post.platform === 'linkedin' && <img src={LinkedinIcon} alt="LinkedIn" className="w-4 h-4 mr-1" />}
+                    {!['facebook', 'instagram', 'threads', 'tiktok', 'youtube', 'linkedin'].includes(post.platform) && post.platform}
                   </span>
                 </div>
               ) : !isDayView && isMobile ? (
@@ -626,16 +593,17 @@ const CalendarCell = ({isToday, viewMode, posts = [], date, onPostDrop, isCompac
                             alt="" 
                             className="w-12 h-12 object-cover rounded"
                             onError={(e) => {
-                              e.target.src = '/images/no-photos.svg';
+                              // If image fails and there's a video, show video icon, otherwise show no-photos
+                              e.target.src = post.video_url ? '/images/video.svg' : '/images/no-photos.svg';
                             }}
                           />
-                        ) : (
-                          <div className="w-12 h-12 bg-gray-200 rounded flex items-center justify-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-gray-600">
-                              <path fillRule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clipRule="evenodd" />
-                            </svg>
-                          </div>
-                        )}
+                        ) : post.video_url ? (
+                          <img 
+                            src="/images/video.svg" 
+                            alt="Video" 
+                            className="w-12 h-12"
+                          />
+                        ) : null}
                       </div>
                     )}
                     <div className="flex-1 min-w-0">
@@ -648,6 +616,9 @@ const CalendarCell = ({isToday, viewMode, posts = [], date, onPostDrop, isCompac
                     {post.platform === 'facebook' && <img src={FacebookIcon} alt="Facebook" className="w-5 h-5" />}
                     {post.platform === 'instagram' && <img src={InstagramIcon} alt="Instagram" className="w-5 h-5" />}
                     {post.platform === 'threads' && <img src={ThreadsIcon} alt="Threads" className="w-5 h-5" />}
+                    {post.platform === 'tiktok' && <img src={TiktokIcon} alt="TikTok" className="w-5 h-5" />}
+                    {post.platform === 'youtube' && <img src={YoutubeIcon} alt="YouTube" className="w-5 h-5" />}
+                    {post.platform === 'linkedin' && <img src={LinkedinIcon} alt="LinkedIn" className="w-5 h-5" />}
                   </div>
                 </div>
               ) : (
@@ -661,7 +632,10 @@ const CalendarCell = ({isToday, viewMode, posts = [], date, onPostDrop, isCompac
                       {post.platform === 'facebook' && <img src={FacebookIcon} alt="Facebook" className="w-6 h-6" />}
                       {post.platform === 'instagram' && <img src={InstagramIcon} alt="Instagram" className="w-6 h-6" />}
                       {post.platform === 'threads' && <img src={ThreadsIcon} alt="Threads" className="w-6 h-6" />}
-                      {!['facebook', 'instagram', 'threads'].includes(post.platform) && post.platform}
+                      {post.platform === 'tiktok' && <img src={TiktokIcon} alt="TikTok" className="w-6 h-6" />}
+                      {post.platform === 'youtube' && <img src={YoutubeIcon} alt="YouTube" className="w-6 h-6" />}
+                      {post.platform === 'linkedin' && <img src={LinkedinIcon} alt="LinkedIn" className="w-6 h-6" />}
+                      {!['facebook', 'instagram', 'threads', 'tiktok', 'youtube', 'linkedin'].includes(post.platform) && post.platform}
                     </span>
                   </div>
                   

@@ -27,7 +27,7 @@ const BrandStyle = ({ facebookData, instagramData, threadsData }) => {
     
     // New states for available brands
     const [availableBrands, setAvailableBrands] = useState([]);
-    const [selectedBrand, setSelectedBrand] = useState(null);
+    const [selectedBrandId, setSelectedBrandId] = useState(null);
     const [selectedBrandName, setSelectedBrandName] = useState(null);
     const [loadingBrands, setLoadingBrands] = useState(true);
     
@@ -115,7 +115,7 @@ const BrandStyle = ({ facebookData, instagramData, threadsData }) => {
     
     // Handle brand selection
     const handleBrandSelect = (brand) => {
-        setSelectedBrand(brand.website_url);
+        setSelectedBrandId(brand.id);
         setSelectedBrandName(brand.name);
         setExtractedBrandData(null); // Clear any previous extracted data
         setExtractionComplete(true);
@@ -207,7 +207,7 @@ const BrandStyle = ({ facebookData, instagramData, threadsData }) => {
             
             // Store the extracted brand data
             setExtractedBrandData(data);
-            setSelectedBrand(websiteUrl);
+            
             
             // Extract a clean brand name from the URL
             let cleanBrandName = websiteUrl;
@@ -234,7 +234,7 @@ const BrandStyle = ({ facebookData, instagramData, threadsData }) => {
     
     // Update the handleGoBack function to reuse the fetchAvailableBrands function
     const handleGoBack = () => {
-        setSelectedBrand(null);
+        setSelectedBrandId(null);
         setSelectedBrandName(null);
         setExtractedBrandData(null);
         setExtractionComplete(false);
@@ -315,7 +315,7 @@ const BrandStyle = ({ facebookData, instagramData, threadsData }) => {
                     {!isMobile && (
                         <button 
                             onClick={openDialog}
-                            className="flex text-md items-center gap-1 border  px-4 py-1.5 rounded-lg brand-button"
+                            className="flex text-sm items-center gap-1 border  px-4 py-1.5 rounded-lg brand-button"
                         >
                             <Plus size={20} className="inline-block" /> {t('brands.newBrandIdentity')}
                         </button>
@@ -325,7 +325,7 @@ const BrandStyle = ({ facebookData, instagramData, threadsData }) => {
 
             <div className="bg-[#FAFBFB] rounded-lg min-h-[80vh] h-auto">
                 {extractionComplete ? (
-                    <Brand brandName={selectedBrand} extractedData={extractedBrandData} />
+                    <Brand brandId={selectedBrandId} extractedData={extractedBrandData} />
                 ) : (
                     <div className="flex flex-col gap-4 h-[70%] p-8 lg:p-10 xl:p-16">
                         {isLoading ? (

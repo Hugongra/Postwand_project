@@ -5,9 +5,9 @@ import { API_BASE_URL } from './config_url.js';
 const TokenUsage = () => {
   const { t } = useTranslation();
   const [usageData, setUsageData] = useState({
-    tokens_used: 0,
-    max_tokens: 200000,
-    percentage: 0
+    grok: { tokens_used: 0, max_tokens: 50000, percentage: 0 },
+    claude: { tokens_used: 0, max_tokens: 100000, percentage: 0 },
+    image: { tokens_used: 0, max_tokens: 50, percentage: 0 }
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -42,8 +42,9 @@ const TokenUsage = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Format numbers with commas
+  // Format numbers with commas - add null/undefined check
   const formatNumber = (num) => {
+    if (num === null || num === undefined) return '0';
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
   
@@ -66,43 +67,115 @@ const TokenUsage = () => {
   }
 
   // Determine color based on usage percentage
-  const getProgressColor = () => {
-    if (usageData.percentage >= 90) return 'bg-red-500';
-    if (usageData.percentage >= 75) return 'bg-yellow-500';
+  const getProgressColor = (percentage) => {
+    if (percentage >= 90) return 'bg-red-500';
+    if (percentage >= 75) return 'bg-yellow-500';
     return 'bg-green-500';
   };
 
+  // Calculate total usage across all token types
+  const getTotalUsage = () => {
+    const totalUsed = (usageData.grok?.tokens_used || 0) + 
+                     (usageData.claude?.tokens_used || 0) + 
+                     (usageData.image?.tokens_used || 0);
+    const totalMax = (usageData.grok?.max_tokens || 0) + 
+                    (usageData.claude?.max_tokens || 0) + 
+                    (usageData.image?.max_tokens || 0);
+    const totalPercentage = totalMax > 0 ? Math.round((totalUsed / totalMax) * 100 * 10) / 10 : 0;
+    
+    return { totalUsed, totalMax, totalPercentage };
+  };
+
+  const { totalUsed, totalMax, totalPercentage } = getTotalUsage();
+
   return (
     <div className="p-4 bg-white rounded-lg shadow-sm border border-gray-100">
-      <h3 className="text-lg font-semibold mb-2">{t('usage.tokenUsage')}</h3>
+      <h3 className="text-lg font-semibold mb-4">{t('usage.tokenUsage')}</h3>
       
-      <div className="mb-2">
+      {/* Overall Usage Summary */}
+      <div className="mb-4 p-3 bg-gray-50 rounded-lg">
+        <h4 className="text-sm font-medium mb-2">{t('usage.totalUsage') || 'Total Usage'}</h4>
         <div className="flex justify-between text-sm mb-1">
-          <span>{formatNumber(usageData.tokens_used)} / {formatNumber(usageData.max_tokens)} {t('usage.tokens')}</span>
-          <span>{usageData.percentage}%</span>
+          <span>{formatNumber(totalUsed)} / {formatNumber(totalMax)} {t('usage.tokens') || 'tokens'}</span>
+          <span>{totalPercentage}%</span>
         </div>
         <div className="w-full bg-gray-200 rounded-full h-2.5">
           <div 
-            className={`h-2.5 rounded-full ${getProgressColor()}`} 
-            style={{ width: `${Math.min(usageData.percentage, 100)}%` }}
+            className={`h-2.5 rounded-full ${getProgressColor(totalPercentage)}`} 
+            style={{ width: `${Math.min(totalPercentage, 100)}%` }}
           ></div>
         </div>
       </div>
+
+      {/* Individual Token Types */}
+      <div className="space-y-3">
+        {/* Grok Usage */}
+        <div className="border-l-4 border-blue-500 pl-3">
+          <div className="flex justify-between items-center mb-1">
+            <span className="text-sm font-medium text-blue-700">Grok {t('usage.tokens') || 'Tokens'}</span>
+            <span className="text-xs text-gray-500">{usageData.grok?.percentage || 0}%</span>
+          </div>
+          <div className="flex justify-between text-xs text-gray-600 mb-1">
+            <span>{formatNumber(usageData.grok?.tokens_used)} / {formatNumber(usageData.grok?.max_tokens)}</span>
+          </div>
+          <div className="w-full bg-gray-200 rounded-full h-1.5">
+            <div 
+              className={`h-1.5 rounded-full ${getProgressColor(usageData.grok?.percentage || 0)}`} 
+              style={{ width: `${Math.min(usageData.grok?.percentage || 0, 100)}%` }}
+            ></div>
+          </div>
+        </div>
+
+        {/* Claude Usage */}
+        <div className="border-l-4 border-purple-500 pl-3">
+          <div className="flex justify-between items-center mb-1">
+            <span className="text-sm font-medium text-purple-700">Claude {t('usage.tokens') || 'Tokens'}</span>
+            <span className="text-xs text-gray-500">{usageData.claude?.percentage || 0}%</span>
+          </div>
+          <div className="flex justify-between text-xs text-gray-600 mb-1">
+            <span>{formatNumber(usageData.claude?.tokens_used)} / {formatNumber(usageData.claude?.max_tokens)}</span>
+          </div>
+          <div className="w-full bg-gray-200 rounded-full h-1.5">
+            <div 
+              className={`h-1.5 rounded-full ${getProgressColor(usageData.claude?.percentage || 0)}`} 
+              style={{ width: `${Math.min(usageData.claude?.percentage || 0, 100)}%` }}
+            ></div>
+          </div>
+        </div>
+
+        {/* Image Usage */}
+        <div className="border-l-4 border-green-500 pl-3">
+          <div className="flex justify-between items-center mb-1">
+            <span className="text-sm font-medium text-green-700">Image {t('usage.tokens') || 'Tokens'}</span>
+            <span className="text-xs text-gray-500">{usageData.image?.percentage || 0}%</span>
+          </div>
+          <div className="flex justify-between text-xs text-gray-600 mb-1">
+            <span>{formatNumber(usageData.image?.tokens_used)} / {formatNumber(usageData.image?.max_tokens)}</span>
+          </div>
+          <div className="w-full bg-gray-200 rounded-full h-1.5">
+            <div 
+              className={`h-1.5 rounded-full ${getProgressColor(usageData.image?.percentage || 0)}`} 
+              style={{ width: `${Math.min(usageData.image?.percentage || 0, 100)}%` }}
+            ></div>
+          </div>
+        </div>
+      </div>
       
-      {usageData.percentage >= 90 && (
+      {/* Warning Messages */}
+      {totalPercentage >= 90 && (
         <div className="mt-3 text-sm text-red-600">
-          <p>{t('usage.nearLimit')}</p>
+          <p>{t('usage.nearLimit') || 'You are approaching your usage limit'}</p>
         </div>
       )}
       
-      {usageData.percentage >= 75 && usageData.percentage < 90 && (
+      {totalPercentage >= 75 && totalPercentage < 90 && (
         <div className="mt-3 text-sm text-yellow-600">
-          <p>{t('usage.approachingLimit')}</p>
+          <p>{t('usage.approachingLimit') || 'You are approaching your usage limit'}</p>
         </div>
       )}
       
       <div className="mt-3 text-xs text-gray-500">
-        <p>{t('usage.resetsMonthly')}</p>
+        <p>{t('usage.resetsMonthly') || 'Usage resets monthly'}</p>
       </div>
     </div>
   );

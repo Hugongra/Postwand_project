@@ -26,6 +26,7 @@
     "share": "Share",
     "copy": "Copy",
     "paste": "Paste",
+    "remove": "Remove",
     "processing": "Processing...",
     "settings": "Settings",
     "unknownError": "Unknown error",
@@ -291,7 +292,35 @@
       "roast": "Roast"
     },
     "platformType": "Platform Type",
-    "tone": "Tone"
+    "tone": "Tone",
+    "createAd": {
+      "title": "Create Ad",
+      "subtitle": "Generate professional ads for your products and services",
+      "formTitle": "Ad Details",
+      "adConcept": "Ad Concept",
+      "adConceptPlaceholder": "Describe your ad concept, target audience, key message, and desired outcome...",
+      "productImage": "Product Image",
+      "uploadPrompt": "Click to upload or drag and drop your product image",
+      "supportedFormats": "PNG, JPG, JPEG up to 10MB",
+      "shortcuts": "Ad Templates",
+      "shortcutsDesc": "Choose from pre-designed ad templates to get started quickly",
+      "photoshoot": "Product Photoshoot",
+      "facebookAd": "Facebook Ad",
+      "instagramStory": "Instagram Story",
+      "bannerAd": "Banner Ad",
+      "videoAd": "Video Ad",
+      "carouselAd": "Carousel Ad",
+      "enterConceptFirst": "Please enter an ad concept first",
+      "selectType": "Select Ad Type",
+      "selectTypeDesc": "Choose how you want to create your ad",
+      "generateFromImage": "Generate Post for your product",
+        "generateFromImageDesc": "Upload a product image and let AI create stunning ads with various templates and shortcuts",
+      "copyFromReference": "Copy Ad from Reference",
+      "copyFromReferenceDesc": "Upload your product image and a reference ad to create similar styled advertisements",
+      "getStarted": "Get Started"
+    },
+    "generateAd": "Generate Ad",
+    "copyAd": "Copy Ad Style"
   
   },
   "brands": {
@@ -751,7 +780,14 @@
     },
     "usage": {
       "title": "API Token Usage",
-      "description": "Monitor your API token usage for this billing period. Your usage resets at the beginning of each billing cycle."
+      "description": "Monitor your API token usage for this billing period. Your usage resets at the beginning of each billing cycle.",
+      "tokenUsage": "Token Usage",
+      "totalUsage": "Total Usage",
+      "tokens": "tokens",
+      "errorTitle": "Error Loading Usage",
+      "nearLimit": "You are near your usage limit",
+      "approachingLimit": "You are approaching your usage limit",
+      "resetsMonthly": "Usage resets monthly"
     },
     "legal": {
       "title": "Legal Policies",

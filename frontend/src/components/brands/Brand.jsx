@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import BrandSkeletonLoader from '../skeletons/BrandSkeletonLoader';
 import { API_BASE_URL } from '../config_url.js';
 
-const Brand = ({ brandName, extractedData }) => {
+const Brand = ({ brandId, extractedData }) => {
     const [brandData, setBrandData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -27,8 +27,8 @@ const Brand = ({ brandName, extractedData }) => {
                 }
                 
                 // Otherwise, fetch from the database
-                const url = brandName 
-                    ? `${API_BASE_URL}/api/brand-profile/${encodeURIComponent(brandName)}`
+                const url = brandId 
+                    ? `${API_BASE_URL}/api/brand-profile/${encodeURIComponent(brandId)}`
                     : `${API_BASE_URL}/api/brand-profile`;
                 
                 const response = await fetch(url, {
@@ -61,7 +61,8 @@ const Brand = ({ brandName, extractedData }) => {
         };
         
         fetchBrandProfile();
-    }, [brandName, extractedData]);
+    
+    }, [brandId, extractedData]);
     
     if (loading) {
         return (
@@ -118,6 +119,14 @@ const Brand = ({ brandName, extractedData }) => {
     const character = brand_info?.brand_character?.join(", ") || "";
     const company_description = brand_info?.company_description || "";
     
+    // Get product features data
+    const product_features = brand_info?.product_features || {};
+    const main_products = product_features?.main_products_services?.join(", ") || "";
+    const key_features = product_features?.key_features || [];
+    const unique_selling_points = product_features?.unique_selling_points || [];
+    const benefits = product_features?.benefits || [];
+    const pricing_model = product_features?.pricing_model || "";
+    
     // Get domain name from brand info URL
     const url = brand_info?.url || "";
     const domainMatch = url.match(/^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:/\n?]+)/i);
@@ -134,7 +143,7 @@ const Brand = ({ brandName, extractedData }) => {
                         Brand Name
                     </label>
                     <input 
-                        className="p-2 border rounded-md flex-1 shadow-sm focus:border-pink-300" 
+                        className="p-2 border rounded-md flex-1 shadow-sm focus:border-pink-300 text-sm" 
                         type="text"
                         value={domainName}
                         readOnly
@@ -146,7 +155,7 @@ const Brand = ({ brandName, extractedData }) => {
         Company Description
     </label>
     <textarea 
-        className="p-2 border rounded-md shadow-sm focus:border-pink-300 resize-none overflow-hidden text-justify" 
+        className="p-2 border rounded-md shadow-sm focus:border-pink-300 resize-none overflow-hidden text-justify text-sm" 
         value={company_description}
         readOnly
         rows={1}
@@ -168,7 +177,7 @@ const Brand = ({ brandName, extractedData }) => {
                         Main header
                     </label>
                     <input 
-                        className="p-2 border rounded-md flex-1 shadow-sm focus:border-pink-300" 
+                        className="p-2 border rounded-md flex-1 shadow-sm focus:border-pink-300 text-sm" 
                         type="text"
                         value={main_heading}
                         readOnly
@@ -180,7 +189,7 @@ const Brand = ({ brandName, extractedData }) => {
                         Purpose
                     </label>
                     <input 
-                        className="p-2 border rounded-md flex-1 shadow-sm focus:border-pink-300" 
+                        className="p-2 border rounded-md flex-1 shadow-sm focus:border-pink-300 text-sm" 
                         type="text"
                         value={purpose}
                         readOnly
@@ -192,7 +201,7 @@ const Brand = ({ brandName, extractedData }) => {
                         Audience
                     </label>
                     <input 
-                        className="p-2 border rounded-md flex-1 shadow-sm focus:border-pink-300" 
+                        className="p-2 border rounded-md flex-1 shadow-sm focus:border-pink-300 text-sm" 
                         type="text"
                         value={professions}
                         readOnly
@@ -204,7 +213,7 @@ const Brand = ({ brandName, extractedData }) => {
                         Industry
                     </label>
                     <input 
-                        className="p-2 border rounded-md flex-1 shadow-sm focus:border-pink-300" 
+                        className="p-2 border rounded-md flex-1 shadow-sm focus:border-pink-300 text-sm" 
                         type="text"
                         value={industry}
                         readOnly
@@ -216,7 +225,7 @@ const Brand = ({ brandName, extractedData }) => {
                         Tone
                     </label>
                     <input 
-                        className="p-2 border rounded-md flex-1 shadow-sm focus:border-pink-300" 
+                        className="p-2 border rounded-md flex-1 shadow-sm focus:border-pink-300 text-sm" 
                         type="text"
                         value={tone}
                         readOnly
@@ -228,13 +237,100 @@ const Brand = ({ brandName, extractedData }) => {
                         Character
                     </label>
                     <input 
-                        className="p-2 border rounded-md flex-1 shadow-sm focus:border-pink-300" 
+                        className="p-2 border rounded-md flex-1 shadow-sm focus:border-pink-300 text-sm " 
                         type="text"
                         value={character}
                         readOnly
                     />
                 </div>
                 </div>
+                
+                {/* Product Features Section */}
+                {(main_products || key_features.length > 0 || unique_selling_points.length > 0 || benefits.length > 0 || pricing_model) && (
+                    <>
+                        <h1 className="text-2xl font-medium text-gray-700 mt-6">Product Features</h1>
+                        <div className="w-full bg-white rounded-lg p-4 shadow space-y-3">
+                            {main_products && (
+                                <div className="flex items-center">
+                                    <label className="mb-1 text-xs w-20 text-gray-700">
+                                        Products
+                                    </label>
+                                    <input 
+                                        className="p-2 border rounded-md flex-1 shadow-sm focus:border-pink-300 text-sm" 
+                                        type="text"
+                                        value={main_products}
+                                        readOnly
+                                    />
+                                </div>
+                            )}
+
+                            {key_features.length > 0 && (
+                                <div className="flex flex-col">
+                                    <label className="mb-1 text-xs text-gray-700">
+                                        Key Features
+                                    </label>
+                                    <div className="p-2 border rounded-md shadow-sm min-h-[40px] bg-gray-50">
+                                        <div className="flex flex-wrap gap-1">
+                                            {key_features.map((feature, index) => (
+                                                <span key={index} className="inline-block bg-blue-100 text-blue-800 text-sm px-2 py-1 rounded-full">
+                                                    {feature}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {unique_selling_points.length > 0 && (
+                                <div className="flex flex-col">
+                                    <label className="mb-1 text-xs text-gray-700">
+                                        Unique Selling Points
+                                    </label>
+                                    <div className="p-2 border rounded-md shadow-sm min-h-[40px] bg-gray-50">
+                                        <div className="flex flex-wrap gap-1">
+                                            {unique_selling_points.map((usp, index) => (
+                                                <span key={index} className="inline-block bg-green-100 text-green-800 text-sm px-2 py-1 rounded-full">
+                                                    {usp}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {benefits.length > 0 && (
+                                <div className="flex flex-col">
+                                    <label className="mb-1 text-xs text-gray-700">
+                                        Benefits
+                                    </label>
+                                    <div className="p-2 border rounded-md shadow-sm min-h-[40px] bg-gray-50">
+                                        <div className="flex flex-wrap gap-1">
+                                            {benefits.map((benefit, index) => (
+                                                <span key={index} className="inline-block bg-purple-100 text-purple-800 text-sm px-2 py-1 rounded-full">
+                                                    {benefit}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {pricing_model && (
+                                <div className="flex items-center">
+                                    <label className="mb-1 text-xs w-20 text-gray-700">
+                                        Pricing
+                                    </label>
+                                    <input 
+                                        className="p-2 border rounded-md flex-1 shadow-sm focus:border-pink-300 text-sm" 
+                                        type="text"
+                                        value={pricing_model}
+                                        readOnly
+                                    />
+                                </div>
+                            )}
+                        </div>
+                    </>
+                )}
             </div>
 
             <div className="w-full md:w-1/2 mt-6 md:mt-0">
@@ -247,7 +343,7 @@ const Brand = ({ brandName, extractedData }) => {
                                 palette.map((color, index) => (
                                     <div key={index} className="flex flex-col items-center">
                                         <div 
-                                            className="rounded-full w-[60px] md:w-[75px] h-[60px] md:h-[75px] border border-gray-200" 
+                                            className="rounded-full w-[50px] md:w-[65px] h-[50px] md:h-[65px] border border-gray-200" 
                                             style={{backgroundColor: color}}
                                         ></div>
                                         <span className="text-xs font-medium mt-1">{color.toUpperCase()}</span>

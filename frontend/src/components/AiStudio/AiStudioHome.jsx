@@ -17,7 +17,7 @@ const AiStudioHome = () => {
       <div className="relative flex flex-col justify-center items-center lg:w-[85%] h-full mx-auto">
         <div className="md:col-span-4 rounded-lg p-6 flex flex-col mx-auto">
           <div className="flex">
-            <div className="grid grid-cols-1 lg:grid-cols-4 md:gap-4 gap-3 md:h-[35vh] h-[120vh] w-full mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-5 md:gap-4 gap-3 md:h-[35vh] h-[150vh] lg:h-[45vh] w-full mx-auto">
               
               {/* Ideas option */}
               <div 
@@ -66,6 +66,17 @@ const AiStudioHome = () => {
                 <div>
                   <h3 className="text-lg font-medium text-gray-800 mt-2">{t('aiStudio.option.generatePost')}</h3>
                   <p className="text-sm text-gray-600 mt-1">{t('aiStudio.option.generatePostDesc')}</p>
+                </div>
+              </div>
+
+              {/* Create Ad option */}
+              <div 
+                className="bg-gray-300/50 rounded-xl p-5 hover:bg-gray-200/60 transition-all duration-200 flex flex-col relative cursor-pointer w-full"
+                onClick={() => navigate('/ai-studio/ad-type-selector')}
+              >
+                <div>
+                  <h3 className="text-lg font-medium text-gray-800 mt-2">{t('aiStudio.createAd.title')}</h3>
+                  <p className="text-sm text-gray-600 mt-1">{t('aiStudio.createAd.subtitle')}</p>
                 </div>
               </div>
             </div>

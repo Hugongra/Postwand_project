@@ -419,7 +419,7 @@ if __name__ == "__main__":
             return self.file.read()
     
     # Test with FLUX Kontext image editing
-    image_file = MockFile("prueba.png")
+    image_file = MockFile("download.png")
     prompt = "Make the background green"  # Example prompt
     
     result = edit_image_flux_kontext(image_file, prompt)

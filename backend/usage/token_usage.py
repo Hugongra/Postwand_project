@@ -1,7 +1,12 @@
 # backend/token_service.py
+import os
+from dotenv import load_dotenv
 from database import get_supabase_client
 import logging
 from datetime import datetime, timezone
+
+# Load environment variables first
+load_dotenv()
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)

@@ -9,6 +9,7 @@ import FacebookIcon from '/SM_icons/facebook.svg';
 import InstagramIcon from '/SM_icons/instagram.svg';
 import ThreadsIcon from '/SM_icons/threads.svg';
 import TiktokIcon from '/SM_icons/tiktok.svg';
+import YoutubeIcon from '/SM_icons/youtube.svg';
 import LinkedinIcon from '/SM_icons/linkedin.svg';
 import TwitterIcon from '/SM_icons/x.svg';
 import { useTranslation } from 'react-i18next';
@@ -16,7 +17,7 @@ const DAYS = ['daysShort.sun', 'daysShort.mon', 'daysShort.tue', 'daysShort.wed'
 const MONTHS = ['months.january', 'months.february', 'months.march', 'months.april', 'months.may', 'months.june', 
                 'months.july', 'months.august', 'months.september', 'months.october', 'months.november', 'months.december'];
 
-const CustomCalendar = ({ isLoggedIn, facebookData, instagramData, threadsData }) => {
+const CustomCalendar = ({ isLoggedIn, facebookData, instagramData, threadsData, tiktokData, linkedinData, youtubeData }) => {
   const { t } = useTranslation();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [posts, setPosts] = useState([]);
@@ -41,7 +42,10 @@ const CustomCalendar = ({ isLoggedIn, facebookData, instagramData, threadsData }
   const platformsData = {
     facebook: { pages: facebookData?.pages || [] },
     instagram: { accounts: instagramData?.accounts || [] },
-    threads: { accounts: threadsData?.accounts || [] }
+    threads: { accounts: threadsData?.accounts || [] },
+    linkedin: { accounts: linkedinData?.accounts || [] },
+    youtube: { channels: youtubeData?.channels || [] },
+    tiktok: { accounts: tiktokData?.accounts || [] }
   };
 
   // Handle window resize to detect mobile view
@@ -540,6 +544,21 @@ const CustomCalendar = ({ isLoggedIn, facebookData, instagramData, threadsData }
                         <span className="flex items-center">
                           <img src={ThreadsIcon} className="h-5 w-5 flex-shrink-0 inline-block mr-2" />
                           <span>Threads</span>
+                        </span>
+                      ) : platform === 'tiktok' ? (
+                        <span className="flex items-center">
+                          <img src={TiktokIcon} className="h-5 w-5 flex-shrink-0 inline-block mr-2" />
+                          <span>TikTok</span>
+                        </span>
+                      ) : platform === 'youtube' ? (
+                        <span className="flex items-center">
+                          <img src={YoutubeIcon} className="h-5 w-5 flex-shrink-0 inline-block mr-2" />
+                          <span>YouTube</span>
+                        </span>
+                      ) : platform === 'linkedin' ? (
+                        <span className="flex items-center">
+                          <img src={LinkedinIcon} className="h-5 w-5 flex-shrink-0 inline-block mr-2" />
+                          <span>LinkedIn</span>
                         </span>
                       ) : (
                         <span>{platform.charAt(0).toUpperCase() + platform.slice(1)}</span>

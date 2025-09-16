@@ -332,7 +332,7 @@ def get_platform_token(platform, page_id, auth_id=None, user_id=None):
    
 
 
-def post_to_platform(platform_data, content, image_url=None, video_url=None, location_id=None, user_id=None, file_name=None, video_file_name=None, scheduled_post_id=None, youtube_metadata=None):
+def post_to_platform(platform_data, content, image_url=None, video_url=None, location_id=None, user_id=None, file_name=None, video_file_name=None, scheduled_post_id=None, youtube_metadata=None, tiktok_metadata=None):
    
     """Helper function to post to a specific platform with appropriate content"""
 
@@ -789,14 +789,14 @@ def post_to_platform(platform_data, content, image_url=None, video_url=None, loc
             # Extract title from content or use default
             title = content[:100] if content else "Posted via Postwand"
             
-            logging.info("About to call post_to_tiktok_video with SELF_ONLY privacy level")
+            logging.info("About to call post_to_tiktok_video with compliance parameters")
             try:
                 success, result, result_data = post_to_tiktok_video(
                     content=content,
                     access_token=access_token,
                     video_url=video_url,
                     title=title,
-                    privacy_level="SELF_ONLY",  # Use SELF_ONLY for unaudited API clients
+                    tiktok_compliance=tiktok_metadata,
                     page_id=page_id,
                     user_id=user_id
                 )
@@ -822,7 +822,7 @@ def post_to_platform(platform_data, content, image_url=None, video_url=None, loc
                     access_token=access_token,
                     video_url=video_url,
                     title=title,
-                    privacy_level="SELF_ONLY",  # Use SELF_ONLY for unaudited API clients
+                    tiktok_compliance=tiktok_metadata,
                     page_id=page_id,
                     user_id=user_id
                 )
@@ -963,7 +963,7 @@ def schedule_future_post(status, content, platform, page_id, page_token, schedul
 
 # Convert run_in_background to a Celery task
 @celery_app.task(bind=True, name='scheduler.scheduler.run_in_background_task')
-def run_in_background_task(self, task_id, platforms_data, content_data, image_urls, video_url,  location_id, user_id, file_names=None, video_file_name=None, scheduled_post_id=None, youtube_metadata=None):
+def run_in_background_task(self, task_id, platforms_data, content_data, image_urls, video_url,  location_id, user_id, file_names=None, video_file_name=None, scheduled_post_id=None, youtube_metadata=None, tiktok_metadata=None):
     """Celery task to handle posting to multiple platforms"""
     try:
         print(f"=== CELERY TASK STARTED ===")
@@ -1010,7 +1010,8 @@ def run_in_background_task(self, task_id, platforms_data, content_data, image_ur
                     file_names,
                     video_file_name,
                     scheduled_post_id,  # Pass the scheduled post ID if available
-                    youtube_metadata  # Pass YouTube metadata
+                    youtube_metadata,  # Pass YouTube metadata
+                    tiktok_metadata  # Pass TikTok metadata
                 )
                 
                 platform = platform_data.get('platform')
@@ -1205,6 +1206,16 @@ def create_scheduled_post():
         youtube_description = request.form.get('youtube_description', None)
         youtube_category = request.form.get('youtube_category', None)  # This is the category ID
         
+        # Get TikTok compliance metadata from request
+        tiktok_compliance_json = request.form.get('tiktok_compliance', None)
+        tiktok_compliance = None
+        if tiktok_compliance_json:
+            try:
+                tiktok_compliance = json.loads(tiktok_compliance_json)
+            except json.JSONDecodeError:
+                logging.error("Invalid TikTok compliance JSON")
+                return jsonify({'error': 'Invalid TikTok compliance format'}), 400
+        
         # Log location data if available
         if location_id and location_name:
             logging.info(f"Location data received: {location_id} - {location_name}")
@@ -1244,7 +1255,7 @@ def create_scheduled_post():
             
             celery_task = run_in_background_task.delay(
                 task_id, platforms_data, content_data, image_urls, video_url, 
-                location_id, user_id, file_names, video_file_name, None, youtube_meta
+                location_id, user_id, file_names, video_file_name, None, youtube_meta, tiktok_compliance
             )
             
             print(f"Celery task dispatched with ID: {celery_task.id}")
@@ -1484,7 +1495,7 @@ def process_scheduled_posts():
                 
                 celery_task = run_in_background_task.delay(
                     task_id, platform_data, content_data, image_urls, video_url, 
-                    location_id, user_id, None, None, post_id, None  # Pass the scheduled post ID, no YouTube metadata for scheduled posts yet
+                    location_id, user_id, None, None, post_id, None, None  # Pass the scheduled post ID, no YouTube/TikTok metadata for scheduled posts yet
                 )
                 
                 # Update the background task with Celery task ID

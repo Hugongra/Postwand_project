@@ -11,6 +11,7 @@ import Platform from './platform/Platform';
 import { API_BASE_URL } from '../config_url.js';
 import NotificationCard from './NotificationCard';
 import AccountSelect from './platform/AccountSelect';
+import TikTokCompliance from './TikTokCompliance';
 import { useTranslation } from 'react-i18next';
 
 const PostScheduler = ({
@@ -81,6 +82,34 @@ const PostScheduler = ({
   const [selectedYouTubeCategory, setSelectedYouTubeCategory] = useState('');
   const [selectedCategoryName, setSelectedCategoryName] = useState('People & Blogs');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  
+  // TikTok compliance state
+  const [tiktokCompliance, setTiktokCompliance] = useState({
+    privacyLevel: '',
+    interactions: {
+      allowComment: false,
+      allowDuet: false,
+      allowStitch: false
+    },
+    commercialContent: {
+      enabled: false,
+      yourBrand: false,
+      brandedContent: false
+    }
+  });
+
+  // Stable callbacks for TikTok compliance
+  const handlePrivacyChange = React.useCallback((privacy) => {
+    setTiktokCompliance(prev => ({ ...prev, privacyLevel: privacy }));
+  }, []);
+
+  const handleInteractionChange = React.useCallback((interactions) => {
+    setTiktokCompliance(prev => ({ ...prev, interactions }));
+  }, []);
+
+  const handleCommercialContentChange = React.useCallback((commercial) => {
+    setTiktokCompliance(prev => ({ ...prev, commercialContent: commercial }));
+  }, []);
   
   const youtubeCategories = [
     { id: 1, name: "Film & Animation" },
@@ -369,6 +398,23 @@ const PostScheduler = ({
       return;
     }
 
+    // TikTok compliance validation
+    if (selectedPlatforms.includes('tiktok')) {
+      if (!tiktokCompliance.privacyLevel) {
+        setStatus({ type: 'error', message: 'TikTok privacy level must be selected' });
+        setIsSubmitting(false);
+        return;
+      }
+      
+      if (tiktokCompliance.commercialContent.enabled && 
+          !tiktokCompliance.commercialContent.yourBrand && 
+          !tiktokCompliance.commercialContent.brandedContent) {
+        setStatus({ type: 'error', message: 'When commercial content is enabled, you must select at least one option' });
+        setIsSubmitting(false);
+        return;
+      }
+    }
+
     const formData = new FormData();
     
     // Prepare platform-specific content
@@ -398,6 +444,18 @@ const PostScheduler = ({
       formData.append('youtube_title', post.youtubeTitle);
       formData.append('youtube_tags', post.youtubeTags);
       formData.append('youtube_description', getCurrentContent());
+    }
+    
+    // Add TikTok compliance data if TikTok is selected
+    if (selectedPlatforms.includes('tiktok')) {
+      formData.append('tiktok_compliance', JSON.stringify({
+        privacy_level: tiktokCompliance.privacyLevel,
+        disable_comment: !tiktokCompliance.interactions.allowComment,
+        disable_duet: !tiktokCompliance.interactions.allowDuet,
+        disable_stitch: !tiktokCompliance.interactions.allowStitch,
+        brand_content_toggle: tiktokCompliance.commercialContent.brandedContent,
+        brand_organic_toggle: tiktokCompliance.commercialContent.yourBrand
+      }));
     }
     
     // Verify selectedPlatforms and selectedPages have values
@@ -1043,6 +1101,21 @@ const PostScheduler = ({
     setShowTextActionsMenu(false);
     setIsDropdownOpen(false);
     
+    // Reset TikTok compliance
+    setTiktokCompliance({
+      privacyLevel: '',
+      interactions: {
+        allowComment: false,
+        allowDuet: false,
+        allowStitch: false
+      },
+      commercialContent: {
+        enabled: false,
+        yourBrand: false,
+        brandedContent: false
+      }
+    });
+    
     // Reset file inputs
     if (imageInputRef.current) {
       imageInputRef.current.value = "";
@@ -1244,6 +1317,7 @@ const PostScheduler = ({
                 setPost={setPost}
                 postType={postType}
                />
+
             
 
             
@@ -1505,6 +1579,20 @@ const PostScheduler = ({
                   </div>
                 </div>
               )}
+
+              {/* TikTok Compliance Component */}
+              <div className={`mb-4 ${textareaPlatform === 'tiktok' ? 'block' : 'hidden'}`}>
+                <TikTokCompliance
+                  selectedAccount={socialAccounts.find(acc => 
+                    acc.platform === 'tiktok' && acc.id_ === selectedPages.tiktok
+                  )}
+                  onPrivacyChange={handlePrivacyChange}
+                  onInteractionChange={handleInteractionChange}
+                  onCommercialContentChange={handleCommercialContentChange}
+                  postType={postType}
+                  videoUrl={post.videoUrl || videoUrl}
+                />
+              </div>
                   </div>
 
 

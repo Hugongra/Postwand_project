@@ -109,7 +109,7 @@ const ImageLibrary = () => {
                                 // Navigate directly with URL parameters instead of using localStorage
                                 window.location.href = '/ai-studio?openImageGeneration=true&returnToLibrary=true';
                             }}
-                            className="flex items-center gap-1 brand-button border  px-4 py-1.5 rounded-lg"
+                            className="flex items-center gap-1 brand-button border  px-4 py-1.5 rounded-lg text-sm"
                         >
                             <Plus size={20} /> {t('imageLibrary.generateImages')}
                         </button>
