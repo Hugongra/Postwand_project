@@ -126,10 +126,10 @@ app.config.update(
 CORS(app, 
      supports_credentials=True,
      origins=[
-         "https://localhost:5174",           # For local development
-         "https://tiktok-dev.local:5174",     # For TikTok Auth
+         #"https://localhost:5174",           # For local development
+         #"https://tiktok-dev.local:5174",     # For TikTok Auth
          "https://accounts.google.com",      # Allow Google OAuth popup
-         #"https://app.postwand.io",          # Production frontend
+         "https://app.postwand.io",          # Production frontend
      ],
      allow_headers=["Content-Type", "Authorization", "X-CSRFToken", "X-Requested-With"],
      expose_headers=["Content-Type", "X-CSRFToken"],
@@ -157,7 +157,7 @@ def add_coop_headers(response):
     response.headers['Cross-Origin-Embedder-Policy'] = 'unsafe-none'
     return response
 
-APP_URL = "/api"
+APP_URL = "/"
 
 
 
@@ -1683,22 +1683,22 @@ if __name__ == '__main__':
     # )
     
     # Listen on all interfaces to work with both localhost and tiktok-dev.local
-    app.run(
-        host='0.0.0.0',  # Listen on all interfaces so both localhost and tiktok-dev.local work
-        port=5001,
-        debug=True,
-        ssl_context=(
-           '../localhost+3.pem',      # Certificate that covers both localhost and tiktok-dev.local
-            '../localhost+3-key.pem'   # Key for the multi-domain certificate
-        ),
-    )
+    #app.run(
+    #    host='0.0.0.0',  # Listen on all interfaces so both localhost and tiktok-dev.local work
+    #    port=5001,
+    #    debug=True,
+    #    ssl_context=(
+    #       '../localhost+3.pem',      # Certificate that covers both localhost and tiktok-dev.local
+    #        '../localhost+3-key.pem'   # Key for the multi-domain certificate
+    #    ),
+    #)
 
     #For production, get port from environment variable or use default
-    #port = int(os.environ.get('PORT', 5000))
+    port = int(os.environ.get('PORT', 5000))
     #Listen on all interfaces (0.0.0.0)
     #Don't use SSL context in production - the platform handles HTTPS
     #Disable debug mode
-    #app.run(host='0.0.0.0', port=port, debug=False)
+    app.run(host='0.0.0.0', port=port, debug=False)
 
 
 
