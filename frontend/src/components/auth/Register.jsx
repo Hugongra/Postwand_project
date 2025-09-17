@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { User, Mail, Lock, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import VerifyCode from './VerifyCode';
@@ -228,6 +228,7 @@ const Register = ({ onLogin }) => {
   };
 
   return (
+    <Suspense fallback="loading">
     <div className="flex w-full h-full">
       <div className="lg:w-1/2 w-full bg-white flex items-center justify-center relative">
         <img src={PostwandLogoColor} alt="Postwand Logo" className="absolute top-6 right-6 w-[8vw] min-w-[100px] h-auto object-cover" />
@@ -400,6 +401,7 @@ const Register = ({ onLogin }) => {
   </h1>
 </div>
     </div>
+    </Suspense>
   );
 };
 

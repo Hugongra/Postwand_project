@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { Mail, Lock, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -152,6 +152,7 @@ const Login = ({ onLogin }) => {
   };
 
   return (
+    <Suspense fallback="loading">
     <div className="flex w-full h-full">
       <div className="w-full bg-white flex items-center justify-center relative">
         <img src={PostwandLogoColor} alt="Postwand Logo" className="absolute top-6 right-6 w-[8vw] min-w-[100px] h-auto object-cover" />
@@ -279,6 +280,7 @@ const Login = ({ onLogin }) => {
         </div>
       </div>
     </div>
+    </Suspense>
   );
 };
 
