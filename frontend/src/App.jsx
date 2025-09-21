@@ -18,12 +18,11 @@ import PrivacyPolicyES from "./components/legal/PrivacyPolicy_es";
 import TermsConditions from "./components/legal/TermsConditions";
 import TermsConditionsES from "./components/legal/TermsConditions_es";
 import TokenLimitModal from "./components/TokenLimitModal";
-import ViralChatSession from "./components/ViralChat/ViralChatSession";
-import ViralChatSkeletonLoader from "./components/skeletons/ViralChatSkeletonLoader";
+
 import SkeletonLoader from "./components/skeletons/SkeletonLoader";
 import CalendarSkeletonLoader from "./components/skeletons/CalendarSkeletonLoader";
 import AiStudioSkeletonLoader from "./components/skeletons/AiStudioSkeletonLoader";
-import MessagesSkeletonLoader from "./components/skeletons/MessagesSkeletonLoader";
+
 
 import BrandStyleSkeletonLoader from "./components/skeletons/BrandStyleSkeletonLoader";
 import AIStudio2 from "./components/skeletons/AIStudio2";
@@ -33,13 +32,13 @@ import CreateImages from "./components/CreatePost/CreateImages";
 import CreateAd from "./components/AiStudio/CreateAd";
 import AdTypeSelector from "./components/AiStudio/AdTypeSelector";
 import "./App.css";
-import Messages from "./components/messages/Messages";
+
 import { CardTitle } from "./components/ui/card";
-import ImageEditor from './components/ImageEditor/ImageEditor';
+
 import ImageLibrary from './components/ImageLibrary/ImageLibrary';
 import ImageLibrarySkeletonLoader from "./components/skeletons/ImageLibrarySkeletonLoader";
-import ImageEditorFabric from './CanvasImageEditor';
-import Fabric from './components/Fabric';
+
+
 
 import { loadStripe } from '@stripe/stripe-js';
 import {
@@ -50,8 +49,8 @@ import PricingTiers from './components/pricing_tiers/pricing_tiers';
 
 import BrandIdentity from "./components/brands/BrandIdentity";
 import DeletionConfirmation from './components/auth/DeletionConfirmation';
-import InstagramInsights from "./components/insights/Insights";
-import Settings from "./components/Settings";
+
+
 
 // Initialize Stripe outside of component render
 const stripePromise = loadStripe("pk_test_51RBOY6QMQsRNuG45HnWwJdSwqwHnnZhzD5QnX9WBGmjcWbZofA0StHc73OXvlpLcPnVcN1TsQzM11xBGG8fY7xRR00KTv87rnY");
@@ -402,15 +401,12 @@ function App() {
       return <AiStudioSkeletonLoader />;
     } else if (path === '/scheduler') {
       return <SkeletonLoader />;
-    } else if (path === '/messages') {
-      return <MessagesSkeletonLoader />;
-    } else if (path === '/image-library') {
+    }  else if (path === '/image-library') {
       return <ImageLibrarySkeletonLoader />;
 
     } else if (path === '/brand-identity') {
       return <BrandStyleSkeletonLoader />;
-    } else if (path === '/viral-chat') {
-      return <ViralChatSkeletonLoader />;
+    
     } else {
       // Default loading state for any other route
       return (
@@ -618,13 +614,7 @@ function App() {
             </div>
           }/>
           
-          {/* Add ViralChat route */}
-          <Route path="/viral-chat/:id?" element={
-            <div className="bg-primary h-full">
-              {isLoading ? <ViralChatSkeletonLoader /> : <ViralChatSession />}
-            </div>
-          }/>
-          
+        
           {/* Continue with other routes */}
         
           <Route path="/ai-studio" element={
@@ -636,7 +626,7 @@ function App() {
             </div>
           }>
             <Route index element={<AiStudioHome />} />
-            <Route path="ideas" element={<ViralChatSession brands={brands} />} />
+            
             <Route path="images" element={<CreatePost />} />
             <Route path="text" element={<CreateText />} />
             <Route path="post" element={<CreatePost />} />
@@ -663,15 +653,7 @@ function App() {
             </div>
           }/>
           
-          <Route path="/image-editor" element={
-            <div className="py-4 pr-2">
-              <ImageEditor 
-                initialImage={editedImage} 
-                onSave={handleSaveImage} 
-                onCancel={() => console.log('Editing cancelled')} 
-              />
-            </div>
-          }/>
+         
           
           <Route path="/image-library" element={
             <div className="bg-primary">
@@ -703,25 +685,12 @@ function App() {
                 />
             </div>
           }/>
-         {/*
-          <Route path="/insights" element={
-            <div className="bg-primary min-h-screen">
-              <InstagramInsights instagramData={instagramData} />
-            </div>
-          } />
-          */}
+        
+   
           
-          <Route path="/settings" element={
-            <div className="bg-primary min-h-screen">
-              <Settings />
-            </div>
-          } />
+    
 
-          <Route path="/viral-chat" element={
-            <div className="bg-primary min-h-screen">
-              <ViralChatSession brands={brands} />
-            </div>
-          } />
+        
         </Route>
         
         {/* Checkout Routes - Add protection but allow access even with expired trial */}
@@ -754,9 +723,6 @@ function App() {
 
         <Route path="/deletion-confirmation" element={<DeletionConfirmation />} />
 
-        <Route path="/image-fabric" element={
-            <ImageEditorFabric />
-          }/>
       </Routes>
     </>
   );

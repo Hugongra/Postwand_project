@@ -8,6 +8,7 @@ import uuid
 import base64
 import json
 import hmac
+
 import hashlib
 from urllib.parse import urlparse
 import logging
@@ -79,10 +80,7 @@ from stripe_service import (
     get_session_status
 )
 
-from brand_extraction.logo_extraction import extract_website_assets
-from brand_extraction.info_extraction import info_extraction
-from brand_extraction.color_extraction import color_extraction
-from brand_service import invalidate_brand_cache, get_brand_profile as get_cached_brand_profile
+from brand_extraction.brand_endpoints import brand_bp
  
 from viral_ideas_chat import initialize_chat, connect_to_chat
 #SUPABASE
@@ -121,15 +119,18 @@ app.config.update(
    
 )
 
+# Register blueprints
+app.register_blueprint(brand_bp)
+
 
 # CORS configuration for production
 CORS(app, 
      supports_credentials=True,
      origins=[
-         #"https://localhost:5174",           # For local development
-         #"https://tiktok-dev.local:5174",     # For TikTok Auth
-         "https://accounts.google.com",      # Allow Google OAuth popup
-         "https://app.postwand.io",          # Production frontend
+         "https://localhost:5174",           # For local development
+         "https://tiktok-dev.local:5174",     # For TikTok Auth
+         #"https://accounts.google.com",      # Allow Google OAuth popup
+         #"https://app.postwand.io",          # Production frontend
      ],
      allow_headers=["Content-Type", "Authorization", "X-CSRFToken", "X-Requested-With"],
      expose_headers=["Content-Type", "X-CSRFToken"],
@@ -157,7 +158,7 @@ def add_coop_headers(response):
     response.headers['Cross-Origin-Embedder-Policy'] = 'unsafe-none'
     return response
 
-APP_URL = "/"
+APP_URL = "/api"
 
 
 
@@ -187,17 +188,6 @@ def check_instagram_token_validity(access_token):
         return False
 
 
-#USER AUTHENTICATION
-@app.route(f'{APP_URL}/debug/session', methods=['GET'])
-def debug_session():
-    """Debug endpoint to check session data"""
-    return jsonify({
-        'session_data': dict(session),
-        'session_keys': list(session.keys()),
-        'user_id': session.get('user_id'),
-        'has_user_id': 'user_id' in session
-    })
-
 
 
 @app.route(f'{APP_URL}/auth/status', methods=['GET', 'OPTIONS'])
@@ -213,11 +203,10 @@ def api_register():
 @app.route(f'{APP_URL}/auth/login', methods=['POST'])
 @user_rate_limit(limit=5, period=60)
 def api_login():
-    print("DEBUG: Login route called!")
-    print(f"DEBUG: Request data: {request.get_json()}")
-    result = login()
-    print(f"DEBUG: Login result: {result}")
-    return result
+
+ 
+   
+    return login()
 
 @app.route(f'{APP_URL}/auth/logout', methods=['POST', 'OPTIONS'])
 def api_logout():
@@ -227,12 +216,6 @@ def api_logout():
 def api_google_sign_in():
     if request.method == 'OPTIONS':
         return '', 204
-    
-    # Debug logging for Content-Type issue
-    print(f"DEBUG: Content-Type: {request.content_type}")
-    print(f"DEBUG: Headers: {dict(request.headers)}")
-    print(f"DEBUG: Request data: {request.get_data()}")
-    
     return google_sign_in()
 
 
@@ -328,23 +311,14 @@ def tiktok_callback():
 def get_tiktok_creator_info():
     """Get TikTok creator info for validation and UI display"""
     try:
-        data = request.get_json()
-        account_id = data.get('account_id')
-        user_id = session.get('user_id')
-        
-        if not account_id:
-            return jsonify({'error': 'Account ID is required'}), 400
-            
+       
         from scheduler.tiktok import get_creator_info_for_ui
-        result = get_creator_info_for_ui(account_id, user_id)
+        result = get_creator_info_for_ui()
         
-        if result['success']:
-            return jsonify(result), 200
-        else:
-            return jsonify(result), 400
-        
+        if result['success']:return jsonify(result), 200
+        else: return jsonify(result), 400
+
     except Exception as e:
-        logging.error(f"Error getting TikTok creator info: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
 #SCHEDULE POSTS ENDPOINTS
@@ -408,9 +382,7 @@ def task_status_endpoint(task_id):
 def get_scheduled_posts():
     try:
         user_id = session.get('user_id')
-        if not user_id:
-            return jsonify({'error': 'User not authenticated'}), 401
-            
+      
         # Fetch all scheduled posts from Supabase for the current user
         result = supabase.table('scheduled_posts')\
             .select('*')\
@@ -476,9 +448,6 @@ def delete_post():
     
     except Exception as e:
         return jsonify({'error': str(e)}), 400
-
-
-
 
 
 
@@ -679,95 +648,12 @@ def api_generate_image():
            
             
         return jsonify(result), 200
-        #else:
-        #    # Stability AI returns a file path
-        #    image_path = generate_image_stability(style, text, text_position, prompt, aspect_ratio)
-        #    
-        #    # Read the binary data from the file directly
-        #    try:
-        #        with open(image_path, 'rb') as image_file:
-        #            # Base64 encode the binary data directly - don't decode as text first
-        #            encoded_image = base64.b64encode(image_file.read()).decode('utf-8')
-        #            data_url = f"data:image/webp;base64,{encoded_image}"
-        #        return jsonify({'imageUrl': data_url, 'status': 'success'}), 200
-        #    except Exception as file_error:
-        #       
-        #        return jsonify({'error': str(file_error), 'status': 'error'}), 500
+     
 
     except Exception as e:
        return jsonify({'error': str(e), 'status': 'error'}), 500
     
 
-
-
-
-
-
-@app.route(f'{APP_URL}/search-places', methods=['GET'])
-@login_required
-@subscription_required
-def search_places():
-    try:
-        query = request.args.get('query', '')
-        
-        if not query or len(query.strip()) < 2:
-            return jsonify({'places': []}), 200
-        
-        # Google Places API key from environment variables
-        api_key = os.getenv('GOOGLE_PLACES_API_KEY')
-        if not api_key:
-            app.logger.error("Missing Google Places API key")
-            return jsonify({'error': 'Google Places API key not configured'}), 500
-        
-        app.logger.info(f"Searching Places API for: {query}")
-        
-        try:
-            # Call Google Places Autocomplete API
-            response = requests.get(
-                'https://maps.googleapis.com/maps/api/place/autocomplete/json',
-                params={
-                    'input': query,
-                    'key': api_key,
-                    'types': 'establishment',
-                    'fields': 'place_id,description,structured_formatting'
-                }
-            )
-            
-            app.logger.info(f"Places API response status: {response.status_code}")
-            
-            if not response.ok:
-                app.logger.error(f"Places API error: {response.text}")
-                return jsonify({'error': f'Places API error: {response.status_code}'}), response.status_code
-            
-            data = response.json()
-            app.logger.info(f"Places API response: {data.get('status')}")
-            
-            if data.get('status') != 'OK' and data.get('status') != 'ZERO_RESULTS':
-                app.logger.error(f"Places API returned non-OK status: {data.get('status')}, error: {data.get('error_message')}")
-                return jsonify({'error': f"Places API error: {data.get('status')}"}), 500
-            
-            # Format the places data for the frontend
-            places = []
-            for prediction in data.get('predictions', []):
-                places.append({
-                    'place_id': prediction.get('place_id'),
-                    'description': prediction.get('description'),
-                    'structured_formatting': prediction.get('structured_formatting', {}),
-                    'secondary_text': prediction.get('structured_formatting', {}).get('secondary_text', '')
-                })
-            
-            return jsonify({'places': places})
-            
-        except requests.RequestException as e:
-            app.logger.error(f"Request error to Places API: {str(e)}")
-            return jsonify({'error': f'Request error: {str(e)}'}), 500
-            
-    except Exception as e:
-        app.logger.error(f"Error searching for places: {str(e)}")
-        # Return an actual error message to help debug
-        import traceback
-        app.logger.error(traceback.format_exc())
-        return jsonify({'error': str(e)}), 500
     
 
 # Register after_request handler for translation
@@ -775,430 +661,23 @@ def search_places():
 def process_response(response):
     return translate_response(response)
 
-# Test endpoint for translation
-@app.route(f'{APP_URL}/test-translation', methods=['GET'])
-@subscription_required
-def test_translation():
-    """Test endpoint to verify translation is working"""
-    language = request.args.get('lang', '')
-    if language:
-        from flask import g
-        g.language = language  # Override detected language for testing
-        
-    return jsonify({
-        'message': 'This message should be translated based on your Accept-Language header',
-        'error': 'This error message should also be translated'
-    })
 
 # Token usage endpoint
 @app.route(f'{APP_URL}/usage/tokens', methods=['GET'])
+@login_required
 @subscription_required
 def get_token_usage():
     """Get token usage for the current user"""
     user_id = session.get('user_id')
-    if not user_id:
-        return jsonify({'error': 'User not authenticated'}), 401
+    
         
     usage_data = get_user_token_usage(user_id)
     return jsonify(usage_data)
 
 
-@app.route(f'{APP_URL}/viral-chat', methods=['POST'])
-@login_required
-@subscription_required
-def viral_chat():
-    user_id = session.get('user_id')
-
-    if not user_id:
-        return jsonify({"error": "User not authenticated"}), 401
-    return initialize_chat(user_id)
 
 
-@app.route(f'{APP_URL}/transcript-video', methods=['POST'])
-@login_required
-@subscription_required
-@user_rate_limit(limit=15, period=60)   
-def transcript_video():
-    """Transcribe a single video and save to whiteboard transcripts column"""
-    try:
-        data = request.json
-        user_id = session.get('user_id')
-        
-        video_url = data.get('video_url')
-        video_id = data.get('video_id')
-        whiteboard_name = data.get('whiteboard_name', 'Untitled Whiteboard')
-        
-        if not video_url or not video_id:
-            return jsonify({'error': 'Missing required fields'}), 400
-        
-        # Initialize video transcriber
-        from video_transcript import VideoTranscriber
-        transcriber = VideoTranscriber(os.getenv('OPENAI_API_KEY'))
-        
-        # Process video
-        result = transcriber.process_video(video_url=video_url)
-        
-        if not result.get('success'):
-            return jsonify({'error': 'Failed to process video'}), 500
-        
-        # Get or create whiteboard
-        whiteboard_result = supabase.table('viral_chat_whiteboards').select('*').eq('name', whiteboard_name).eq('user_id', user_id).execute()
-        
-        if whiteboard_result.data:
-            # Update existing whiteboard transcripts
-            whiteboard = whiteboard_result.data[0]
-            transcripts = whiteboard.get('transcripts', {})
-            if transcripts is None:
-                transcripts = {}
-                
-            # Safe metadata extraction
-            metadata = result.get('metadata') or {}
-            video_title = metadata.get('title', 'Unknown Video') if isinstance(metadata, dict) else 'Unknown Video'
-            
-            transcripts[video_id] = {
-                'url': video_url,
-                'title': video_title,
-                'transcript': result.get('transcript', '')
-            }
-            
-            supabase.table('viral_chat_whiteboards').update({
-                'transcripts': transcripts,
-                'updated_at': datetime.now(timezone.utc).isoformat()
-            }).eq('id', whiteboard['id']).execute()
-        else:
-            # Create new whiteboard entry with transcript
-            # Safe metadata extraction
-            metadata = result.get('metadata') or {}
-            video_title = metadata.get('title', 'Unknown Video') if isinstance(metadata, dict) else 'Unknown Video'
-            
-            transcripts = {
-                video_id: {
-                    'url': video_url,
-                    'title': video_title,
-                    'transcript': result.get('transcript', '')
-                }
-            }
-            
-            supabase.table('viral_chat_whiteboards').insert({
-                'user_id': user_id,
-                'name': whiteboard_name,
-                'transcripts': transcripts,
-                'created_at': datetime.now(timezone.utc).isoformat(),
-                'updated_at': datetime.now(timezone.utc).isoformat()
-            }).execute()
-        
-        return jsonify({
-            'success': True,
-            'title': video_title,
-            'transcript': result.get('transcript', '')
-        }), 200
-        
-    except Exception as e:
-        print(f"Error transcribing video: {str(e)}")
-        return jsonify({'error': str(e)}), 500
 
-@app.route(f'{APP_URL}/brain', methods=['POST'])
-@login_required
-@subscription_required
-def brain():
-    """Process whiteboard content - combine layout with stored transcripts"""
-    try:
-        user_id = session.get('user_id')
-        data = request.json
-        
-        whiteboard_name = data.get('whiteboard_name')
-        folders = data.get('folders', [])
-        items = data.get('items', [])
-        
-        if not whiteboard_name:
-            return jsonify({'error': 'Whiteboard name required'}), 400
-        
-        # Get whiteboard with transcripts
-        whiteboard_result = supabase.table('viral_chat_whiteboards').select('*').eq('name', whiteboard_name).eq('user_id', user_id).execute()
-        
-        if not whiteboard_result.data:
-            return jsonify({'error': 'Whiteboard not found'}), 404
-        
-        whiteboard = whiteboard_result.data[0]
-        transcripts = whiteboard.get('transcripts', {})
-        
-        # Combine layout with transcripts for brain data
-        brain_data = {'videos': {}}
-        
-        # Process folders
-        for folder in folders:
-            for item in folder['items']:
-                if item.get('type') == 'video' and item['id'] in transcripts:
-                    transcript_data = transcripts[item['id']]
-                    brain_data['videos'][item['id']] = {
-                        'url': transcript_data['url'],
-                        'title': transcript_data['title'],
-                        'transcript': transcript_data['transcript'],
-                        'folder': folder['name']
-                    }
-        
-        # Process loose items
-        for item in items:
-            if item.get('type') == 'video' and item['id'] in transcripts:
-                transcript_data = transcripts[item['id']]
-                brain_data['videos'][item['id']] = {
-                    'url': transcript_data['url'],
-                    'title': transcript_data['title'],
-                    'transcript': transcript_data['transcript'],
-                    'folder': None
-                }
-        
-        # Update whiteboard with brain data
-        supabase.table('viral_chat_whiteboards').update({
-            'data_info': brain_data,
-            'updated_at': datetime.now(timezone.utc).isoformat()
-        }).eq('id', whiteboard['id']).execute()
-        
-        return jsonify({
-            'success': True, 
-            'message': f'Connected {len(brain_data["videos"])} videos to chat',
-            'video_count': len(brain_data["videos"])
-        }), 200
-        
-    except Exception as e:
-        print(f"Error in brain endpoint: {str(e)}")
-        return jsonify({'error': str(e)}), 500
-
-# Whiteboard endpoints
-@app.route(f'{APP_URL}/whiteboards', methods=['GET'])
-@login_required
-@subscription_required
-def get_whiteboards():
-    """Get all whiteboards for the current user or shared with the user"""
-    try:
-        user_id = session.get('user_id')
-        
-        # Get user's own whiteboards
-        own_boards = supabase.table('viral_chat_whiteboards').select('*').eq('user_id', user_id).execute()
-        
-        # Get whiteboards shared with the user
-        shared_boards = supabase.table('viral_chat_whiteboard_shares').select(
-            'viral_chat_whiteboards(id, name, description, created_at, updated_at, user_id)'
-        ).eq('shared_with_user_id', user_id).execute()
-        
-        # Format the response
-        result = {
-            'own_whiteboards': own_boards.data if own_boards.data else [],
-            'shared_whiteboards': []
-        }
-        
-        # Process shared whiteboards
-        if shared_boards.data:
-            for share in shared_boards.data:
-                if share.get('viral_chat_whiteboards'):
-                    whiteboard = share['viral_chat_whiteboards']
-                    whiteboard['is_shared'] = True
-                    result['shared_whiteboards'].append(whiteboard)
-        
-        return jsonify(result), 200
-        
-    except Exception as e:
-        print(f"Error getting whiteboards: {str(e)}")
-        return jsonify({'error': str(e)}), 500
-
-@app.route(f'{APP_URL}/whiteboards', methods=['POST'])
-@login_required
-@subscription_required
-def save_whiteboard():
-    """Save a whiteboard to Supabase with performance optimizations"""
-    try:
-        user_id = session.get('user_id')
-        data = request.json
-        
-        if not data:
-            return jsonify({'error': 'No data provided'}), 400
-            
-        whiteboard_data = data.get('whiteboard_data')
-        data_info = data.get('data_info')
-        whiteboard_id = data.get('id')
-        name = data.get('name', 'Untitled Whiteboard')
-        description = data.get('description', '')
-        
-        if not whiteboard_data:
-            return jsonify({'error': 'Whiteboard data is required'}), 400
-        
-        # If whiteboard_id is provided, update existing whiteboard
-        if whiteboard_id:
-            try:
-                # Single query: check ownership AND update (no separate auth query needed)
-                update_data = {
-                    'data': whiteboard_data,
-                    'data_info': data_info,
-                    'name': name,
-                    'description': description
-                    # Remove 'updated_at' - let PostgreSQL handle it automatically
-                }
-                
-                # Combine authorization check with update in single query
-                result = supabase.table('viral_chat_whiteboards')\
-                    .update(update_data, count='exact')\
-                    .eq('id', whiteboard_id)\
-                    .eq('user_id', user_id)\
-                    .execute()
-                
-                if result.count == 0:
-                    # No rows were updated - either whiteboard doesn't exist or user doesn't own it
-                    return jsonify({'error': 'Whiteboard not found or unauthorized'}), 404
-                
-            except Exception as db_error:
-                return jsonify({'error': f'Database update failed: {str(db_error)}'}), 500
-        else:
-            # Create new whiteboard
-            try:
-                insert_data = {
-                    'user_id': user_id,
-                    'data': whiteboard_data,
-                    'data_info': data_info,
-                    'name': name,
-                    'description': description
-                    # Remove manual timestamps - let PostgreSQL handle them
-                }
-                
-                # Only return essential columns to reduce response size
-                result = supabase.table('viral_chat_whiteboards')\
-                    .insert(insert_data, count='exact')\
-                    .execute()
-                
-                if result.count == 0:
-                    return jsonify({'error': 'Failed to create whiteboard'}), 500
-                
-            except Exception as db_error:
-                return jsonify({'error': f'Database insert failed: {str(db_error)}'}), 500
-        
-        # Return minimal response data - no huge transcript fields
-        return jsonify({
-            'success': True,
-            'whiteboard': result.data[0] if result.data else None
-        }), 200
-        
-    except Exception as e:
-        import traceback
-        print(f"Error saving whiteboard: {str(e)}")
-        print(f"Full traceback: {traceback.format_exc()}")
-        return jsonify({'error': f'Failed to save whiteboard: {str(e)}'}), 500
-
-@app.route(f'{APP_URL}/whiteboards/<whiteboard_id>', methods=['GET'])
-def get_whiteboard(whiteboard_id):
-    """Get a specific whiteboard by ID (public endpoint if shared)"""
-    try:
-        user_id = session.get('user_id')
-        
-        # Get the whiteboard
-        result = supabase.table('viral_chat_whiteboards').select('*').eq('id', whiteboard_id).execute()
-        
-        if not result.data:
-            return jsonify({'error': 'Whiteboard not found'}), 404
-            
-        whiteboard = result.data[0]
-        
-        # Check if user is authorized to view this whiteboard
-        is_owner = user_id and whiteboard['user_id'] == user_id
-        is_public = whiteboard.get('is_public', False)
-        
-        if not is_owner and not is_public:
-            # Check if it's shared with this user
-            if user_id:
-                shared = supabase.table('viral_chat_whiteboard_shares').select('*').eq('whiteboard_id', whiteboard_id).eq('shared_with_user_id', user_id).execute()
-                if not shared.data:
-                    return jsonify({'error': 'Unauthorized to view this whiteboard'}), 403
-            else:
-                return jsonify({'error': 'Unauthorized to view this whiteboard'}), 403
-        
-        return jsonify({
-            'whiteboard': whiteboard,
-            'is_owner': is_owner
-        }), 200
-        
-    except Exception as e:
-        print(f"Error getting whiteboard: {str(e)}")
-        return jsonify({'error': str(e)}), 500
-
-@app.route(f'{APP_URL}/whiteboards/<whiteboard_id>', methods=['DELETE'])
-@login_required
-@subscription_required
-def delete_whiteboard(whiteboard_id):
-    """Delete a whiteboard"""
-    try:
-        user_id = session.get('user_id')
-        
-        # Check if user owns this whiteboard
-        check = supabase.table('viral_chat_whiteboards').select('user_id').eq('id', whiteboard_id).execute()
-        if not check.data or check.data[0]['user_id'] != user_id:
-            return jsonify({'error': 'Unauthorized to delete this whiteboard'}), 403
-        
-        # Delete all shares first
-        supabase.table('viral_chat_whiteboard_shares').delete(returning='minimal', count='exact').eq('whiteboard_id', whiteboard_id).execute()
-        
-        result = supabase.table('viral_chat_whiteboards').delete(returning='minimal', count='exact').eq('id', whiteboard_id).execute()
-        
-        if result.count == 0:
-            return jsonify({'error': 'Whiteboard not found'}), 404
-            
-        return jsonify({
-            'success': True,
-            'message': 'Whiteboard deleted successfully'
-        }), 200
-        
-    except Exception as e:
-        print(f"Error deleting whiteboard: {str(e)}")
-        return jsonify({'error': str(e)}), 500
-
-@app.route(f'{APP_URL}/whiteboards/<whiteboard_id>/share', methods=['POST'])
-@login_required
-@subscription_required
-def share_whiteboard(whiteboard_id):
-    """Share a whiteboard with another user or make it public"""
-    try:
-        user_id = session.get('user_id')
-        data = request.json
-        
-        # Check if user owns this whiteboard
-        check = supabase.table('viral_chat_whiteboards').select('user_id').eq('id', whiteboard_id).execute()
-        if not check.data or check.data[0]['user_id'] != user_id:
-            return jsonify({'error': 'Unauthorized to share this whiteboard'}), 403
-        
-        # Handle making the whiteboard public
-        is_public = data.get('is_public')
-        if is_public is not None:
-            supabase.table('viral_chat_whiteboards').update({
-                'is_public': is_public
-            }).eq('id', whiteboard_id).execute()
-        
-        # Handle sharing with specific users
-        shared_with_email = data.get('shared_with_email')
-        if shared_with_email:
-            # Find user by email
-            user_result = supabase.table('users').select('id').eq('email', shared_with_email).execute()
-            if not user_result.data:
-                return jsonify({'error': f'User with email {shared_with_email} not found'}), 404
-                
-            shared_user_id = user_result.data[0]['id']
-            
-            # Check if already shared
-            check_share = supabase.table('viral_chat_whiteboard_shares').select('*').eq('whiteboard_id', whiteboard_id).eq('shared_with_user_id', shared_user_id).execute()
-            
-            if not check_share.data:
-                # Create new share
-                supabase.table('viral_chat_whiteboard_shares').insert({
-                    'whiteboard_id': whiteboard_id,
-                    'shared_by_user_id': user_id,
-                    'shared_with_user_id': shared_user_id,
-                    'created_at': datetime.now(timezone.utc).isoformat()
-                }).execute()
-        
-        return jsonify({
-            'success': True,
-            'message': 'Whiteboard shared successfully'
-        }), 200
-        
-    except Exception as e:
-        print(f"Error sharing whiteboard: {str(e)}")
-        return jsonify({'error': str(e)}), 500
 
 
 #IMAGE CHAT
@@ -1493,212 +972,29 @@ def load_image_chat(chat_id):
         print(f"Error loading image chat: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
-# BRAND EXTRACTION ENDPOINTS
-@app.route(f'{APP_URL}/brands', methods=['GET'])
-@login_required
-@subscription_required
-def api_get_brands():
-    """Get all brand profiles for the current user"""
-    try:
-        user_id = session.get('user_id')
-        if not user_id:
-            return jsonify({'error': 'User not authenticated'}), 401
-        
-        # Get all brand profiles for this user
-        result = supabase.table('brand_profiles').select('*').eq('user_id', user_id).order('created_at', desc=True).execute()
-        
-        # Format the response to match what the frontend expects
-        brands = []
-        for brand_profile in result.data:
-            # Extract domain name from website_url for the name
-            website_url = brand_profile.get('website_url', '')
-            try:
-                from urllib.parse import urlparse
-                parsed = urlparse(website_url if website_url.startswith('http') else f'https://{website_url}')
-                domain_name = parsed.hostname.replace('www.', '') if parsed.hostname else website_url
-                clean_name = domain_name.split('.')[0] if '.' in domain_name else domain_name
-                name = clean_name.capitalize()
-            except:
-                name = website_url
-            
-            brands.append({
-                'id': brand_profile['id'],
-                'name': name,
-                'website_url': brand_profile['website_url'],
-                'logo_url': brand_profile.get('logo_url'),
-                'created_at': brand_profile['created_at'],
-                'updated_at': brand_profile['updated_at']
-            })
-        
-        return jsonify({'brands': brands}), 200
-        
-    except Exception as e:
-        print(f"Error getting brands: {str(e)}")
-        return jsonify({'error': str(e)}), 500
-
-@app.route(f'{APP_URL}/brands/<brand_id>', methods=['DELETE'])
-@login_required
-@subscription_required
-def api_delete_brand(brand_id):
-    """Delete a brand profile"""
-    try:
-        user_id = session.get('user_id')
-        if not user_id:
-            return jsonify({'error': 'User not authenticated'}), 401
-        
-        # Check if brand belongs to user and delete it
-        result = supabase.table('brand_profiles').delete(count='exact').eq('id', brand_id).eq('user_id', user_id).execute()
-        
-        if result.count == 0:
-            return jsonify({'error': 'Brand not found or unauthorized'}), 404
-        
-        # Invalidate cache
-        invalidate_brand_cache(user_id)
-        
-        return jsonify({'message': 'Brand deleted successfully'}), 200
-        
-    except Exception as e:
-        print(f"Error deleting brand: {str(e)}")
-        return jsonify({'error': str(e)}), 500
-
-@app.route(f'{APP_URL}/extract-brand', methods=['POST'])
-@login_required
-@subscription_required
-def api_extract_brand():
-    """Extract brand assets (logo, images, colors, brand info) from a website URL"""
-    try:
-        data = request.json
-        url = data.get('url')
-        
-        if not url:
-            return jsonify({'error': 'URL is required'}), 400
-        
-        user_id = session.get('user_id')
-        if not user_id:
-            return jsonify({'error': 'User not authenticated'}), 401
-        
-        # Normalize URL
-        from brand_extraction.logo_extraction import normalize_url
-        normalized_url = normalize_url(url)
-        
-        # Step 1: Extract website assets (logo and images)
-        print(f"Extracting assets from {normalized_url}")
-        assets = extract_website_assets(normalized_url, supabase_admin, user_id, image_limit=10)
-        
-        # Step 2: Extract colors
-        print("Extracting colors...")
-        colors = color_extraction(
-            url=normalized_url,
-            logo_url=assets.get('logo'),
-            image_urls=assets.get('images', [])
-        )
-        
-        # Step 3: Extract brand information using LLM
-        print("Extracting brand information...")
-        brand_analyzer = info_extraction()
-        brand_info = brand_analyzer.analyze_brand(normalized_url)
-        
-        # Prepare the response data
-        result = {
-            'success': True,
-            'url': normalized_url,
-            'assets': assets,
-            'colors': colors,
-            'brand_info': brand_info
-        }
-        
-        # Store the brand profile in database
-        try:
-            # Extract domain from normalized URL
-            from urllib.parse import urlparse
-            parsed_url = urlparse(normalized_url)
-            domain = parsed_url.netloc.replace('www.', '') if parsed_url.netloc else normalized_url
-            
-            brand_profile_data = {
-                'user_id': user_id,
-                'domain': domain,
-                'website_url': normalized_url,
-                'logo_url': assets.get('logo'),
-                'image_urls': assets.get('images', []),
-                'colors': colors,
-                'brand_info': brand_info,
-                'created_at': datetime.now(timezone.utc).isoformat(),
-                'updated_at': datetime.now(timezone.utc).isoformat()
-            }
-            
-            # Check if brand profile already exists (use domain for faster lookup due to index)
-            existing = supabase.table('brand_profiles').select('id').eq('user_id', user_id).eq('domain', domain).execute()
-            
-            if existing.data:
-                # Update existing profile
-                supabase.table('brand_profiles').update(brand_profile_data).eq('id', existing.data[0]['id']).execute()
-            else:
-                # Create new profile
-                supabase.table('brand_profiles').insert(brand_profile_data).execute()
-            
-            # Invalidate cache
-            invalidate_brand_cache(user_id)
-            
-        except Exception as db_error:
-            print(f"Warning: Failed to save brand profile to database: {str(db_error)}")
-            # Continue without failing the entire request
-        
-        return jsonify(result), 200
-        
-    except Exception as e:
-        print(f"Error in brand extraction: {str(e)}")
-        return jsonify({'error': f'Brand extraction failed: {str(e)}'}), 500
-
-@app.route(f'{APP_URL}/brand-profile', methods=['GET'])
-@app.route(f'{APP_URL}/brand-profile/<brand_id>', methods=['GET'])
-@login_required
-@subscription_required  
-def api_get_brand_profile(brand_id=None):
-    """Get brand profile from database"""
-    try:
-        
-        
-        brand_profile = get_cached_brand_profile(brand_id)
-        
-        if brand_profile:
-            return jsonify({'brand_profile': brand_profile}), 200
-        else:
-            return jsonify({'error': 'Brand profile not found'}), 404
-            
-    except Exception as e:
-        print(f"Error getting brand profile: {str(e)}")
-        return jsonify({'error': str(e)}), 500
+# Brand endpoints are now handled by the brand_bp blueprint
 
 #MAIN
 if __name__ == '__main__':
-    # Original threads-dev.local configuration (commented out)
-    # app.run(
-    #     host='threads-dev.local',
-    #     port=5000,
-    #     ssl_context=(
-    #         '../frontend/threads-dev.local.pem',  # Your SSL cert
-    #         '../frontend/threads-dev.local-key.pem'  # Your SSL key
-    #     ),
-    #     debug=True
-    # )
+ 
     
-    # Listen on all interfaces to work with both localhost and tiktok-dev.local
-    #app.run(
-    #    host='0.0.0.0',  # Listen on all interfaces so both localhost and tiktok-dev.local work
-    #    port=5001,
-    #    debug=True,
-    #    ssl_context=(
-    #       '../localhost+3.pem',      # Certificate that covers both localhost and tiktok-dev.local
-    #        '../localhost+3-key.pem'   # Key for the multi-domain certificate
-    #    ),
-    #)
+    
+    app.run(
+        host='0.0.0.0',  
+        port=5001,
+        debug=True,
+        ssl_context=(
+           '../localhost+3.pem',      
+            '../localhost+3-key.pem'   
+        ),
+    )
 
     #For production, get port from environment variable or use default
-    port = int(os.environ.get('PORT', 5000))
+    #port = int(os.environ.get('PORT', 5000))
     #Listen on all interfaces (0.0.0.0)
     #Don't use SSL context in production - the platform handles HTTPS
     #Disable debug mode
-    app.run(host='0.0.0.0', port=port, debug=False)
+    #app.run(host='0.0.0.0', port=port, debug=False)
 
 
 

@@ -1,11 +1,12 @@
 import logging
 import requests
 import json
-import time
-import os
-from datetime import datetime, timezone
-import tempfile
 
+import os
+import tempfile
+from flask import request, session
+from database import get_supabase_client
+supabase = get_supabase_client()
 # TikTok Content Posting API URLs
 TIKTOK_API_BASE = "https://open.tiktokapis.com"
 TIKTOK_CREATOR_INFO_URL = f"{TIKTOK_API_BASE}/v2/post/publish/creator_info/query/"
@@ -47,8 +48,7 @@ def _upload_video_to_tiktok(content, access_token, video_url, title=None, privac
             logging.warning("TikTok token is invalid, attempting refresh...")
             
             # Get refresh token from database and refresh
-            from database import get_supabase_client
-            supabase = get_supabase_client()
+            
             
             tiktok_accounts = supabase.table('tiktok_accounts').select('*').eq('tiktok_id', page_id).eq('user_id', user_id).execute()
             if not tiktok_accounts.data:
@@ -381,7 +381,7 @@ def _post_photos_to_tiktok(content, access_token, image_urls, title=None, descri
         logging.error(f"Unexpected error in TikTok photo upload: {str(e)}")
         return False, {"error": f"Unexpected error: {str(e)}"}, None
 
-def get_creator_info_for_ui(account_id, user_id):
+def get_creator_info_for_ui():
     """
     Get creator info for UI display with token refresh handling
     
@@ -393,16 +393,21 @@ def get_creator_info_for_ui(account_id, user_id):
         dict: Response with success status and data or error
     """
     try:
-        from database import get_supabase_client
-        import os
-        
+   
         supabase = get_supabase_client()
+
+        data = request.get_json()
+        account_id = data.get('account_id')
+        user_id = session.get('user_id')
+        
+        if not account_id:
+            return {'success': False, 'error': 'Account ID is required'}
         
         # Get TikTok account data from database
         tiktok_accounts = supabase.table('tiktok_accounts').select('*').eq('tiktok_id', account_id).eq('user_id', user_id).execute()
         
         if not tiktok_accounts.data:
-            return {'success': False, 'error': 'TikTok account not found'}
+            return {'success': False, 'error': 'TikTok account not found'}, 400
             
         account = tiktok_accounts.data[0]
         access_token = account.get('access_token')
