@@ -58,7 +58,7 @@ const AIStudio2 = () => {
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 flex-grow">
                         {/* Row 1 */}
                         <div 
-                            className="bg-gray-200 rounded-xl p-5 hover:bg-gray-200/60 transition-all duration-200 flex flex-col relative aspect-square h-60 cursor-pointer"
+                            className="bg-gray-200 rounded-lg p-5 hover:bg-gray-200/60 transition-all duration-200 flex flex-col relative aspect-square h-60 cursor-pointer"
                             onClick={() => handlePlatformSelection('instagram')}
                         >
                             <div>
@@ -71,7 +71,7 @@ const AIStudio2 = () => {
                         </div>
                         
                         <div 
-                            className="bg-gray-200 rounded-xl p-5 hover:bg-gray-200/60 transition-all duration-200 flex flex-col relative aspect-square h-60 cursor-pointer"
+                            className="bg-gray-200 rounded-lg p-5 hover:bg-gray-200/60 transition-all duration-200 flex flex-col relative aspect-square h-60 cursor-pointer"
                             onClick={() => handlePlatformSelection('facebook')}
                         >
                             <div>
@@ -84,7 +84,7 @@ const AIStudio2 = () => {
                         </div>
                         
                         <div 
-                            className="bg-gray-200 rounded-xl p-5 hover:bg-gray-200/60 transition-all duration-200 flex flex-col relative aspect-square h-60 cursor-pointer"
+                            className="bg-gray-200 rounded-lg p-5 hover:bg-gray-200/60 transition-all duration-200 flex flex-col relative aspect-square h-60 cursor-pointer"
                             onClick={() => handlePlatformSelection('tiktok')}
                         >
                             <div>
@@ -98,7 +98,7 @@ const AIStudio2 = () => {
                         
                         {/* YouTube */}
                         <div 
-                            className="bg-gray-200 rounded-xl p-5 hover:bg-gray-200/60 transition-all duration-200 flex flex-col relative aspect-square h-60 cursor-pointer"
+                            className="bg-gray-200 rounded-lg p-5 hover:bg-gray-200/60 transition-all duration-200 flex flex-col relative aspect-square h-60 cursor-pointer"
                             onClick={() => handlePlatformSelection('youtube')}
                         >
                             <div>
@@ -112,7 +112,7 @@ const AIStudio2 = () => {
                         
                         {/* Row 2 */}
                         <div 
-                            className="bg-gray-200 rounded-xl p-5 hover:bg-gray-200/60 transition-all duration-200 flex flex-col relative aspect-square h-60 cursor-pointer"
+                            className="bg-gray-200 rounded-lg p-5 hover:bg-gray-200/60 transition-all duration-200 flex flex-col relative aspect-square h-60 cursor-pointer"
                             onClick={() => handlePlatformSelection('threads')}
                         >
                             <div>
@@ -126,7 +126,7 @@ const AIStudio2 = () => {
                         
                         {/* linkedin */}  
                         <div 
-                            className="bg-gray-200 rounded-xl p-5 hover:bg-gray-200/60 transition-all duration-200 flex flex-col relative aspect-square h-60 cursor-pointer"
+                            className="bg-gray-200 rounded-lg p-5 hover:bg-gray-200/60 transition-all duration-200 flex flex-col relative aspect-square h-60 cursor-pointer"
                             onClick={() => handlePlatformSelection('linkedin')}
                         >
                             <div>
@@ -140,7 +140,7 @@ const AIStudio2 = () => {
                         
                         {/* twitter */}
                         <div 
-                            className="bg-gray-200 rounded-xl p-5 hover:bg-gray-200/60 transition-all duration-200 flex flex-col relative aspect-square h-60 cursor-pointer"
+                            className="bg-gray-200 rounded-lg p-5 hover:bg-gray-200/60 transition-all duration-200 flex flex-col relative aspect-square h-60 cursor-pointer"
                             onClick={() => handlePlatformSelection('twitter')}
                         >
                             <div>
@@ -154,7 +154,7 @@ const AIStudio2 = () => {
 
                         {/* Blog */}
                         <div 
-                            className="bg-gray-200 rounded-xl p-5 hover:bg-gray-200/60 transition-all duration-200 flex flex-col relative aspect-square h-60 cursor-pointer"
+                            className="bg-gray-200 rounded-lg p-5 hover:bg-gray-200/60 transition-all duration-200 flex flex-col relative aspect-square h-60 cursor-pointer"
                             onClick={() => handlePlatformSelection('blog')}
                         >
                             <div>
@@ -182,7 +182,7 @@ const AIStudio2 = () => {
                         </button>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-6 h-[60vh] w-full">
                         {/* Type option 1 */}
-                        <div className="bg-gray-200 rounded-xl p-5 hover:bg-gray-200/60 transition-all duration-200 flex flex-col relative cursor-pointer w-full">
+                        <div className="bg-gray-200 rounded-lg p-5 hover:bg-gray-200/60 transition-all duration-200 flex flex-col relative cursor-pointer w-full">
                             <div>
                                 <h3 className="text-lg font-medium text-gray-800">Post</h3>
                                 <p className="text-sm text-gray-600 mt-1">Create regular posts</p>
@@ -190,7 +190,7 @@ const AIStudio2 = () => {
                         </div>
                         
                         {/* Type option 2 */}
-                        <div className="bg-gray-200 rounded-xl p-5 hover:bg-gray-200/60 transition-all duration-200 flex flex-col relative cursor-pointer w-full">
+                        <div className="bg-gray-200 rounded-lg p-5 hover:bg-gray-200/60 transition-all duration-200 flex flex-col relative cursor-pointer w-full">
                             <div>
                                 <h3 className="text-lg font-medium text-gray-800">Story</h3>
                                 <p className="text-sm text-gray-600 mt-1">Create engaging stories</p>
@@ -198,7 +198,7 @@ const AIStudio2 = () => {
                         </div>
                         
                         {/* Type option 3 */}
-                        <div className="bg-gray-200 rounded-xl p-5 hover:bg-gray-200/60 transition-all duration-200 flex flex-col relative cursor-pointer w-full">
+                        <div className="bg-gray-200 rounded-lg p-5 hover:bg-gray-200/60 transition-all duration-200 flex flex-col relative cursor-pointer w-full">
                             <div>
                                 <h3 className="text-lg font-medium text-gray-800">Reel</h3>
                                 <p className="text-sm text-gray-600 mt-1">Create short video content</p>

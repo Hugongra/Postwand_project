@@ -13,14 +13,16 @@ export default defineConfig({
     alias: {
       "@": path.resolve(__dirname, "./src"),
       "~public": path.resolve(__dirname, "./public"),
+      "@components": path.resolve(__dirname, "./src/components"),
+      "@services": path.resolve(__dirname, "./src/services"),
     },
   },
   server: {
     host: '0.0.0.0',  // Listen on all interfaces
     port: 5174,  // Changed port to avoid conflicts
     https: {
-      key: fs.readFileSync('../localhost+3-key.pem'),  // Multi-domain certificate key
-      cert: fs.readFileSync('../localhost+3.pem'),     // Multi-domain certificate
+      key: fs.readFileSync('../https_certs/localhost+3-key.pem'),  // Multi-domain certificate key
+      cert: fs.readFileSync('../https_certs/localhost+3.pem'),     // Multi-domain certificate
     },
     proxy: {
       '/api': {

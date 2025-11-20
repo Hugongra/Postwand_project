@@ -1,0 +1,231 @@
+
+VARIATIONS = {
+    # -------------------------
+    # PRODUCT ADS
+    # -------------------------
+    "product": [
+        {
+        "name": "Studio Focued Features Arrows",
+        "prompt_template": (
+            "Create a high-end studio advertisement for {brand_name}. "
+            "Show the product centered on a clean, minimalist background — with a color from {color_palette}. "
+            "Use gentle shadows and natural reflections to emphasize quality and texture. "
+            "Headline: '{headline}' in VERY LARGE, BOLD {font} font. Use all caps. "
+            "Display product features clearly around the product **in an annotated diagram style**. "
+            "Each feature is connected to the product by a **clean, straight line** with a **sharp, well-defined arrowhead that precisely touches the product's surface**: {features}. "
+            "Include a sleek call-to-action button reading '{call_to_action}'. "
+            "Keep the focus entirely on the product; avoid clutter. "
+            "Use the brand’s color palette: {color_palette}."
+        ),
+        "font": "elegant sans-serif",
+    },
+        {
+            "name": "Studio Focued Features",
+            "prompt_template": (
+                "Create a high-end studio advertisement for {brand_name}. "
+                "Show the product centered on a clean, minimalist background — with a color from {color_palette}. "
+                "Use gentle shadows and natural reflections to emphasize quality and texture. "
+                "Headline: '{headline}' in VERY LARGE, BOLD GREEN {font} font. Use all caps. "
+                "Display product features clearly around the product in lower case, highlighting key aspects: {features}. "
+                "Include a sleek call-to-action button reading '{call_to_action}'. "
+                "Keep the focus entirely on the product; avoid clutter. "
+                "Use the brand’s color palette: {color_palette}."
+            ),
+            "font": "elegant sans-serif",
+        },
+        {
+            "name": "Studio Focused",
+            "prompt_template": (
+               "Create a high-end studio advertisement for {brand_name}. "
+               "Show the product centered on a clean, minimalist background — with a color from {color_palette}. "
+               "Use gentle shadows and natural reflections to emphasize quality and texture. "
+               "Headline: '{headline}' in VERY LARGE, BOLD {font} font. Use all caps. "
+               "Include a sleek call-to-action button reading '{call_to_action}'. "
+               "Keep the focus entirely on the product; avoid clutter. "
+               "Use the brand’s color palette: {color_palette}."
+            ),
+            "font": "friendly sans-serif",
+        },
+        {
+            "name": "Studio Focused Features Split",
+            "prompt_template": (
+               "Create a modern advertisement with a dynamic visual split, filling the entire canvas. "
+                "On the LEFT HALF of the image, prominently display the {brand_name} product, centered and showcased with high-end studio lighting and natural reflections. "
+                "On the RIGHT HALF of the image, present the key product features. Each feature should be displayed as a LARGE, BOLD text snippet, with ample spacing between them to ensure readability and impact: {features}. "
+                "Use a clean, minimalist background with a color from {color_palette}, with a subtle transition between the two halves of the image. "
+                "Headline: '{headline}' in VERY LARGE, BOLD {font} font, positioned effectively across the top. Use all caps. "
+                "Include a sleek call-to-action button reading '{call_to_action}' at the bottom right. "
+                "Keep the focus on clarity and visual appeal, avoiding clutter. "
+                "Use the brand’s color palette: {color_palette}."   
+            ),
+            "font": "luxury serif",
+        },
+       
+    ],
+
+    # -------------------------
+    # SOCIAL PROOF ADS
+    # -------------------------
+    "social_proof": [
+       {
+    "name": "Testimonial Top Product Bottom",
+    "prompt_template": (
+        "Design a modern social proof advertisement for {brand_name}, composed of two distinct content zones arranged vertically, spanning the entire canvas. "
+        "The UPPER ZONE is dedicated to the testimonial: "
+        "Prominently display the full quote: '{review_text}' in VERY LARGE, BOLD {font} typography, centered. "
+        "Below the quote, include the reviewer's information: {reviewer_name}, {reviewer_title}. "
+        "The LOWER ZONE showcases the {brand_name} product, perfectly centered and well-lit with studio quality. "
+        "The background is a clean, solid brackground with shades of {color_palette} to enhance the trustworthiness of the ad.avoiding any hard lines or borders. "
+        "Ensure the text is highly readable and the layout feels balanced and trustworthy. "
+        "Maintain a clean and clutter-free aesthetic."
+    ),
+    "font": "modern sans-serif"
+},
+{
+    "name": "Realistic User Testimonial",
+    "prompt_template": (
+        "Create an authentic social proof advertisement for {brand_name}, depicting a realistic, smiling person genuinely using or wearing the product {brand_name_product} in a natural, everyday setting, evoking relatability and satisfaction. "
+        "The person should be prominently featured on the LEFT or CENTER of the image, allowing for ample space for text. "
+        "Strategically place the testimonial on the RIGHT side of the image (or gracefully integrated at the BOTTOM), ensuring it harmonizes with the visual scene rather than being separated by a line or box: "
+        "The quote '{review_text}' should be presented in clear, legible {font} typography. "
+        "Below the quote, include the reviewer's name and title: {reviewer_name}, {reviewer_title}. "
+        "Above the quote, include five distinct star icons. "
+        "The entire background should be soft-focused and complementary, utilizing the {color_palette} to enhance a feeling of warmth, trust, and authenticity. "
+        "Focus on natural lighting and genuine emotion. Avoid stiff poses or overly staged appearances. "
+        "The overall composition should feel inviting and trustworthy, with all elements blending seamlessly."
+    ),
+    "font": "friendly sans-serif"
+}
+    ],
+
+    # -------------------------
+    # BEFORE & AFTER ADS
+    # -------------------------
+    "before_after": [
+      {
+    "name": "Classic Horizontal Split",
+    "prompt_template": (
+        "Design a high-impact, before-and-after advertisement for {brand_name}, visually splitting the entire canvas down the middle without hard borders or lines. "
+        "The LEFT HALF of the image must clearly show the 'Before' state: a person's face (or relevant area) with the issue: {before_state}—using dull, slightly desaturated lighting. "
+        "The RIGHT HALF of the image must show the 'After' state: the exact same person/subject/pose after transformation: {after_state}—using bright, flattering, studio-quality lighting. "
+        "Ensure the subject's perspective, framing, and pose are virtually identical on both sides to emphasize the product's effect. "
+        "Headline in a prominent, central position: '{headline}' in BOLD {font} font. "
+        "Subtle call-to-action '{call_to_action}' integrated near the bottom center. "
+        "Use warm, clean brand tones from {color_palette} only on the 'After' side."
+    ),
+    "font": "editorial sans"
+},
+{
+    "name": "Diagonal Wipe Transition",
+    "prompt_template": (
+        "Create a dynamic, visually blended before-and-after advertisement for {brand_name}. "
+        "The image should feature the subject/product (e.g., a person's skin) transitioning seamlessly along a diagonal line across the entire canvas. "
+        "The upper-left section clearly shows the 'Before' state ({before_state}) in a less appealing tone. "
+        "The lower-right section clearly shows the 'After' state ({after_state})—bright, vibrant, and transformed. "
+        "The transition must be smooth, like a digital 'wipe,' avoiding any harsh borders or boxes. "
+        "Overlay the text '{headline}' across the diagonal divide, ensuring high readability against both halves. "
+        "Include a clear, subtle CTA '{call_to_action}' at the bottom. "
+        "Maintain a clean, modern style utilizing the {color_palette} to highlight the transformation."
+    ),
+    "font": "elegant serif"
+}
+    ],
+
+    # -------------------------
+    # COMPARISON ADS
+    # -------------------------
+    "comparison": [
+        {
+            "name": "Side-by-Side Split",
+            "prompt_template": (
+           "Design a direct visual comparison advertisement with the image split vertically down the middle, utilizing the entire canvas from edge to edge. "
+"On the LEFT HALF of the image, depict the competitor product ({competitor_reference}) in a dull, muted, or gray tone, emphasizing its less desirable qualities. "
+"On the RIGHT HALF of the image, showcase the vibrant, superior, and highly appealing {brand_name} product, radiating positive qualities. "
+"Ensure there are NO internal boxes, borders, or frames containing either product – the split itself is the primary visual division. "
+"Headline: '{headline}', prominently displayed, bridging both halves. "
+"Clearly highlight the key difference between the two products: {key_difference}. "
+"Color palette: {color_palette}, used to strongly differentiate the two halves. "
+            ),
+            "font": "clean modern",
+        },
+       {
+    "name": "Feature-Rich Vertical Comparison",
+    "prompt_template": (
+        "Design a direct comparison advertisement with the image split vertically down the middle, utilizing the entire canvas from edge to edge without any internal boxes or borders. "
+        "The LEFT HALF of the image is dedicated to the GENERIC competitor product ({competitor_reference}): "
+        "Depict the generic product in a dull, uninspired, or slightly negative tone (e.g., outdated, slow, clunky). "
+        "Prominently display its 'worse' or less desirable features: {generic_features} as clear text points, using a less appealing font or color. "
+        "The RIGHT HALF of the image is dedicated to the {brand_name} product: "
+        "Showcase the vibrant, superior, and highly appealing {brand_name} product, radiating positive qualities and modern design. "
+        "Clearly display its advanced and desirable features: {brand_features} as bold, impactful text points, using the brand's primary {font} and vibrant colors. "
+        "A strong headline: '{headline}', should bridge both halves, emphasizing the contrast. "
+        "Include a compelling call-to-action '{call_to_action}' at the bottom, primarily on the brand's side. "
+        "The background should use the {color_palette} to strongly differentiate the two halves, with the generic side having muted tones and the brand side being bright and inviting."
+    ),
+    "font": "clean modern"
+}
+    ],
+
+    # -------------------------
+    # PROBLEM–SOLUTION ADS
+    # -------------------------
+    "problem_solution": [
+        {
+    "name": "Horizontal Transformation",
+    "prompt_template": (
+        "Design a compelling problem-solution advertisement for {brand_name}, visually divided into two seamlessly blending halves across the entire canvas. "
+        "The LEFT HALF of the image dramatically illustrates the problem: a person expressing clear frustration or discomfort related to '{problem_statement}', depicted with muted, slightly desaturated, or 'cooler' lighting. "
+        "The RIGHT HALF of the image dynamically showcases the solution: the same person, now happy and relieved, confidently using the {brand_name} product, associated with '{solution_headline}', depicted with warm, bright, and flattering lighting. "
+        "Visually integrate key benefits: {benefit_summary} prominently on the 'solution' side. "
+        "Include a clear call-to-action (CTA): '{call_to_action}' at the bottom center, bridging both halves. "
+        "The background should subtly transition from a 'problem' tone to a 'solution' tone using the {color_palette}, avoiding any harsh dividing lines. "
+        "Ensure consistent subject, perspective, and composition to highlight the transformation."
+    ),
+    "font": "modern bold"
+},
+{
+    "name": "Spotlight Solution",
+    "prompt_template": (
+        "Create a dramatic problem-solution advertisement for {brand_name} with a focus overlay effect. "
+        "The background of the entire image should subtly depict the pervasive problem '{problem_statement}', possibly with a soft-focus, dark, or somewhat chaotic visual. "
+        "A bright, clean spotlight then sharply illuminates the {brand_name} product, which is elegantly positioned in the foreground or center, representing the clear solution. "
+        "Overlay the bold solution headline: '{solution_headline}' in striking, large {font} typography, possibly with a subtle glow or strong contrast. "
+        "Clearly display key benefits: {benefit_summary} around the illuminated product, using bright colors from {color_palette}. "
+        "Ensure the call-to-action (CTA): '{call_to_action}' is prominently visible and compelling. "
+        "The overall mood should be one of relief and clarity emerging from confusion, without hard separating lines."
+    ),
+    "font": "thin sans-serif"
+}
+    ],
+
+    # -------------------------
+    # CONTROVERSIAL QUESTION ADS
+    # -------------------------
+    "controversial_question": [
+       {
+    "name": "High-Contrast Minimalist Shock",
+    "prompt_template": (
+        "Design a **stark, bold, and highly minimalist** ad for {brand_name}. "
+        "The background must be a single, solid color selected from {color_palette} with extremely high contrast to the text. "
+        "Center the controversial question: **'{question}'** in **EXTREMELY LARGE, BOLD {font} font**. **The question must dominate the entire frame**. "
+        "The only other element is a subtle brand logo positioned below the question. "
+        "Maintain a **clean, graphic, and visually arresting** aesthetic. "
+        "Font must be in **ALL CAPS** for maximum impact."
+    ),
+    "font": "geometric sans-serif"
+},
+{
+    "name": "Dynamic Scene with Dominant Question",
+    "prompt_template": (
+        "Create a dramatic ad featuring a **high-quality, natural lifestyle background** that visually relates to the controversy or problem implied by the question. "
+        "Place the controversial question **'{question}'** across the top of the image in **VERY LARGE, BOLD, and highly readable {font} font**. "
+        "Use a dark, translucent overlay (or text shadow) over the background image to ensure the question remains **dominant and clearly legible**. "
+        "Follow the question with a bold, confident statement: **'{headline}'**. "
+        "Include a clear call-to-action (CTA): **'{call_to_action}'** at the bottom. "
+        "Use the {color_palette} for the text and overlay, ensuring a dynamic, authoritative, and non-distracting composition. "
+        "Focus on **dramatic lighting and cinematic quality**."
+    ),
+    "font": "modern condensed"
+}
+    ],
+}

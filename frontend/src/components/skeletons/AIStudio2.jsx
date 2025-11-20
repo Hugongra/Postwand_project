@@ -71,7 +71,7 @@ const AIStudio2 = () => {
                     
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-[60vh] w-full">
                         {/* Type option 1 */}
-                        <div className="bg-gray-200/50 rounded-xl p-5 hover:bg-gray-200/60 transition-all duration-200 flex flex-col relative cursor-pointer w-full">
+                        <div className="bg-gray-200/50 rounded-lg p-5 hover:bg-gray-200/60 transition-all duration-200 flex flex-col relative cursor-pointer w-full">
                             <div>
                                 <h3 className="text-lg font-medium text-gray-800">Generate Images</h3>
                                 <p className="text-sm text-gray-600 mt-1">Create regular posts</p>
@@ -79,7 +79,7 @@ const AIStudio2 = () => {
                         </div>
                         
                         {/* Type option 2 */}
-                        <div className="bg-gray-200/50 rounded-xl p-5 hover:bg-gray-200/60 transition-all duration-200 flex flex-col relative cursor-pointer w-full">
+                        <div className="bg-gray-200/50 rounded-lg p-5 hover:bg-gray-200/60 transition-all duration-200 flex flex-col relative cursor-pointer w-full">
                             <div>
                                 <h3 className="text-lg font-medium text-gray-800">Generate Captions</h3>
                                 <p className="text-sm text-gray-600 mt-1">Create engaging stories</p>
@@ -87,7 +87,7 @@ const AIStudio2 = () => {
                         </div>
                         
                         {/* Type option 3 */}
-                        <div className="bg-gray-200/50 rounded-xl p-5 hover:bg-gray-200/60 transition-all duration-200 flex flex-col relative cursor-pointer w-full">
+                        <div className="bg-gray-200/50 rounded-lg p-5 hover:bg-gray-200/60 transition-all duration-200 flex flex-col relative cursor-pointer w-full">
                             <div>
                                 <h3 className="text-lg font-medium text-gray-800">Generate Post</h3>
                                 <p className="text-sm text-gray-600 mt-1">Create short video content</p>

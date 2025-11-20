@@ -17,7 +17,7 @@ const RecentDraftsSkeletonLoader = () => {
         <div className="w-full px-4 py-4 mx-auto bg-[#F8F5FA]">
           {/* Header */}
           <div className="h-28 flex flex-col py-2 px-4 mb-1 rounded-lg bg-[#F8F9FA] border-white">
-            <div className="w-48 h-9 bg-gray-200 rounded-md mt-2 animate-pulse"></div>
+            <div className="w-48 h-9 bg-gray-200 rounded-lg mt-2 animate-pulse"></div>
           </div>
           
           {/* Card Content */}
@@ -26,8 +26,8 @@ const RecentDraftsSkeletonLoader = () => {
               /* Empty state */
               <div className="text-center py-8 animate-pulse">
                 <div className="w-12 h-12 mx-auto mb-4 bg-gray-200 rounded-full"></div>
-                <div className="h-5 w-36 bg-gray-200 rounded-md mx-auto mb-4"></div>
-                <div className="h-10 w-40 bg-gray-200 rounded-md mx-auto"></div>
+                <div className="h-5 w-36 bg-gray-200 rounded-lg mx-auto mb-4"></div>
+                <div className="h-10 w-40 bg-gray-200 rounded-lg mx-auto"></div>
               </div>
             ) : (
               /* Grid of draft skeletons */

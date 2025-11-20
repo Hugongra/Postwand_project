@@ -33,7 +33,7 @@ const PrivacyPolicy = () => {
           Questions or concerns? Reading this Privacy Notice will help you understand your privacy rights and choices. If you still have any questions or concerns, please contact us at <a href="mailto:albert@postwand.io" className="text-purple-600 hover:underline">albert@postwand.io</a>.
         </p>
         
-        <div className="bg-purple-50 p-4 rounded-md mb-8">
+        <div className="bg-purple-50 p-4 rounded-lg mb-8">
           <h2 className="text-xl font-bold mb-4 text-purple-800">SUMMARY OF KEY POINTS</h2>
           <ul className="space-y-3">
             <li><strong>What personal information do we process?</strong> We collect personal information you provide to us, such as names, email addresses, passwords, payment information, and job titles.</li>

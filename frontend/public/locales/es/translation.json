@@ -147,7 +147,7 @@
     "welcomeTo": "Bienvenido a"
   },
   "social": {
-    "postType": "Tipo de publicación",
+    "postType": "Tipo de post",
     "post": "Publicar",
     "schedule": "Programar",
     "publish": "Publicar",
@@ -169,7 +169,7 @@
     "createPost": "Crear publicación",
     "backgroundTasks": "Tareas en segundo plano",
     "platformsToPost": "Selecciona las plataformas",
-    "selectPlatformAccount": "Seleccionar las cuentas",
+    "selectPlatformAccount": "Cuentas",
     "aiWriter": "Escritor IA",
     "improvePost": "Mejorar",
     "generatingCaption": "Generando descripción de la publicación...",
@@ -187,7 +187,7 @@
     "connectAccount": "Conectar con",
     "connectSocialAccount": "Conecta tus cuentas",
     "generateImageAI": "Generar",
-    "selectFromLibrary": "Mis imágenes",
+    "selectFromLibrary": "Imágenes",
     "chooseImage": "Subir imagen",
     "selectImageFromLibrary": "Selecciona una imagen de la biblioteca",
     "noImagesFoundInLibrary": "No se encontraron imágenes en tu biblioteca.",
@@ -195,6 +195,7 @@
     "chooseVideo": "Subir Video",
     "addLocation": "Añadir ubicación",
     "location": "Ubicación",
+    "writeYourPost": "Escribe tu publicación...",
     "platforms": {
       "facebook": "Facebook",
       "instagram": "Instagram",
@@ -249,10 +250,10 @@
     "option": {
       "generateIdeas": "Generar ideas",
       "generateIdeasDesc": "Genera ideas para tus publicaciones",
-      "generateImages": "Crear imágenes",
-      "generateImagesDesc": "Crea imágenes impresionantes para tus publicaciones",
-      "generateCaptions": "Generar textos",
-      "generateCaptionsDesc": "Crea textos atractivos para tus publicaciones",
+      "editImages": "Editar imágenes",
+      "editImagesDesc": "Edita tus imágenes con IA",
+      "createCaptions": "Crear textos",
+      "createCaptionsDesc": "Crea textos atractivos para tus publicaciones",
       "generatePost": "Crear publicación",
       "generatePostDesc": "Crea publicaciones completas con IA"
     },
@@ -293,7 +294,6 @@
     },
     "platformType": "Tipo de plataforma",
     "tone": "Tono",
-    "addLocation": "Añadir ubicación",
     "createAd": {
       "title": "Crear Anuncio",
       "subtitle": "Genera anuncios profesionales para tus productos y servicios",
@@ -504,7 +504,6 @@
       "afterConnectingYouWillBeAbleToPostAndManageYourInstagramAccount": "Después de conectar, podrá publicar y gestionar su cuenta de Instagram",
       "instagramBusinessOrCreatorAccountsLinkedToAFacebookPage": "Cuentas de Instagram Business o Creator vinculadas a una página de Facebook",
       "note": "Nota: Si está utilizando una cuenta de Instagram personal, aquí está cómo cambiar a una cuenta de Business/Creator.",
-      "aFacebookTabWillOpenWhereYouCanAuthorizeAccessToYourInstagramAccount": "Se abrirá una pestaña de Facebook donde podrá autorizar el acceso a su cuenta de Instagram.",
       "whatTypeOfAccountsCanYouConnect": "¿Qué tipo de cuentas puede conectar?"
      
       
@@ -526,12 +525,7 @@
     "weOnlyRequestPermissionsNeededToHelpYouManageYourContentAndSchedulePosts": "Solo solicitamos permisos necesarios para ayudarlo a gestionar su contenido y programar publicaciones.",
     "youWillBeRedirectedToTikTokToAuthorizeAccessToYourAccount": "Seras redirigido a TikTok para autorizar el acceso a tu cuenta.",
     "connectAnotherInstagramAccount": "Conectar otra cuenta de Instagram",
-    "youCanOnlyConnectToAnInstagramBusinessOrCreatorAccountThatIsLinkedToAFacebookPage": "Solo puede conectar a una cuenta de Instagram Business o Creator que esté vinculada a una página de Facebook.",
-    "aFacebookTabWillOpenWhereYouCanAuthorizeAccessToYourInstagramAccount": "Se abrirá una pestaña de Facebook donde podrá autorizar el acceso a su cuenta de Instagram.",
-    "connectToLinkedIn": "Conectar a LinkedIn",
-    "connectedLinkedInAccounts": "Cuentas de LinkedIn conectadas",
-    "important": "Importante"
-   
+    "youCanOnlyConnectToAnInstagramBusinessOrCreatorAccountThatIsLinkedToAFacebookPage": "Solo puede conectar a una cuenta de Instagram Business o Creator que esté vinculada a una página de Facebook."
   },
   "FacebookAuth": { 
     "facebook": "Facebook",
@@ -539,14 +533,14 @@
     "threads": "Threads",
     "linkedin": "LinkedIn",
     "youtube": "YouTube",
-    "postToYourYouTubeChannel": "Post to your YouTube channel",
+    "postToYourYouTubeChannel": "Publica en tu canal de YouTube",
     "youtubeAccount": "Cuenta de YouTube",
     "instagramAccount": "Cuenta de Instagram",
     "connecting": "Conectando...",
     "connect": "Conectar",
     "myAccounts": "Mis cuentas",
     "postToYourFacebookPage": "Publica en tu página de Facebook.",
-    "postToYourInstagramBusinessOrCreatorAccount": "Publica en tu cuenta de Instagram Business o Creator.",
+    "postToYourInstagramBusinessOrCreatorAccount": "Publica en tu cuenta de Instagram.",
     "postToYourThreadsAccount": "Publica en tu cuenta de Threads.",
     "postToYourLinkedInAccount": "Publica en tu cuenta de LinkedIn.",
     "threadsConnected": "Threads conectado",
@@ -583,15 +577,28 @@
     "connectAnotherInstagramAccount": "Conectar otra cuenta de Instagram",
     "youCanOnlyConnectToAnInstagramBusinessOrCreatorAccountThatIsLinkedToAFacebookPage": "Solo puede conectar a una cuenta de Instagram Business o Creator que esté vinculada a una página de Facebook.",
     "aFacebookTabWillOpenWhereYouCanAuthorizeAccessToYourInstagramAccount": "Se abrirá una pestaña de Facebook donde podrá autorizar el acceso a su cuenta de Instagram.",
+    "connectToLinkedIn": "Conectar a LinkedIn",
+    "connectedLinkedInAccounts": "Cuentas de LinkedIn conectadas",
     "connectAnotherLinkedInAccount": "Conectar otra cuenta de LinkedIn",
-    "youWillBeRedirectedToLinkedInToAuthorizeAccessToYourAccount": "Seras redirigido a LinkedIn para autorizar el acceso a tu cuenta.",
-    "connectToYouTube": "Connect to YouTube",
-    "connectedYouTubeChannels": "Connected YouTube Channels",
-    "connectAnotherYouTubeChannel": "Connect another YouTube channel",
-    "youWillBeRedirectedToGoogleToAuthorizeAccessToYourYouTubeChannel": "You will be redirected to Google to authorize access to your YouTube channel",
-    "weOnlyRequestPermissionsNeededToHelpYouManageYourContentAndUploadVideos": "We only request permissions needed to help you manage your content and upload videos",
-    "youCanRevokeAccessAtAnyTimeFromYourGoogleAccountSettings": "You can revoke access at any time from your Google Account settings",
-    "afterConnectingYouWillBeAbleToPostAndManageYourYouTubeContent": "After connecting you will be able to post and manage your YouTube content"
+    "youWillBeRedirectedToLinkedInToAuthorizeAccessToYourAccount": "Serás redirigido a LinkedIn para autorizar el acceso a tu cuenta.",
+    "connectToYouTube": "Conectar a YouTube",
+    "connectedYouTubeChannels": "Canales de YouTube conectados",
+    "connectAnotherYouTubeChannel": "Conectar otro canal de YouTube",
+    "youWillBeRedirectedToGoogleToAuthorizeAccessToYourYouTubeChannel": "Seras redirigido a Google para autorizar el acceso a tu canal de YouTube",
+    "weOnlyRequestPermissionsNeededToHelpYouManageYourContentAndUploadVideos": "Solo solicitamos permisos necesarios para ayudarlo a gestionar su contenido y subir videos",
+    "youCanRevokeAccessAtAnyTimeFromYourGoogleAccountSettings": "Puedes revocar el acceso en cualquier momento desde la configuración de tu cuenta de Google",
+    "afterConnectingYouWillBeAbleToPostAndManageYourYouTubeContent": "Después de conectar, podrás publicar y gestionar tu contenido de YouTube",
+    "connectsFacebookPageOnly": "Conecta tu página de Facebook solo (no perfiles personales).",
+    "requiresFacebookBusinessPage": "Requiere una página de Facebook Business.",
+    "connectsInstagramThroughFacebookPage": "Conecta tu cuenta de Instagram a través de su página de Facebook vinculada.",
+    "requiresInstagramBusinessOrCreator": "Requiere perfil de Instagram Business o Creator.",
+    "instagramMustBeLinkedToFacebookPage": "El perfil de Instagram debe estar vinculado a una página de Facebook.",
+    "connectsTikTokAccount": "Conecta tu cuenta de TikTok.",
+    "redirectsToTikTokForAuth": "Redirige a TikTok para autorización.",
+    "connectsLinkedInAccount": "Conecta tu cuenta de LinkedIn.",
+    "redirectsToLinkedInForAuth": "Redirige a LinkedIn para autorización.",
+    "connectsYouTubeChannel": "Conecta tu canal de YouTube.",
+    "redirectsToGoogleForAuth": "Redirige a Google para autorización."
   },
 
   "insights": {
@@ -658,7 +665,7 @@
   },
   "imageLibrary": {
     "title": "Biblioteca de Imágenes",
-    "generateImages": "Generar Imágenes",
+    "generateImages": "Editar Imágenes",
     "noImagesYet": "Aún no has guardado ninguna imagen.",
     "errorGettingImages": "Hubo un error al obtener tus imágenes",
     "useInPost": "Usar en Publicación",
@@ -680,7 +687,7 @@
       "policy": "Políticas"
     },
     "account": {
-      "title": "Información de Usuario y Configuración de Cuenta",
+      "title": "Configuración de Cuenta",
       "name": "Nombre",
       "email": "Correo electrónico",
       "emailCannotBeChanged": "El correo electrónico no se puede cambiar",
@@ -745,15 +752,17 @@
       "cancelConfirmation": "¿Estás seguro de que quieres cancelar tu suscripción? Aún tendrás acceso hasta el final de tu período de facturación actual."
     },
     "usage": {
-      "title": "Uso de Tokens de API",
-      "description": "Monitorea tu uso de tokens de API para este período de facturación. Tu uso se reinicia al comienzo de cada ciclo de facturación.",
+      "title": "Uso de Tokens",
+      "description": "Monitorea tu uso de tokens para este período de facturación. Tu uso se reinicia al comienzo de cada ciclo de facturación.",
       "tokenUsage": "Uso de Tokens",
       "totalUsage": "Uso Total",
       "tokens": "tokens",
-      "errorTitle": "Error al Cargar el Uso",
-      "nearLimit": "Estás cerca de tu límite de uso",
-      "approachingLimit": "Te estás acercando a tu límite de uso",
-      "resetsMonthly": "El uso se reinicia mensualmente"
+      "errorTitle": "No se pueden cargar los datos de uso",
+      "nearLimit": "Cerca del Límite",
+      "approachingLimit": "Uso Alto",
+      "resetsMonthly": "El uso se reinicia mensualmente",
+      "textTokens": "Tokens de Texto",
+      "imageTokens": "Tokens de Imagen"
     },
     "legal": {
       "title": "Políticas Legales",

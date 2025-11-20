@@ -23,8 +23,8 @@ const CalendarSkeletonLoader = () => {
               
               <div className="flex items-center space-x-3">
                 {/* View mode selector */}
-                <div className="relative flex items-center rounded-md overflow-hidden bg-gray-200/50 py-1 w-80 h-10 animate-pulse">
-                  <div className="absolute inset-y-1 bg-white rounded-md" style={{width: 'calc(25% - 8px)'}}></div>
+                <div className="relative flex items-center rounded-lg overflow-hidden bg-gray-200/50 py-1 w-80 h-10 animate-pulse">
+                  <div className="absolute inset-y-1 bg-white rounded-lg" style={{width: 'calc(25% - 8px)'}}></div>
                   {['Day', 'Week', 'Month', 'Year'].map((mode, index) => (
                     <div key={mode} className="h-8 px-4 py-1 text-sm font-medium flex-1 text-center">
                       <div className="h-4 w-12 mx-auto bg-gray-200 rounded animate-pulse"></div>
@@ -75,7 +75,7 @@ const CalendarSkeletonLoader = () => {
                   {viewMode !== 'month' && viewMode !== 'year' && (
                     <div className="px-2 space-y-2">
                       {[...Array(Math.floor(Math.random() * 3))].map((_, i) => (
-                        <div key={i} className="h-16 bg-gray-200 rounded-md animate-pulse"></div>
+                        <div key={i} className="h-16 bg-gray-200 rounded-lg animate-pulse"></div>
                       ))}
                     </div>
                   )}

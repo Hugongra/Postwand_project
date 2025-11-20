@@ -20,7 +20,7 @@ const AiStudioSkeletonLoader = () => (
             <div className="grid grid-cols-1 lg:grid-cols-4 md:gap-4 gap-3 w-[90%] mx-auto">
                 
                                 {/* Option card 1 - Generate Ideas with image */}
-                <div className="bg-gray-300/50 rounded-xl p-3 md:p-5 hover:bg-gray-200/60 transition-all duration-200 flex flex-col relative cursor-pointer w-full min-h-[200px]">
+                <div className="bg-gray-300/50 rounded-lg p-3 md:p-5 hover:bg-gray-200/60 transition-all duration-200 flex flex-col relative cursor-pointer w-full min-h-[200px]">
                   <div>
                     <div className="w-full h-32 bg-gray-200 rounded-lg animate-pulse mb-3 opacity-90"></div>
                     <div className="h-5 w-3/4 bg-gray-200 rounded animate-pulse mb-2"></div>
@@ -30,7 +30,7 @@ const AiStudioSkeletonLoader = () => (
                 </div>
                 
                 {/* Option card 2 - Generate Images with image */}
-                <div className="bg-gray-300/50 rounded-xl p-3 md:p-5 hover:bg-gray-200/60 transition-all duration-200 flex flex-col relative cursor-pointer w-full min-h-[200px]">
+                <div className="bg-gray-300/50 rounded-lg p-3 md:p-5 hover:bg-gray-200/60 transition-all duration-200 flex flex-col relative cursor-pointer w-full min-h-[200px]">
                 <div>
                     <div className="w-full h-32 bg-gray-200 rounded-lg animate-pulse mb-3 opacity-90"></div>
                     <div className="h-5 w-3/4 bg-gray-200 rounded animate-pulse mb-2"></div>
@@ -40,7 +40,7 @@ const AiStudioSkeletonLoader = () => (
                 </div>
                 
                 {/* Option card 3 - Generate Captions text only */}
-                <div className="bg-gray-300/50 rounded-xl p-5 hover:bg-gray-200/60 transition-all duration-200 flex flex-col relative cursor-pointer w-full min-h-[200px]">
+                <div className="bg-gray-300/50 rounded-lg p-5 hover:bg-gray-200/60 transition-all duration-200 flex flex-col relative cursor-pointer w-full min-h-[200px]">
                 <div>
                     <div className="w-full h-32 bg-gray-200 rounded-lg animate-pulse mb-3 opacity-90"></div>
                     <div className="h-5 w-3/4 bg-gray-200 rounded animate-pulse mb-2"></div>
@@ -50,7 +50,7 @@ const AiStudioSkeletonLoader = () => (
                 </div>
                 
                 {/* Option card 4 - Generate Post text only with "SOON" badge */}
-                <div className="bg-gray-300/50 rounded-xl p-5 hover:bg-gray-200/60 transition-all duration-200 flex flex-col relative cursor-pointer w-full min-h-[200px]">
+                <div className="bg-gray-300/50 rounded-lg p-5 hover:bg-gray-200/60 transition-all duration-200 flex flex-col relative cursor-pointer w-full min-h-[200px]">
                 <div>
                     <div className="w-full h-32 bg-gray-200 rounded-lg animate-pulse mb-3 opacity-90"></div>
                     <div className="h-5 w-3/4 bg-gray-200 rounded animate-pulse mb-2"></div>

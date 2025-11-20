@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Albert Molina - CV</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header style="display: flex; align-items: center; justify-content: space-between;">
+         <div>
+        <h1 id="main-name">Albert Albert Molina</h1>
+        <p class="contact-info"><strong>Location:</strong> Barcelona, Spain</p>
+        <p class="contact-info"><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/albertalbertmolina">linkedin.com/in/albertalbertmolina</a></p>
+       </div>
+        <img src="albert.jpeg" alt="Albert Molina" style="width: 120px; height: 120px;">
+
+    </header>
+
+    <main>
+
+        <section id="about-section" class="cv-section">
+            <h2>About Me</h2>
+            <p>
+            I am an OTIC engineering student passionate about technology and web development.
+            </p>
+       </section>
+       <section>
+        <h2>Video</h2>
+        <video src="video_cv.mp4" type="video/mp4" controls autoplay loop muted style="width: 50%; height: auto; margin: 0 auto;"></video>
+
+    </section>
+
+<section>   
+    <h2>Audio</h2>
+    <audio src="audio_cv.mp3" controls type="audio/mp3"></audio>
+</section>
+        <section id="education" class="cv-section">
+            <h2>Education</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Dates</th>
+                        <th>Institution</th>
+                        <th>Degree</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>2023 - Present</td>
+                        <td>La Salle Universitat Ramon Llull</td>
+                        <td>Bachelor's Degree in Engineering</td>
+                        <td>Currently studying Computer Science and Engineering.</td>
+                    </tr>
+                    <tr>
+                        <td>2019 - 2023</td>
+                        <td>Safa horta</td>
+                        <td>High School Diploma</td>
+                        <td>Completed with honors, focus on mathematics and science.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="experience" class="cv-section">
+            <h2>Work Experience</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Dates</th>
+                        <th>Company</th>
+                        <th>Role</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Summer 2024</td>
+                        <td>Tech Company Name</td>
+                        <td>Intern</td>
+                        <td>Assisted with website maintenance and learned about frontend development.</td>
+                    </tr>
+                    <tr>
+                        <td>2022 - 2023</td>
+                        <td>Local Business</td>
+                        <td>Part-time Assistant</td>
+                        <td>Provided customer service and helped manage social media accounts.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="skills" class="cv-section">
+            <h2>Skills</h2>
+            <ul>
+                <li>HTML5 and CSS3</li>
+                <li>Basic JavaScript</li>
+                <li>Microsoft Office Suite</li>
+                <li>Communication and teamwork</li>
+                <li>Problem-solving</li>
+                <li>Spanish (native) and English (fluent)</li>
+            </ul>
+        </section>
+
+        <section id="achievements" class="cv-section">
+            <h2>Achievements</h2>
+            <ol>
+                <li>Dean's List for academic excellence (2024)</li>
+                <li>Completed online web development course with certificate</li>
+                <li>Won school coding competition in 2023</li>
+                <li>Volunteer at local community tech workshops</li>
+            </ol>
+        </section>
+
+        <section id="contact" class="cv-section">
+            <h2>Contact Me</h2>
+            <form>
+                <label for="fullname">Full Name:</label><br>
+                <input type="text" id="fullname" name="fullname" required><br><br>
+
+                <label for="email">Email Address:</label><br>
+                <input type="email" id="email" name="email" required><br><br>
+
+                <label for="message">Message:</label><br>
+                <textarea id="message" name="message" rows="5" cols="50" required></textarea><br><br>
+
+                <button type="submit">Submit</button>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

@@ -95,7 +95,7 @@ The application uses Supabase (PostgreSQL) with the following key tables:
 - `users` - User accounts and authentication
 - `scheduled_posts` - Post scheduling and publishing
 - `facebook_auth`, `instagram_accounts`, etc. - Social media account connections
-- `brand_profiles` - Extracted brand information
+- `brands` - Extracted brand information
 - `saved_images` - User's generated/saved images
 
 ## Key Features Implementation

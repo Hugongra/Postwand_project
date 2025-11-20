@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Check, X, Circle, Rocket, Building, LogOut } from 'lucide-react';
-
-
+import { API_BASE_URL } from '@services/api/config_url.js';
 
 import { useNavigate } from 'react-router-dom';
 import InstagramIcon from '/SM_icons/instagram.svg';
@@ -20,29 +19,89 @@ const TokenLimitModal = ({ isOpen, onClose, isTrialExpired = true, onLogout }) =
     console.log("TokenLimitModal isOpen:", isOpen);
   }, [isOpen]);
   
-  // Calculate monthly and annual prices
-  const prices = {
-    creator: {
-      monthly: 17,  
-      threeMonths: 14   
+  // Define pricing plans with their benefits
+  const plans = [
+    {
+      id: 'CREATOR',
+      name: 'Creator',
+      description: 'For content creators',
+      prices: {
+        monthly: 17,
+        threeMonths: 14
+      },
+      highlighted: false,
+      benefits: [
+        { 
+          text: '1 account per social media',
+          icons: [FacebookIcon, LinkedinIcon, InstagramIcon]
+        },
+        { text: 'Unlimited scheduled posts' },
+        { text: '100 image generations' },
+        { text: '100k AI-words' },
+        { text: 'Content calendar' },
+        { text: 'Direct posting to social media platforms' },
+        { text: 'Photo editing tools' },
+        { text: 'Ai Studio for creating posts' }
+      ]
     },
-    pro: {
-      monthly: 34,
-      threeMonths: 27    
+    {
+      id: 'MANAGER',
+      name: 'Manager',
+      description: 'For content managers',
+      prices: {
+        monthly: 34,
+        threeMonths: 27
+      },
+      highlighted: true,
+      benefits: [
+        { 
+          text: 'Unlimited accounts per social media',
+          icons: [FacebookIcon, LinkedinIcon, InstagramIcon]
+        },
+        { text: 'Unlimited scheduled posts' },
+        { text: '200 image generations' },
+        { text: 'Unlimited AI-words' },
+        { text: 'Content calendar' },
+        { text: 'Direct posting to social media platforms' },
+        { text: 'Photo editing tools' },
+        { text: 'Ai Studio for creating posts' }
+      ]
     },
-    business: {
-      monthly: 68, 
-      threeMonths: 55   
+    {
+      id: 'BUSINESS',
+      name: 'Business',
+      description: 'For teams and agencies',
+      prices: {
+        monthly: 68,
+        threeMonths: 55
+      },
+      highlighted: false,
+      benefits: [
+        { 
+          text: 'Unlimited accounts per social media',
+          icons: [FacebookIcon, LinkedinIcon, InstagramIcon]
+        },
+        { text: 'Unlimited scheduled posts' },
+        { text: '400 image generations' },
+        { text: 'Unlimited AI-words' },
+        { text: 'Unlimited guest editors' },
+        { text: 'Content calendar' },
+        { text: 'Direct posting to social media platforms' },
+        { text: 'Photo editing tools' },
+        { text: 'Ai Studio for creating posts' }
+      ]
     }
-  };
+  ];
 
   if (!isOpen) return null;
   
   console.log("TokenLimitModal is rendering");
 
-  const handleUpgrade = () => {
-    navigate('/checkout');
- 
+  const handleUpgrade = (planType) => {
+    const interval = isThreeMonths ? '3_months' : 'monthly';
+    
+    // Redirect to the checkout session endpoint
+    window.location.href = `${API_BASE_URL}/api/create-checkout-session?plan=${planType}&interval=${interval}`;
   };
 
   const handleLogout = () => {
@@ -117,188 +176,59 @@ const TokenLimitModal = ({ isOpen, onClose, isTrialExpired = true, onLogout }) =
           
           {/* Pricing Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full flex-grow">
-            {/* Creator Plan */}
-            <div className="border shadow-lg rounded-lg p-4 flex flex-col bg-white h-full">
-              <div className="mb-3">
-               
-                <h2 className="text-xl font-semibold">Creator</h2>
-                <p className="text-gray-600 text-xs">For content creators</p>
-              </div>
-              
-              <h3 className="text-3xl font-bold mb-3">${isThreeMonths ? prices.creator.threeMonths : prices.creator.monthly} <span className="text-gray-500 text-sm font-normal">/month</span></h3>
-              <div className="mb-3">
+            {plans.map((plan) => (
+              <div 
+                key={plan.id}
+                className={`${
+                  plan.highlighted 
+                    ? 'border-2 border-pink-500' 
+                    : 'border'
+                } shadow-lg rounded-lg p-4 flex flex-col bg-white ${
+                  plan.highlighted ? 'relative z-10' : ''
+                } h-full`}
+              >
+                <div className="mb-3">
+                  <h2 className="text-xl font-semibold">{plan.name}</h2>
+                  <p className="text-gray-600 text-xs">{plan.description}</p>
+                </div>
                 
-  
-              </div>
-              <div className="flex flex-col space-y-3 flex-grow">
-                <div className="flex items-start">
-                  <Check className="text-pink-500 mr-1.5 mt-0.5 flex-shrink-0" size={14} />
-                  <span className="text-xs">1 account per social media <br></br>
-                    <img src={FacebookIcon} alt="Facebook" className='inline-block ml-1 w-3 h-3' />
-                    <img src={LinkedinIcon} alt="Linkedin" className='inline-block ml-1 w-3 h-3'  />
-                    <img src={InstagramIcon} alt="Instagram" className='inline-block ml-1 w-3 h-3' />
-                  </span>
-                </div>
-                <div className="flex items-start">
-                  <Check className="text-pink-500 mr-1.5 mt-0.5 flex-shrink-0" size={14} />
-                  <span className="text-xs">Unlimited scheduled posts</span>
-                </div>
-                <div className="flex items-start">
-                  <Check className="text-pink-500 mr-1.5 mt-0.5 flex-shrink-0" size={14} />
-                  <span className="text-xs">100 image generations</span>
-                </div>
-                <div className="flex items-start">
-                  <Check className="text-pink-500 mr-1.5 mt-0.5 flex-shrink-0" size={14} />
-                  <span className="text-xs">100k AI-words</span>
-                </div>
-              
-                <div className="flex items-start">
-                  <Check className="text-pink-500 mr-1.5 mt-0.5 flex-shrink-0" size={14} />
-                  <span className="text-xs">Content calendar</span>
-                </div>
-                <div className="flex items-start">
-                  <Check className="text-pink-500 mr-1.5 mt-0.5 flex-shrink-0" size={14} />
-                  <span className="text-xs">Direct posting to social media platforms</span>
-                </div>
-                <div className="flex items-start">
-                  <Check className="text-pink-500 mr-1.5 mt-0.5 flex-shrink-0" size={14} />
-                  <span className="text-xs">Photo editing tools</span>
-                </div>
-                <div className="flex items-start">
-                  <Check className="text-pink-500 mr-1.5 mt-0.5 flex-shrink-0" size={14} />
-                  <span className="text-xs">Ai Studio for creating posts</span>
-                </div>
-              </div>
-              <button 
-                  onClick={handleUpgrade}
-                  className="w-full font-semibold text-black border border-gray-300 rounded-lg p-2 mt-2 text-[15px] transition hover:bg-pink-500 hover:text-white">
-                    Subscribe   
-                </button>
-        
-            </div>
-            
-            {/* Pro Plan */}
-            <div className="border-2 border-pink-500 rounded-lg p-4 flex flex-col shadow-lg bg-white relative z-10 h-full">
-              <div className="mb-3">
+                <h3 className="text-3xl font-bold mb-3">
+                  ${isThreeMonths ? plan.prices.threeMonths : plan.prices.monthly}{' '}
+                  <span className="text-gray-500 text-sm font-normal">/month</span>
+                </h3>
                 
-                <h2 className="text-xl font-semibold">Manager</h2>
-                <p className="text-gray-600 text-xs">For content managers</p>
-              </div>
-              
-              <h3 className="text-3xl font-bold mb-3">${isThreeMonths ? prices.pro.threeMonths : prices.pro.monthly} <span className="text-gray-500 text-sm font-normal">/month</span></h3>
-              <div className="mb-3">
-          
-              </div>
-              <div className="flex flex-col space-y-3 flex-grow">
-                <div className="flex items-start">
-                  <Check className="text-pink-500 mr-1.5 mt-0.5 flex-shrink-0" size={14} />
-                  <span className="text-xs">Unlimited accounts per social media <br></br> 
-                    <img src={FacebookIcon} alt="Facebook" className='inline-block ml-1 w-3 h-3' />
-                    <img src={LinkedinIcon} alt="Linkedin" className='inline-block ml-1 w-3 h-3' />
-                    <img src={InstagramIcon} alt="Instagram" className='inline-block ml-1 w-3 h-3' />
-                  </span>
+                <div className="flex flex-col space-y-3 flex-grow">
+                  {plan.benefits.map((benefit, index) => (
+                    <div key={index} className="flex items-start">
+                      <Check className="text-pink-500 mr-1.5 mt-0.5 flex-shrink-0" size={14} />
+                      <span className="text-xs">
+                        {benefit.text}
+                        {benefit.icons && (
+                          <>
+                            <br />
+                            {benefit.icons.map((icon, iconIndex) => (
+                              <img 
+                                key={iconIndex}
+                                src={icon} 
+                                alt={`Social media icon ${iconIndex}`} 
+                                className='inline-block ml-1 w-3 h-3' 
+                              />
+                            ))}
+                          </>
+                        )}
+                      </span>
+                    </div>
+                  ))}
                 </div>
-                <div className="flex items-start">
-                  <Check className="text-pink-500 mr-1.5 mt-0.5 flex-shrink-0" size={14} />
-                  <span className="text-xs">Unlimited scheduled posts</span>
-                </div>
-                <div className="flex items-start">
-                  <Check className="text-pink-500 mr-1.5 mt-0.5 flex-shrink-0" size={14} />
-                  <span className="text-xs">200 image generations</span>
-                </div>
-                <div className="flex items-start">
-                  <Check className="text-pink-500 mr-1.5 mt-0.5 flex-shrink-0" size={14} />
-                  <span className="text-xs">Unlimited AI-words</span>
-                </div>
-            
-                <div className="flex items-start">
-                  <Check className="text-pink-500 mr-1.5 mt-0.5 flex-shrink-0" size={14} />
-                  <span className="text-xs">Content calendar</span>
-                </div>
-                <div className="flex items-start">
-                  <Check className="text-pink-500 mr-1.5 mt-0.5 flex-shrink-0" size={14} />
-                  <span className="text-xs">Direct posting to social media platforms</span>
-                </div>
-                <div className="flex items-start">
-                  <Check className="text-pink-500 mr-1.5 mt-0.5 flex-shrink-0" size={14} />
-                  <span className="text-xs">Photo editing tools</span>
-                </div>
-                <div className="flex items-start">
-                  <Check className="text-pink-500 mr-1.5 mt-0.5 flex-shrink-0" size={14} />
-                  <span className="text-xs">Ai Studio for creating posts</span>
-                </div>
-              </div>
-              <button 
-                  onClick={handleUpgrade}
-                  className="w-full font-semibold text-black border border-gray-300 rounded-lg p-2 mt-2 text-[15px] transition hover:bg-pink-500 hover:text-white">
+                
+                <button 
+                  onClick={() => handleUpgrade(plan.id)}
+                  className="w-full font-semibold text-black border border-gray-300 rounded-lg p-2 mt-2 text-[15px] transition hover:bg-pink-500 hover:text-white"
+                >
                   Subscribe   
                 </button>
-           
-            </div>
-            
-            {/* Enterprise Plan */}
-            <div className="border shadow-lg rounded-lg p-4 flex flex-col bg-white h-full">
-              <div className="mb-3">
-               
-                <h2 className="text-xl font-semibold">Business</h2>
-                <p className="text-gray-600 text-xs">For teams and agencies</p>
               </div>
-              
-              <h3 className="text-3xl font-bold mb-3">${isThreeMonths ? prices.business.threeMonths : prices.business.monthly} <span className="text-gray-500 text-sm font-normal">/month</span></h3>
-              <div className="mb-3">
-                
-             
-              </div>
-              <div className="flex flex-col space-y-3 flex-grow">
-                <div className="flex items-start">
-                  <Check className="text-pink-500 mr-1.5 mt-0.5 flex-shrink-0" size={14} />
-                  <span className="text-xs">Unlimited accounts per social media <br></br> 
-                    <img src={FacebookIcon} alt="Facebook" className='inline-block ml-1 w-3 h-3' />  
-                    <img src={LinkedinIcon} alt="Linkedin" className='inline-block ml-1 w-3 h-3' />
-                    <img src={InstagramIcon} alt="Instagram" className='inline-block ml-1 w-3 h-3' />
-                  </span>
-                </div>
-                <div className="flex items-start">
-                  <Check className="text-pink-500 mr-1.5 mt-0.5 flex-shrink-0" size={14} />
-                  <span className="text-xs">Unlimited scheduled posts</span>
-                </div>
-                <div className="flex items-start">
-                  <Check className="text-pink-500 mr-1.5 mt-0.5 flex-shrink-0" size={14} />
-                  <span className="text-xs">400 image generations</span>
-                </div>
-                <div className="flex items-start">
-                  <Check className="text-pink-500 mr-1.5 mt-0.5 flex-shrink-0" size={14} />
-                  <span className="text-xs">Unlimited AI-words</span>
-                </div>
-                <div className="flex items-start">
-                  <Check className="text-pink-500 mr-1.5 mt-0.5 flex-shrink-0" size={14} />
-                  <span className="text-xs">Unlimited guest editors</span>
-                </div>
-             
-                <div className="flex items-start">
-                  <Check className="text-pink-500 mr-1.5 mt-0.5 flex-shrink-0" size={14} />
-                  <span className="text-xs">Content calendar</span>
-                </div>
-                <div className="flex items-start">
-                  <Check className="text-pink-500 mr-1.5 mt-0.5 flex-shrink-0" size={14} />
-                  <span className="text-xs">Direct posting to social media platforms</span>
-                </div>
-                <div className="flex items-start">
-                  <Check className="text-pink-500 mr-1.5 mt-0.5 flex-shrink-0" size={14} />
-                  <span className="text-xs">Photo editing tools</span>
-                </div>
-                <div className="flex items-start">
-                  <Check className="text-pink-500 mr-1.5 mt-0.5 flex-shrink-0" size={14} />
-                  <span className="text-xs">Ai Studio for creating posts</span>
-                </div>
-              </div>
-              <button 
-                  onClick={handleUpgrade}
-                  className="w-full font-semibold text-black border border-gray-300 rounded-lg p-2 mt-2 text-[15px] transition hover:bg-pink-500 hover:text-white">
-                  Subscribe   
-                </button>              
-           
-            </div>
+            ))}
           </div>
         </div>
       </div>

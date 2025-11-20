@@ -7,8 +7,6 @@ import ImageLibrarySkeletonLoader from './ImageLibrarySkeletonLoader';
 import ImagesSkeletonLoader from './ImagesSkeletonLoader';
 import BrandSkeletonLoader from './BrandSkeletonLoader';
 import CalendarSkeletonLoader from './CalendarSkeletonLoader';
-import MessagesListSkeleton from './MessagesListSkeleton';
-import MessagesSkeletonLoader from './MessagesSkeletonLoader';
 import HomeSkeletonLoader from './HomeSkeletonLoader';
 
 export {
@@ -21,7 +19,5 @@ export {
   ImagesSkeletonLoader,
   BrandSkeletonLoader,
   CalendarSkeletonLoader,
-  MessagesListSkeleton,
-  MessagesSkeletonLoader,
   HomeSkeletonLoader
 }; 

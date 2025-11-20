@@ -20,7 +20,7 @@ const PrivacyPolicy = () => {
           ¿Preguntas o inquietudes? Leer esta Política de Privacidad le ayudará a entender sus derechos de privacidad y opciones. Si aún tiene alguna pregunta o inquietud, contáctenos en <a href="mailto:albert@postwand.io" className="text-purple-600 hover:underline">albert@postwand.io</a>.
         </p>
         
-        <div className="bg-purple-50 p-4 rounded-md mb-8">
+        <div className="bg-purple-50 p-4 rounded-lg mb-8">
           <h2 className="text-xl font-bold mb-4 text-purple-800">RESUMEN DE PUNTOS CLAVE</h2>
           <ul className="space-y-3">
             <li><strong>¿Qué información personal procesamos?</strong> Recopilamos información personal que nos proporciona, como nombres, direcciones de correo electrónico, contraseñas, información de pago y títulos de trabajo.</li>

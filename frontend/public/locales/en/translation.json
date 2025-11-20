@@ -147,7 +147,7 @@
     "welcomeTo": "Welcome to"
   },
   "social": {
-    "postType": "Post Type",
+    "postType": "Post type",
     "post": "Post",
     "schedule": "Schedule",
     "publish": "Publish",
@@ -161,7 +161,7 @@
     "schedulePost": "Schedule Post",
     "selectPlatforms": "Select Platforms",
     "addMedia": "Add Media",
-    "uploadMedia": "Upload Media",
+    "uploadMedia": "Upload media",
     "characterCount": "{{count}} / {{max}} characters",
     "newPost": "New Post",
     "createNewPost": "Create New Post?",
@@ -169,7 +169,7 @@
     "createPost": "Create Post",
     "backgroundTasks": "Background Tasks",
     "platformsToPost": "Select platforms",
-    "selectPlatformAccount": "Select accounts",
+    "selectPlatformAccount": "Accounts",
     "aiWriter": "AI Writer",
     "improvePost": "Improve",
     "generatingCaption": "Generating post caption...",
@@ -183,11 +183,11 @@
     "scheduling": "Scheduling...",
     "willBePublishedOn": "Your post will be published on",
     "noAccountsConnected": "No accounts connected",
-    "chooseAccount": "Choose a {{platform}} account",
+    "chooseAccount": "Select a {{platform}} account",
     "connectAccount": "Connect to", 
     "connectSocialAccount": "Connect your accounts",
     "generateImageAI": "Generate",
-    "selectFromLibrary": "My images",
+    "selectFromLibrary": "Images",
     "chooseImage": "Upload Image",
     "selectImageFromLibrary": "Select an Image from Library",
     "noImagesFoundInLibrary": "No images found in your library.",
@@ -195,7 +195,9 @@
     "chooseVideo": "Upload Video",
     "addLocation": "Add Location",
     "location": "Location",
-    "platforms": {
+    "writeYourPost": "Write your post...",
+    "scheduleFuturePost": "Schedule Post",
+      "platforms": {
       "facebook": "Facebook",
       "instagram": "Instagram",
       "twitter": "Twitter",
@@ -249,10 +251,10 @@
     "option": {
       "generateIdeas": "Generate Ideas",
       "generateIdeasDesc": "Generate ideas for your posts",
-      "generateImages": "Create Images",
-      "generateImagesDesc": "Create stunning images for your posts",
-      "generateCaptions": "Generate Captions",
-      "generateCaptionsDesc": "Create engaging captions for your posts",
+      "editImages": "Edit Images",
+      "editImagesDesc": "Edit your images with AI",
+      "createCaptions": "Create Captions",
+      "createCaptionsDesc": "Create engaging captions for your posts",
       "generatePost": "Create Post",
       "generatePostDesc": "Create complete posts with AI"
     },
@@ -467,6 +469,12 @@
     "reset": "Reset",
     "apply": "Apply"
   },
+  "calendarCell": {
+    "videoPost": "Video Post",
+    "caption": "Caption",
+    "imagePost": "Image Post",
+    "textPost": "Text Post"
+  },
   "RecentDrafts": {
     "recentDrafts": "Recent Drafts",
     "selectDrafts": "Select Drafts",
@@ -494,7 +502,8 @@
       "weOnlyRequestAccessToDataNeeded": "We only request access to data needed to help you manage your content and insights.",
       "afterConnectingYouWillBeAbleToPostAndManageYourInstagramAccount": "After connecting, you will be able to post and manage your Instagram account",
       "instagramBusinessOrCreatorAccountsLinkedToAFacebookPage": "Instagram Business or Creator Accounts linked to a Facebook Page",
-      "note": "Note: If you're using a personal IG account, here's how to switch to a business/creator account."
+      "note": "Note: If you're using a personal IG account, here's how to switch to a business/creator account.",
+      "whatTypeOfAccountsCanYouConnect": "What type of accounts can you connect?"
       },
       "threads": {
         "whatWillHappen": "Here's what will happen:",
@@ -547,7 +556,8 @@
     "disconnecting": "Disconnecting...",
     "disconnect": "Disconnect",
     "connectAnotherFacebookPage": "Connect another Facebook Page",
-    "connectToInstagramLinkedToAFacebookPage": "Connect to Instagram linked to a Facebook Page",
+    "connectToInstagramLinkedToAFacebookPage": "Connect to Instagram with Facebook",
+    "connectToInstagram": "Connect to Instagram",
     "connectToInstagramBusinessOrCreatorAccount": "Connect to Instagram Business or Creator Account",
     "youAreUsingAnInstagramBusinessOrCreatorAccountThatIsNotLinkedToAFacebookPage": "You are using an instagram business or creator account that is NOT linked to a Facebook Page.",
     "anInstagramLoginWindowWillOpenWhereYouCanAuthorizeAccessToYourInstagramAccount": "An Instagram login window will open where you can authorize access to your Instagram account.",
@@ -567,6 +577,7 @@
     "aFacebookTabWillOpenWhereYouCanAuthorizeAccessToYourInstagramAccount": "A facebook tab will open where you can authorize access to your instagram account.",
     "connectToLinkedIn": "Connect to LinkedIn",
     "connectedLinkedInAccounts": "Connected LinkedIn Accounts",
+    "connectAnotherLinkedInAccount": "Connect another LinkedIn Account",
     "youWillBeRedirectedToLinkedInToAuthorizeAccessToYourAccount": "You will be redirected to LinkedIn to authorize access to your account.",
     "connectToYouTube": "Connect to YouTube",
     "connectedYouTubeChannels": "Connected YouTube Channels",
@@ -574,7 +585,18 @@
     "youWillBeRedirectedToGoogleToAuthorizeAccessToYourYouTubeChannel": "You will be redirected to Google to authorize access to your YouTube channel",
     "weOnlyRequestPermissionsNeededToHelpYouManageYourContentAndUploadVideos": "We only request permissions needed to help you manage your content and upload videos",
     "youCanRevokeAccessAtAnyTimeFromYourGoogleAccountSettings": "You can revoke access at any time from your Google Account settings",
-    "afterConnectingYouWillBeAbleToPostAndManageYourYouTubeContent": "After connecting you will be able to post and manage your YouTube content"
+    "afterConnectingYouWillBeAbleToPostAndManageYourYouTubeContent": "After connecting you will be able to post and manage your YouTube content",
+    "connectsFacebookPageOnly": "Connects your Facebook Page only (not personal profiles).",
+    "requiresFacebookBusinessPage": "Requires a Facebook Business Page.",
+    "connectsInstagramThroughFacebookPage": "Connects your Instagram account through its linked Facebook Page.",
+    "requiresInstagramBusinessOrCreator": "Requires Instagram Business or Creator profile.",
+    "instagramMustBeLinkedToFacebookPage": "Instagram profile must be linked to a Facebook Page.",
+    "connectsTikTokAccount": "Connects your TikTok account.",
+    "redirectsToTikTokForAuth": "Redirects to TikTok for authorization.",
+    "connectsLinkedInAccount": "Connects your LinkedIn account.",
+    "redirectsToLinkedInForAuth": "Redirects to LinkedIn for authorization.",
+    "connectsYouTubeChannel": "Connects your YouTube channel.",
+    "redirectsToGoogleForAuth": "Redirects to Google for authorization."
   },
   "insights": {
     "insightsTitle": "Insights",
@@ -692,7 +714,7 @@
   },
   "imageLibrary": {
     "title": "Image Library",
-    "generateImages": "Generate Images",
+    "generateImages": "Edit Images",
     "noImagesYet": "You haven't saved any images yet.",
     "errorGettingImages": "There was an error getting your images",
     "useInPost": "Use in Post",
@@ -714,7 +736,7 @@
       "policy": "Policy"
     },
     "account": {
-      "title": "User Info & Account Settings",
+      "title": "Account Settings",
       "name": "Name",
       "email": "Email",
       "emailCannotBeChanged": "Email cannot be changed",
@@ -779,15 +801,17 @@
       "cancelConfirmation": "Are you sure you want to cancel your subscription? You will still have access until the end of your current billing period."
     },
     "usage": {
-      "title": "API Token Usage",
-      "description": "Monitor your API token usage for this billing period. Your usage resets at the beginning of each billing cycle.",
+      "title": "Token Usage",
+      "description": "Monitor your token usage for this billing period. Your usage resets at the beginning of each billing cycle.",
       "tokenUsage": "Token Usage",
       "totalUsage": "Total Usage",
       "tokens": "tokens",
-      "errorTitle": "Error Loading Usage",
-      "nearLimit": "You are near your usage limit",
-      "approachingLimit": "You are approaching your usage limit",
-      "resetsMonthly": "Usage resets monthly"
+      "errorTitle": "Unable to load usage data",
+      "nearLimit": "Near Limit",
+      "approachingLimit": "High Usage",
+      "resetsMonthly": "Usage resets monthly",
+      "textTokens": "Text Tokens",
+      "imageTokens": "Image Tokens"
     },
     "legal": {
       "title": "Legal Policies",
