@@ -86,10 +86,10 @@ app.register_blueprint(post_api_bp)
 if __name__ == '__main__':
 
     #LOCALHOST
-    app.run(host='0.0.0.0', port=5001,debug=True, ssl_context=('../https_certs/localhost+3.pem','../https_certs/localhost+3-key.pem'))
+    #app.run(host='0.0.0.0', port=5001,debug=True, ssl_context=('../https_certs/localhost+3.pem','../https_certs/localhost+3-key.pem'))
 
     #PRODUCTION
-    #app.run(host='0.0.0.0', port=5000, debug=False)
+    app.run(host='0.0.0.0', port=5000, debug=False)
 
 
 
