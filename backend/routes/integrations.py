@@ -10,7 +10,7 @@ import services.integrations.platforms.tiktok as tiktok
 import services.integrations.get_accounts as get_accounts
 from decorators.decorators import login_required
 
-integrations_auth_bp = Blueprint('integrations_auth', __name__, url_prefix='/api')
+integrations_auth_bp = Blueprint('integrations_auth', __name__)
 
 @integrations_auth_bp.route('/auth/facebook', methods=['POST'])
 @login_required

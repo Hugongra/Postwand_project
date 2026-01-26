@@ -68,19 +68,24 @@ init_coop_headers(app)
 init_translation(app)
 
 
-# Register blueprints
-app.register_blueprint(brand_bp)
-app.register_blueprint(auth_bp)
-app.register_blueprint(integrations_auth_bp)
-app.register_blueprint(scheduler_bp)
-app.register_blueprint(create_text_bp)
-app.register_blueprint(edit_image_bp)
-app.register_blueprint(images_bp)
-app.register_blueprint(stripe_bp)
-app.register_blueprint(usage_bp)
-app.register_blueprint(create_ads_bp)
+# API Prefix Configuration
+# Set to '' for DigitalOcean production (DO strips /api)
+# Set to '/api' for local development
+API_PREFIX = os.getenv('API_PREFIX', '')  # Default: no prefix (production)
 
-# Register API v1 blueprint
+# Register blueprints with configurable prefix
+app.register_blueprint(brand_bp, url_prefix=API_PREFIX)
+app.register_blueprint(auth_bp, url_prefix=API_PREFIX)
+app.register_blueprint(integrations_auth_bp, url_prefix=API_PREFIX)
+app.register_blueprint(scheduler_bp, url_prefix=API_PREFIX)
+app.register_blueprint(create_text_bp, url_prefix=API_PREFIX)
+app.register_blueprint(edit_image_bp, url_prefix=API_PREFIX)
+app.register_blueprint(images_bp, url_prefix=API_PREFIX)
+app.register_blueprint(stripe_bp, url_prefix=API_PREFIX)
+app.register_blueprint(usage_bp, url_prefix=API_PREFIX)
+app.register_blueprint(create_ads_bp, url_prefix=API_PREFIX)
+
+# Register API v1 blueprint (has its own prefix)
 app.register_blueprint(post_api_bp)
 
 

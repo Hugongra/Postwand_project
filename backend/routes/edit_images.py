@@ -2,7 +2,7 @@ from flask import Blueprint, g
 from decorators.decorators import login_required, require_image_quota
 import services.edit_images.edit_images as edit_images
 
-edit_image_bp = Blueprint('edit_image', __name__, url_prefix='/api')
+edit_image_bp = Blueprint('edit_image', __name__)
 
 @edit_image_bp.route('/edit-image/<model>', methods=['POST'])
 @login_required

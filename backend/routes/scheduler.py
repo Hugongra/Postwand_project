@@ -4,7 +4,7 @@ from flask import Blueprint, g
 from decorators.decorators import login_required
 from services.scheduler.platforms.tiktok import get_creator_info_for_ui
 import services.scheduler.scheduler as scheduler
-scheduler_bp = Blueprint('scheduler', __name__, url_prefix='/api')
+scheduler_bp = Blueprint('scheduler', __name__)
 
 @scheduler_bp.route('/schedule', methods=['POST'])
 @login_required

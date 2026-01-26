@@ -1,7 +1,7 @@
 from flask import Blueprint, g
 from decorators.decorators import login_required
 import services.create_text.text_chat as text_chat
-create_text_bp = Blueprint('create_text', __name__, url_prefix='/api')
+create_text_bp = Blueprint('create_text', __name__)
 
 @create_text_bp.route('/chat/send', methods=['POST'])
 @login_required

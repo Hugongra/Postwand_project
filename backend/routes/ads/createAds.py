@@ -2,7 +2,7 @@ from flask import Blueprint, g
 from decorators.decorators import login_required, require_image_quota
 from services.ads.createAds import generate_ad, generate_copy_service, create_ad_with_copy_service, generate_auto_ad_service
 
-create_ads_bp = Blueprint('create_ads', __name__, url_prefix='/api')
+create_ads_bp = Blueprint('create_ads', __name__)
 
 @create_ads_bp.route('/ads/create_ad', methods=['POST'])
 @login_required

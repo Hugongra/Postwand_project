@@ -3,7 +3,7 @@ from flask import Blueprint, g, request
 from decorators.decorators import login_required
 import services.images as images
 
-images_bp = Blueprint('images', __name__, url_prefix='/api')
+images_bp = Blueprint('images', __name__)
 
 @images_bp.route('/images', methods=['POST'])
 @login_required

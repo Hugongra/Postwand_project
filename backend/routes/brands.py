@@ -2,7 +2,7 @@ from flask import Blueprint, g
 from decorators.decorators import login_required
 import services.brand_extraction.brands as brands
 
-brand_bp = Blueprint('brand', __name__, url_prefix='/api')
+brand_bp = Blueprint('brand', __name__)
 
 @brand_bp.route('/brands', methods=['GET'])
 @login_required

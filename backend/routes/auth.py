@@ -7,7 +7,7 @@ from decorators.decorators import login_required
 from utils.token_usage import get_user_token_usage
 
 # Create blueprint
-auth_bp = Blueprint('auth', __name__, url_prefix='/api')
+auth_bp = Blueprint('auth', __name__)
 
 @auth_bp.route('/auth/register', methods=['POST'])
 def register():

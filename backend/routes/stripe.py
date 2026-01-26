@@ -1,7 +1,7 @@
 from flask import Blueprint, g
 import services.stripe as stripe_service
 
-stripe_bp = Blueprint('stripe', __name__, url_prefix='/api')
+stripe_bp = Blueprint('stripe', __name__)
 
 @stripe_bp.route('/create-checkout-session', methods=['GET', 'POST'])
 def create_checkout_session():
