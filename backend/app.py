@@ -53,7 +53,8 @@ app.config.update(
 CORS(app, 
      supports_credentials=True,
      origins=[
-         "https://localhost:5174", 
+         "https://localhost:5174",
+         "https://app.postwand.io",
          "https://accounts.google.com"
      ],
      allow_headers=["Content-Type", "Authorization", "X-CSRFToken", "X-Requested-With"],
