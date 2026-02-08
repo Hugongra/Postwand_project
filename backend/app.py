@@ -71,7 +71,7 @@ init_translation(app)
 # API Prefix Configuration
 # Set to '' for DigitalOcean production (DO strips /api)
 # Set to '/api' for local development
-API_PREFIX = os.getenv('API_PREFIX', '')  # Default: no prefix (production)
+API_PREFIX = ''  # Default: no prefix (production)
 
 # Register blueprints with configurable prefix
 app.register_blueprint(brand_bp, url_prefix=API_PREFIX)

@@ -6,8 +6,8 @@ from backend.models.chat.controller import ChatController, StructuredPost
 chat = ChatController.chat_with_memory("grok")
 
 def load_system_prompt(mode):
-    current_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    filename = os.path.join(current_dir, 'services', 'create_text', f'system_prompt_{mode}.txt')
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    filename = os.path.join(current_dir, f'system_prompt_{mode}.txt')
     with open(filename, 'r', encoding='utf-8') as file:
         return file.read()
 

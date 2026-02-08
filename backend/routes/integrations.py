@@ -37,6 +37,10 @@ def exchange_threads_code():
 def linkedin_auth_endpoint():
     return linkedin.linkedin_auth(g.user_id)
 
+@integrations_auth_bp.route('/auth/linkedin/exchange', methods=['GET', 'POST'])
+def linkedin_exchange_endpoint():
+    return linkedin.linkedin_auth()
+
 @integrations_auth_bp.route('/auth/tiktok', methods=['GET', 'POST'])
 @login_required
 def tiktok_auth():

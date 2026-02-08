@@ -1,4 +1,4 @@
-from flask import request, Response
+from flask import request, Response, session
 import os
 import json
 import requests
@@ -63,7 +63,44 @@ def get_user_info(access_token):
     
     return response.json()
 
-def linkedin_auth( user_id):
+def linkedin_auth(user_id=None):
+    # Get user_id from session if not provided
+    if user_id is None:
+        user_id = session.get('user_id')
+    
+    if not user_id:
+        error_response = {"success": False, "error": "User not authenticated"}
+        
+        # For GET requests (OAuth callback), return an error page
+        if request.method == 'GET':
+            html = f"""
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Authentication Error</title>
+                <script>
+                    window.onload = function() {{
+                        if (window.opener) {{
+                            window.opener.postMessage({{
+                                type: 'linkedin_auth_error',
+                                data: {json.dumps(error_response)}
+                            }}, '*');
+                            setTimeout(function() {{
+                                window.close();
+                            }}, 2000);
+                        }}
+                    }};
+                </script>
+            </head>
+            <body>
+                <p>Authentication failed: User not authenticated</p>
+                <p>This window will close automatically in 2 seconds.</p>
+            </body>
+            </html>
+            """
+            return Response(html, mimetype='text/html')
+        
+        return error_response, 401
    
     if request.method == 'GET':
         code = request.args.get('code')

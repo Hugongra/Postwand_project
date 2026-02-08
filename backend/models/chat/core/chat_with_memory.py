@@ -8,19 +8,28 @@ class ChatWithMemory:
 
     def send(self, user_id, user_message, system_prompt=None, response_model=None, **kwargs):
         history = self.memory.get(user_id)
+        
+        # Build messages for API call (without structured_posts metadata)
         messages = []
-
         if system_prompt:
             messages.append({"role": "system", "content": system_prompt})
-
-        messages.extend(history)
+        
+        # Add history without structured_posts field
+        for msg in history:
+            messages.append({"role": msg["role"], "content": msg["content"]})
+        
         messages.append({"role": "user", "content": user_message})
 
+        structured_posts = None
         if response_model:
             response = self.adapter.chat_structured(messages, response_model, **kwargs)
             reply = response.get("content", "")
             if hasattr(reply, 'model_dump'):
-                reply_text = f"Generated structured response: {type(reply).__name__}"
+                structured_data = reply.model_dump()
+                # Extract posts for display
+                if 'posts' in structured_data:
+                    structured_posts = structured_data['posts']
+                reply_text = structured_data.get('summary', 'Generated content')
             else:
                 reply_text = str(reply)
         else:
@@ -29,6 +38,6 @@ class ChatWithMemory:
             reply_text = reply
 
         self.memory.add(user_id, "user", user_message)
-        self.memory.add(user_id, "assistant", reply_text)
+        self.memory.add(user_id, "assistant", reply_text, structured_posts=structured_posts)
 
         return response

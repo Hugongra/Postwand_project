@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import PostwandLogo from '/images/postwand_logo_color.png';
 
 // Desktop Sidebar Item Component
-const SidebarItem = ({ icon, customIcon, text, active, onClick }) => (
+const SidebarItem = ({ icon, customIcon, text, active, onClick, rightButton }) => (
   <div
     onClick={onClick}
     className={`flex items-center h-10 gap-3 p-3 rounded-lg cursor-pointer transition-all 
@@ -17,9 +17,14 @@ const SidebarItem = ({ icon, customIcon, text, active, onClick }) => (
     <div className="flex-shrink-0 flex items-center justify-center">
       {customIcon || icon}
     </div>
-    <span className="whitespace-nowrap text-sm font-normal" >
-      {text}
+    <span className="whitespace-nowrap text-sm font-normal flex-1" >
+      {text} 
     </span>
+    {rightButton && (
+      <div onClick={(e) => e.stopPropagation()}>
+        {rightButton}
+      </div>
+    )}
   </div>
 );
 
@@ -100,8 +105,17 @@ export const DesktopSidebar = ({
                     {firstLetter}
                   </div>
                 }
-                text={user.name}
+                text={user.name }
                 active={currentPath === "/profile"}
+                rightButton={
+                  <Link 
+                    to="/trial-end" 
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="px-4 py-1.5 text-xs text-gray-700 hover:text-black font-medium bg-white border-purple-600 rounded-md transition-colors whitespace-nowrap"
+                  >
+                    Plan
+                  </Link>
+                }
               />
             </Link>
             <SidebarItem

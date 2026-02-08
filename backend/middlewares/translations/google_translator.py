@@ -11,10 +11,18 @@ class GoogleTranslator:
         
         if credentials_path:
             if not os.path.isabs(credentials_path):
+                # Get the directory where this file (google_translator.py) is located
                 base_dir = os.path.dirname(os.path.abspath(__file__))
                 credentials_path = os.path.join(base_dir, credentials_path)
-                
-            os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credentials_path
+            
+            # Check if file exists before setting
+            if os.path.exists(credentials_path):
+                os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credentials_path
+                print(f"Google Translation credentials loaded from: {credentials_path}")
+            else:
+                print(f"Google Translation initialization error: File {credentials_path} was not found.")
+                self.enabled = False
+                return
             
         try:
             self.client = translate.TranslationServiceClient()
