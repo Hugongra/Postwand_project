@@ -3,13 +3,17 @@ from openai import OpenAI
 from .base_adapter import BaseAdapter
 
 
-grok_client = OpenAI(
-    api_key=os.getenv("XAI_API_KEY"),
-    base_url="https://api.x.ai/v1",
-)
+def _get_grok_client():
+    key = os.getenv("XAI_API_KEY")
+    if not key:
+        raise ValueError(
+            "XAI_API_KEY is not set in .env. Get one at https://console.x.ai"
+        )
+    return OpenAI(api_key=key, base_url="https://api.x.ai/v1")
 
 class GrokAdapter(BaseAdapter):
     def _run_completion(self, messages, **kwargs):
+        client = _get_grok_client()
         response_model = kwargs.pop("response_model", None)
         
         params = {
@@ -21,14 +25,14 @@ class GrokAdapter(BaseAdapter):
         
         if response_model:
             params["response_format"] = response_model
-            completion = grok_client.beta.chat.completions.parse(**params)
+            completion = client.beta.chat.completions.parse(**params)
             return {
                 "content": completion.choices[0].message.parsed,
                 "tokens": getattr(completion.usage, "total_tokens", None),
             }
         
         params["response_format"] = kwargs.get("response_format", None)
-        completion = grok_client.chat.completions.create(**params)
+        completion = client.chat.completions.create(**params)
         return {
             "content": completion.choices[0].message.content.strip(),
             "tokens": getattr(completion.usage, "total_tokens", None),

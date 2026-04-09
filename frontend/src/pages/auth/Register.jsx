@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { GoogleLogin } from '@react-oauth/google';
 
 import * as api from '@services/api/api';
+import { persistSessionFromApiResponse } from '@services/api/authTokens';
 
 const Register = () => {
   const { t } = useTranslation();
@@ -34,16 +35,29 @@ const Register = () => {
     setFormError('');
     setIsLoading(true);
 
-    // Provide the decoded token or standard response to api.GoogleSignIn
-    const response = await api.GoogleSignIn(credentialResponse);
-
-    if (!response.ok) {
-      setFormError(t('auth.googleAuthFailed'));
+    if (!credentialResponse?.credential) {
+      setFormError(t('auth.googleAuthNoCredential'));
       setIsLoading(false);
       return;
     }
+
+    const response = await api.GoogleSignIn(credentialResponse);
+
+    if (!response.ok) {
+      const d = response.data;
+      const serverMsg =
+        (typeof d?.error === 'string' && d.error) ||
+        (typeof d?.msg === 'string' && d.msg) ||
+        (typeof d?.message === 'string' && d.message) ||
+        null;
+      setFormError(serverMsg || t('auth.googleAuthFailed'));
+      setIsLoading(false);
+      return;
+    }
+    await persistSessionFromApiResponse(response.data);
     localStorage.setItem('user', JSON.stringify(response.data.user));
     window.dispatchEvent(new Event('user_logged_in'));
+    setIsLoading(false);
     navigate('/onboarding');
   };
 
@@ -83,6 +97,7 @@ const Register = () => {
       return;
     }
 
+    await persistSessionFromApiResponse(response.data);
     localStorage.setItem('user', JSON.stringify(response.data.user));
     setIsLoading(true);
 
@@ -114,7 +129,7 @@ const Register = () => {
                 <GoogleLogin
                   onSuccess={handleSignUpWithGoogle}
                   onError={() => {
-                    setFormError(t('auth.googleAuthFailed'));
+                    setFormError(t('auth.googleAuthClientError'));
                     setIsLoading(false);
                   }}
                   useOneTap={false}

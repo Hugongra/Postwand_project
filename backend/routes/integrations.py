@@ -8,6 +8,7 @@ import services.integrations.platforms.threads as threads
 import services.integrations.platforms.linkedin as linkedin
 import services.integrations.platforms.tiktok as tiktok
 import services.integrations.get_accounts as get_accounts
+# Auth: @login_required accepts Flask session cookies and Authorization: Bearer <Supabase access_token>.
 from decorators.decorators import login_required
 
 integrations_auth_bp = Blueprint('integrations_auth', __name__)
@@ -25,7 +26,7 @@ def instagram_auth():
 @integrations_auth_bp.route('/auth/youtube', methods=['POST', 'GET'])
 @login_required
 def youtube_auth():
-    return youtube.youtube_auth()
+    return youtube.youtube_auth(g.user_id)
 
 @integrations_auth_bp.route('/auth/threads', methods=['GET', 'POST'])
 @login_required
@@ -48,7 +49,11 @@ def tiktok_auth():
 
 @integrations_auth_bp.route('/auth/tiktok/callback', methods=['GET'])
 def tiktok_callback():
-    return tiktok.handle_tiktok_callback(g.user_id)
+    from flask import session
+    user_id = session.get('tiktok_user_id') or (g.user_id if hasattr(g, 'user_id') else None)
+    if not user_id:
+        return {'error': 'Session expired. Please try connecting TikTok again.'}, 401
+    return tiktok.handle_tiktok_callback(user_id)
 
 
 @integrations_auth_bp.route('/social-accounts', methods=['GET'])

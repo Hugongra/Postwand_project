@@ -133,6 +133,8 @@
     "invalidCredentials": "Correo electrónico o contraseña inválidos",
     "authenticationFailed": "Autenticación fallida",
     "googleAuthFailed": "Autenticación de Google fallida",
+    "googleAuthNoCredential": "Google no envió credencial. Prueba otro navegador o desactiva bloqueadores de anuncios.",
+    "googleAuthClientError": "Google no pudo iniciar sesión en esta página. Revisa la consola del navegador o prueba en ventana privada.",
     "googleSignInUnsuccessful": "El inicio de sesión con Google no tuvo éxito. Por favor, inténtalo de nuevo.",
     "signingIn": "Iniciando sesión...",
     "orContinueWith": "O continuar con",

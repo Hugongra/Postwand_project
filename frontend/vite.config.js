@@ -26,11 +26,12 @@ export default defineConfig({
     },
     proxy: {
       '/api': {
-        target: 'https://localhost:5001',  // Back to https since we have SSL
+        target: 'https://127.0.0.1:5000',
         changeOrigin: true,
         secure: false,
-      }
-    }
+        rewrite: (path) => path,
+      },
+    },
   },
   publicDir: 'public'
 })

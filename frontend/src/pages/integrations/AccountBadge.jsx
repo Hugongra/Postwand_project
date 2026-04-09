@@ -52,7 +52,14 @@ const AccountBadge = ({ platform, accounts, isLoading, onClose, onDisconnect, on
       title: t('FacebookAuth.connectedYouTubeChannels'),
       connectAnotherText: t('FacebookAuth.connectAnotherYouTubeChannel'),
       getAccountId: (account) => account.account_id,
-      getAccountName: (account) => account.title,
+      getAccountName: (account) => account.title || account.name,
+      getAccountPicture: (account) => account.profile_picture
+    },
+    threads: {
+      title: 'Connected Threads Accounts',
+      connectAnotherText: 'Connect another Threads account',
+      getAccountId: (account) => account.account_id,
+      getAccountName: (account) => account.name || account.username,
       getAccountPicture: (account) => account.profile_picture
     }
   };

@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { CalendarDays, Image, Share2, Images, Home, Type, Video, Megaphone } from "lucide-react";
+import { CalendarDays, Image, Share2, Images, Home, Type, Video } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { IoPricetagsOutline } from "react-icons/io5";
 import { useTranslation } from 'react-i18next';
 import * as api from '@services/api/api';
+import { clearAuthTokens } from '@services/api/authTokens';
+import { getSupabaseBrowserClient } from '@services/supabase/client';
 import DesktopSidebar from './DesktopSidebar';
 import MobileBottomNav from './MobileBottomNav';
 import ConfirmDialog from './ConfirmDialog';
@@ -25,7 +27,6 @@ export const SideBar = ({ user }) => {
     { path: "/edit-image", icon: <Image size={18} strokeWidth={1.5}/>, text: t('aiStudio.option.editImages') },
     { path: "/create-text", icon: <Type size={18} strokeWidth={1.5}/>, text: t('aiStudio.option.createCaptions') },
     //{ path: "/create-video", icon: <Video size={18} strokeWidth={1.5}/>, text: t('aiStudio.option.generatePost') },
-    { path: "/create-ad", icon: <Megaphone size={18} strokeWidth={1.5}/>, text: t('aiStudio.createAd.title') },
     { path: "/image-library", icon: <Images size={18} strokeWidth={1.5}/>, text: t('navigation.imageLibrary') },
     { path: "/integrations", icon: <Share2 size={18} strokeWidth={1.5}/>, text: t('navigation.socialAccounts') },
   ];
@@ -43,8 +44,17 @@ export const SideBar = ({ user }) => {
     setShowConfirmDialog(false);
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     api.Logout();
+    clearAuthTokens();
+    const supa = getSupabaseBrowserClient();
+    if (supa) {
+      try {
+        await supa.auth.signOut();
+      } catch {
+        /* ignore */
+      }
+    }
     localStorage.removeItem('user');
     window.dispatchEvent(new Event('user_logged_out'));
     navigate('/login');

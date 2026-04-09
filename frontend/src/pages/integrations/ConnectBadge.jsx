@@ -77,6 +77,14 @@ const ConnectBadge = ({ platform, onClose, onConnect }) => {
         t('FacebookAuth.connectsYouTubeChannel'),
         t('FacebookAuth.redirectsToGoogleForAuth')
       ]
+    },
+    threads: {
+      title: 'Connect to Threads',
+      buttonText: 'Connect to Threads',
+      items: [
+        'Connects your Threads account',
+        'Redirects to Threads for authorization'
+      ]
     }
   };
 

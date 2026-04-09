@@ -2,6 +2,7 @@ import React, { useState, useEffect, Suspense } from 'react';
 import { Loader2 } from 'lucide-react';
 import { Card, CardContent } from "@/components/ui/card";
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router-dom';
 import PostScheduler from './PostScheduler';
 import PostPreview from './preview/Postpreview';
 import { IoTextOutline } from "react-icons/io5";
@@ -11,6 +12,7 @@ import * as api from '@services/api/api';
 
 const PostCreator = () => {
   const { t } = useTranslation();
+  const location = useLocation();
 
   const [postType, setPostType] = useState(null);
   const [selectedPlatforms, setSelectedPlatforms] = useState([]);
@@ -19,12 +21,15 @@ const PostCreator = () => {
   
   const getSocialAccounts = async () => {
     setIsLoading(true);
-   
-      const response = await api.SocialAccounts();
+    try {
+      const response = await api.ZernioGetAccounts();
       if (!response.ok) throw new Error('Failed to fetch social accounts');
-      setSocialAccounts(response.data);
-    setIsLoading(false);
-    console.log('[FRONTEND] Social accounts:', response.data);
+      setSocialAccounts(response.data || {});
+    } catch (err) {
+      console.error('Failed to load accounts:', err);
+    } finally {
+      setIsLoading(false);
+    }
   }
   useEffect(() => {
     getSocialAccounts();
@@ -97,6 +102,31 @@ const PostCreator = () => {
     window.addEventListener('clearPost', handleClear);
     return () => window.removeEventListener('clearPost', handleClear);
   }, []);
+
+  useEffect(() => {
+    const preloadedImage = location.state?.preloadedImage;
+    const preloadedContent = location.state?.preloadedContent;
+    const publishNow = location.state?.publishNow;
+    if (preloadedImage || preloadedContent) {
+      if (preloadedImage) {
+        setPostType('image');
+        setPostData(prev => ({
+          ...prev,
+          media: [{ type: 'image', file: null, url: preloadedImage }],
+          content: preloadedContent || prev.content,
+          scheduleNow: publishNow ? true : prev.scheduleNow,
+        }));
+      } else if (preloadedContent) {
+        setPostType('text');
+        setPostData(prev => ({
+          ...prev,
+          content: preloadedContent,
+          scheduleNow: publishNow ? true : prev.scheduleNow,
+        }));
+      }
+      window.history.replaceState({}, '');
+    }
+  }, [location.state]);
 
 
 

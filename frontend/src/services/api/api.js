@@ -1,7 +1,14 @@
 import { API_BASE_URL } from './config_url.js';
+import {
+  clearAuthTokens,
+  getAuthorizationHeaderAsync,
+} from './authTokens.js';
+import { getSupabaseBrowserClient } from '@services/supabase/client';
 
+// Authorization en cada request vía getAuthorizationHeaderAsync() (Supabase getSession + fallback localStorage).
 const api = async (url, method, body) => {
     try {
+      const authHeaders = await getAuthorizationHeaderAsync();
       const options = {
         method: method,
         credentials: 'include'
@@ -13,7 +20,10 @@ const api = async (url, method, body) => {
       if (!isFormData) {
         options.headers = {
           'Content-Type': 'application/json',
+          ...authHeaders,
         };
+      } else {
+        options.headers = { ...authHeaders };
       }
 
       if (method !== 'GET' && method !== 'HEAD') {
@@ -26,16 +36,48 @@ const api = async (url, method, body) => {
 
       const response = await fetch(API_BASE_URL + url, options);
 
-      const data = await response.json();
-
-      // Check if session expired
-      if (response.status === 401 && data.code === 'session_expired') {
-        localStorage.removeItem('user');
-        // Notify app that user was logged out
-        window.dispatchEvent(new Event('user_logged_out'));
+      const text = await response.text();
+      let data = null;
+      if (text) {
+        try {
+          data = JSON.parse(text);
+        } catch {
+          const hint =
+            response.status === 404
+              ? ' (404: suele ser prefijo API; en backend usa FLASK_API_PREFIX=/api o revisa el proxy)'
+              : '';
+          data = {
+            error: `Respuesta no JSON del servidor (HTTP ${response.status})${hint}`,
+            status: response.status,
+          };
+        }
       }
 
-      if (response.status === 403 && data.code === 'subscription_required') {
+      // Solo cerrar sesión si el backend envía code explícito (evita 401 genéricos → logout).
+      if (response.status === 401 && data?.code === 'session_expired') {
+        if (import.meta.env.DEV) {
+          console.warn('[auth] session_expired — clearing client session', url);
+        }
+        clearAuthTokens();
+        const supa = getSupabaseBrowserClient();
+        if (supa) {
+          try {
+            await supa.auth.signOut();
+          } catch {
+            /* ignore */
+          }
+        }
+        localStorage.removeItem('user');
+        window.dispatchEvent(new Event('user_logged_out'));
+      } else if (response.status === 401 && import.meta.env.DEV) {
+        console.warn(
+          '[auth] 401 sin session_expired (no se limpia sesión)',
+          url,
+          data?.code ?? data?.error
+        );
+      }
+
+      if (response.status === 403 && data?.code === 'subscription_required') {
         const user = JSON.parse(localStorage.getItem('user') || '{}');
         if (user) {
           user.has_access = false;
@@ -48,7 +90,11 @@ const api = async (url, method, body) => {
  
     } catch (error) {
       console.error('API error:', error);
-      return { ok: false, status: 0, data: null };
+      const message =
+        error instanceof TypeError
+          ? 'No se pudo conectar con el servidor (red, CORS o URL incorrecta).'
+          : (error && error.message) || 'Error de red';
+      return { ok: false, status: 0, data: { error: message } };
     }
   }; 
 
@@ -88,9 +134,10 @@ const GetBrands = () => {
 
 const ExtractBrand = async (url, onProgress) => {
   try {
+    const authHeaders = await getAuthorizationHeaderAsync();
     const response = await fetch(`${API_BASE_URL}/api/extract-brand`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', ...authHeaders },
       credentials: 'include',
       body: JSON.stringify({ url })
     });
@@ -174,6 +221,10 @@ const DeleteBrand = (brandId) => {
     return api(`/api/auth/tiktok`, 'GET', {});
   };
 
+  const ThreadsLogin = (code) => {
+    return api(`/api/auth/threads`, 'POST', { code });
+  };
+
   const PlatformDisconnect = (platform, accountId) => {
     return api(`/api/auth/disconnect/${platform}/${accountId}`, 'DELETE', {});
   };
@@ -181,6 +232,12 @@ const DeleteBrand = (brandId) => {
 
   const getImages = () => {
     return api(`/api/images`, 'GET', {});
+  };
+
+  const UploadImage = (file) => {
+    const formData = new FormData();
+    formData.append('image', file);
+    return api(`/api/images`, 'POST', formData);
   };
 
   const DeleteImage = (imageId) => {
@@ -216,6 +273,46 @@ const DeleteBrand = (brandId) => {
   const SocialAccounts = () => {
     return api(`/api/social-accounts`, 'GET', {});
   }
+
+  // ── Zernio (unified social media) ──────────────────────────
+
+  const ZernioGetConnectUrl = (platform, redirectUrl) => {
+    const params = new URLSearchParams({ redirect_url: redirectUrl || window.location.href });
+    return api(`/api/zernio/connect/${platform}?${params}`, 'GET', {});
+  };
+
+  const ZernioGetAccounts = () => {
+    return api(`/api/zernio/accounts`, 'GET', {});
+  };
+
+  const ZernioDisconnectAccount = (accountId) => {
+    return api(`/api/zernio/accounts/${accountId}`, 'DELETE', {});
+  };
+
+  const ZernioPublishPost = (content, platforms, mediaFiles, mediaUrls, scheduledFor, timezone, publishNow) => {
+    const hasFiles = mediaFiles && mediaFiles.length > 0;
+
+    if (hasFiles) {
+      const formData = new FormData();
+      formData.append('content', content || '');
+      formData.append('platforms', JSON.stringify(platforms));
+      formData.append('publishNow', publishNow ? 'true' : 'false');
+      if (scheduledFor) formData.append('scheduledFor', scheduledFor);
+      if (timezone) formData.append('timezone', timezone);
+      if (mediaUrls && mediaUrls.length > 0) formData.append('mediaUrls', JSON.stringify(mediaUrls));
+      mediaFiles.forEach(f => formData.append('files', f));
+      return api(`/api/zernio/post`, 'POST', formData);
+    }
+
+    return api(`/api/zernio/post`, 'POST', {
+      content,
+      platforms,
+      mediaItems: mediaUrls,
+      scheduledFor,
+      timezone,
+      publishNow,
+    });
+  };
 
 
 
@@ -273,21 +370,6 @@ const DeleteBrand = (brandId) => {
   }
 
 
-  const GenerateAd = (formData) => {
-    return api(`/api/ads/create_ad`, 'POST', formData);
-  }
-
-  const GenerateAdCopy = (adType, brandId) => {
-    return api(`/api/ads/generate-copy`, 'POST', { ad_type: adType, brand_id: brandId });
-  }
-
-  const CreateAdWithCopy = (formData) => {
-    return api(`/api/ads/create-ad-with-copy`, 'POST', formData);
-  }
-
-  const AutoGenerateAd = (formData) => {
-    return api(`/api/ads/auto-generate`, 'POST', formData);
-  }
 
 
 export { Login, 
@@ -307,8 +389,10 @@ export { Login,
   LinkedinLogin,
   YoutubeLogin,
   TikTokLogin,
+  ThreadsLogin,
   PlatformDisconnect,
   DeleteImage,
+  UploadImage,
   getImages,
   checkUploadStatus,
   checkTaskStatus,
@@ -327,8 +411,8 @@ export { Login,
   UpdateUserProfile,
   DeleteUserData,
   UpdateUserLanguage,
-  GenerateAd,
-  GenerateAdCopy,
-  CreateAdWithCopy,
-  AutoGenerateAd,
+  ZernioGetConnectUrl,
+  ZernioGetAccounts,
+  ZernioDisconnectAccount,
+  ZernioPublishPost,
 };

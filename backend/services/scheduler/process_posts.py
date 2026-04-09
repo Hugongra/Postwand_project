@@ -10,8 +10,7 @@ from celery_config import celery_app
 from .tasks_util import create_task, update_task, set_task_result
 from .execute_post import execute_post
 
-from database import get_supabase_client
-supabase = get_supabase_client()
+from .supabase_service import supabase_service as supabase
 
 @celery_app.task(bind=True, name="scheduler.scheduler.run_in_background_task")
 def run_in_background_task(self, task_id, user_id, postData, image_urls, video_url):

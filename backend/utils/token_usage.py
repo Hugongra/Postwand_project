@@ -1,9 +1,10 @@
 
 from dotenv import load_dotenv
-from database import get_supabase_client
+from database import get_supabase_client, get_service_role_client
 load_dotenv()
 
 supabase = get_supabase_client()
+supabase_admin = get_service_role_client()
 
 GROK_LIMITS = {
     'free': 5000000,     
@@ -26,15 +27,18 @@ def call_rpc(function_name, params, return_data=False):
     except Exception:
         return False
 
+_TEXT_RPC = {
+    'check': 'is_over_grok_limit',
+    'update': 'add_grok_tokens',
+}
+
 RPC_MAP = {
-    'grok': {
-        'check': 'is_over_grok_limit',
-        'update': 'add_grok_tokens'
-    },
+    'grok': _TEXT_RPC,
+    'openai': _TEXT_RPC,
     'image': {
         'check': 'is_over_image_limit',
-        'update': 'add_image_tokens'
-    }
+        'update': 'add_image_tokens',
+    },
 }
 
 def check_token_limit(user_id, token_type):
@@ -51,8 +55,9 @@ def initialize_new_user(user_id, plan='free'):
         plan = plan.lower()
         grok_max = GROK_LIMITS.get(plan, GROK_LIMITS['free'])
         image_max = IMAGE_LIMITS.get(plan, IMAGE_LIMITS['free'])
-        
-        supabase.table('token_usage').insert({
+
+        # Service role avoids RLS and the shared anon client's JWT (unsafe under concurrent requests).
+        supabase_admin.table('token_usage').insert({
             'user_id': user_id,
             'grok_tokens_used': 0,
             'claude_tokens_used': 0,

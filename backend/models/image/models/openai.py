@@ -9,14 +9,19 @@ load_dotenv()
 
 class OpenAIModel:
     def __init__(self):
-        self.api_key = os.getenv("OPENAI_API_KEY_IMAGE")
         self.base_url = "https://api.openai.com/v1/images"
         self.edit_url = f"{self.base_url}/edits"
         self.generate_url = f"{self.base_url}/generations"
 
+    def _get_api_key(self):
+        key = os.getenv("OPENAI_API_KEY_IMAGE") or os.getenv("OPENAI_API_KEY")
+        if not key:
+            raise ValueError("OPENAI_API_KEY is not set in .env")
+        return key
+
     def process_image(self, prompt, aspect_ratio, num_images, images):
         try:
-            headers = {"Authorization": f"Bearer {self.api_key}"}
+            headers = {"Authorization": f"Bearer {self._get_api_key()}"}
             params = {
                 'model': 'gpt-image-1',
                 'prompt': prompt,
@@ -26,27 +31,17 @@ class OpenAIModel:
                 'output_format': 'png'
             }
 
-            files = None
-            url = self.generate_url  # Default to generation
-            
             if images is not None:
-                # If editing an image, use the edit endpoint
                 url = self.edit_url
-                # If it's a data URL (e.g. data:image/png;base64,...), strip the prefix
                 if images.startswith("data:image"):
                     images = images.split(",")[1]
-                # Decode base64 string to bytes
                 image_bytes = base64.b64decode(images)
                 files = {'image': ('image.png', BytesIO(image_bytes), 'image/png')}
+                response = requests.post(url, headers=headers, files=files, data=params)
             else:
+                url = self.generate_url
                 headers["Content-Type"] = "application/json"
-
-            response = requests.post(
-                url, 
-                headers=headers, 
-                files=files if files else None, 
-                data=params
-            )
+                response = requests.post(url, headers=headers, json=params)
             response.raise_for_status()
             result = response.json()
          

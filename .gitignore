@@ -51,6 +51,9 @@ Thumbs.db
 *.swo
 *~
 
+# Celery beat schedule
+celerybeat-schedule*
+
 # Temporary files
 *.tmp
 *.temp

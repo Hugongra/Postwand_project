@@ -133,6 +133,8 @@
     "invalidCredentials": "Invalid email or password",
     "authenticationFailed": "Authentication failed",
     "googleAuthFailed": "Google authentication failed",
+    "googleAuthNoCredential": "Google did not return a sign-in credential. Try another browser or disable ad blockers.",
+    "googleAuthClientError": "Google sign-in could not start on this page. Try a private window or check the browser console.",
     "googleSignInUnsuccessful": "Google sign-in was unsuccessful. Please try again.",
     "signingIn": "Signing in...",
     "orContinueWith": "Or continue with",

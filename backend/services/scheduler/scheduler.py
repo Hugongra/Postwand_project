@@ -12,8 +12,7 @@ from .tasks_util import create_task, update_task, get_task
 from .media_uploads import handle_image_upload, handle_video_upload
 from .process_posts import run_in_background_task
 from celery_config import celery_app
-from database import get_supabase_client
-supabase = get_supabase_client()
+from .supabase_service import supabase_service as supabase
 
 def scheduled_post(user_id):
     try:

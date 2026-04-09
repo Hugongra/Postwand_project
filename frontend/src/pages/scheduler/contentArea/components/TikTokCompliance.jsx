@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { ChevronDown, AlertCircle } from 'lucide-react';
 import { API_BASE_URL } from '@services/api/config_url';
+import { getAuthorizationHeaderAsync } from '@services/api/authTokens';
 
 const TikTokCompliance = ({ 
   selectedAccount, 
@@ -35,9 +36,10 @@ const TikTokCompliance = ({
     setLoading(true);
     setError(null);
     try {
+      const authHeaders = await getAuthorizationHeaderAsync();
       const response = await fetch(`${API_BASE_URL}/api/tiktok/creator-info`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...authHeaders },
         credentials: 'include',
         body: JSON.stringify({ account_id: selectedAccount.account_id })
       });

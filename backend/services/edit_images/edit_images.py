@@ -5,7 +5,7 @@ from database import get_supabase_client
 supabase = get_supabase_client()    
 def convert_aspect_ratio(model, aspect_ratio):
     if model == 'openai':
-        return '1024x1024' if aspect_ratio == '1:1' else '1024x1536'
+        return {'1:1': '1024x1024', '4:5': '1024x1536', '9:16': '1024x1792'}.get(aspect_ratio, '1024x1024')
     elif model == 'flux':
         return {'1:1': '1:1', '4:5': '3:4'}.get(aspect_ratio, '9:16')
     else:  
@@ -23,9 +23,8 @@ def edit_image(user_id, model):
         image_url = request.form.get('image_url')
         image_file = request.files.get('image')
         chat_id = request.form.get('chat_id' or None)
-        aspect_ratio = request.form.get('aspect_ratio')
+        aspect_ratio = convert_aspect_ratio(model, request.form.get('aspect_ratio', '1:1'))
         num_images = request.form.get('num_images', 1)
-        # Still need to convert here for passing to the controller
         image = image_to_data_uri(image_file or image_url)
         result = edit_image_controller.edit_image(model, prompt, aspect_ratio, num_images, image)
 
@@ -38,7 +37,7 @@ def generate_image(user_id, model):
     try:
         prompt = request.form.get('prompt')
         chat_id = request.form.get('chat_id' or None)
-        aspect_ratio = request.form.get('aspect_ratio')
+        aspect_ratio = convert_aspect_ratio(model, request.form.get('aspect_ratio', '1:1'))
         num_images = request.form.get('num_images', 1)
         result = edit_image_controller.generate_image(model, prompt, aspect_ratio, num_images)
         

@@ -16,10 +16,12 @@ FB_APP_SECRET = os.getenv('FB_APP_SECRET')
 
 
 def check_access_token_expiration(access_token):
+    app_id = os.getenv('FB_APP_ID', '')
+    app_secret = os.getenv('FB_APP_SECRET', '')
     debug_url = (
         f"https://graph.facebook.com/debug_token"
         f"?input_token={access_token}"
-        f"&access_token=1058640226029478|f159582a1c1e3b8e8ed6afc062dbb22a"
+        f"&access_token={app_id}|{app_secret}"
     )
     fb_response = requests.get(debug_url).json()
 

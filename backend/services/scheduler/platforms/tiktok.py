@@ -4,9 +4,9 @@ import json
 import os
 import tempfile
 from flask import request, session
-from database import get_supabase_client
+from database import get_service_role_client
 
-supabase = get_supabase_client()
+supabase = get_service_role_client()
 
 # TikTok Content Posting API URLs
 TIKTOK_API_BASE = "https://open.tiktokapis.com"
@@ -349,17 +349,17 @@ def _post_photos_to_tiktok(
         return {"success": False, "error": f"Unexpected error: {str(e)}"}
 
 
-def get_creator_info_for_ui():
+def get_creator_info_for_ui(user_id=None):
     """Returns account capabilities for UI display."""
     try:
         data = request.get_json()
         account_id = data.get("account_id")
-        user_id = session.get("user_id")
+        if not user_id:
+            user_id = session.get("user_id")
 
         if not account_id:
             raise ValueError("Account ID is required")
 
-        supabase = get_supabase_client()
         result = supabase.table("tiktok_accounts").select("*").eq("account_id", account_id).eq("user_id", user_id).execute()
 
         if not result.data:

@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { GoogleLogin } from '@react-oauth/google';
 import PostwandLogoColor from '/images/postwand_logo_color.png';
 import * as api from '@services/api/api';
+import { persistSessionFromApiResponse } from '@services/api/authTokens';
 
 const Login = () => {
   const { t } = useTranslation();
@@ -19,20 +20,34 @@ const Login = () => {
     setFormError('');
     setIsLoading(true);
 
+    if (!credentialResponse?.credential) {
+      setFormError(t('auth.googleAuthNoCredential'));
+      setIsLoading(false);
+      return;
+    }
+
     const response = await api.GoogleSignIn(credentialResponse);
 
     console.log('Google Sign-In Response:', response);
 
     if (!response.ok) {
-      setFormError(t('auth.googleAuthFailed'));
+      const d = response.data;
+      const serverMsg =
+        (typeof d?.error === 'string' && d.error) ||
+        (typeof d?.msg === 'string' && d.msg) ||
+        (typeof d?.message === 'string' && d.message) ||
+        null;
+      setFormError(serverMsg || t('auth.googleAuthFailed'));
       setIsLoading(false);
       return;
     }
 
     console.log('Is new user?', response.data.is_new_user);
 
+    await persistSessionFromApiResponse(response.data);
     localStorage.setItem('user', JSON.stringify(response.data.user));
     window.dispatchEvent(new Event('user_logged_in'));
+    setIsLoading(false);
 
     // If this is a new user, redirect to onboarding
     if (response.data.is_new_user) {
@@ -57,6 +72,7 @@ const Login = () => {
       setIsLoading(false);
       return;
     }
+    await persistSessionFromApiResponse(response.data);
     localStorage.setItem('user', JSON.stringify(response.data.user));
     window.dispatchEvent(new Event('user_logged_in'));
     navigate('/home');
@@ -77,7 +93,7 @@ const Login = () => {
                 <GoogleLogin
                   onSuccess={handleSignInWithGoogle}
                   onError={() => {
-                    setFormError(t('auth.googleAuthFailed'));
+                    setFormError(t('auth.googleAuthClientError'));
                     setIsLoading(false);
                   }}
                   useOneTap={false}

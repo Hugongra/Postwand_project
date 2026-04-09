@@ -6,12 +6,13 @@ import logging
 import sys
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from database import get_supabase_client
+
+from database import get_service_role_client
 
 GOOGLE_CLIENT_ID_YOUTUBE = os.getenv('GOOGLE_CLIENT_ID_YOUTUBE')
 GOOGLE_CLIENT_SECRET_YOUTUBE = os.getenv('GOOGLE_CLIENT_SECRET_YOUTUBE')
 YOUTUBE_API_URL = "https://www.googleapis.com"
-supabase = get_supabase_client()
+supabase = get_service_role_client()
 
 def update_youtube_tokens_in_db(account_id, user_id, access_token, refresh_token=None):
     """Update YouTube tokens in database after refresh"""

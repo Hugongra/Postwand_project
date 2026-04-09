@@ -31,16 +31,6 @@ const CHAT_MODEL = [
 value: 'openai',
 icon: SiOpenai,
 label: 'OpenAI'
-},
-{
-value: 'flux',
-icon: FluxIcon,
-label: 'Flux'
-},
-{
-value: 'nano_banana',
-icon: Banana,
-label: 'Nano Banana'
 }
 ];
 
@@ -66,6 +56,7 @@ const ChatInput = ({
 mode = 'edit', 
 onGenerateAd,
 onEditImage,
+onGenerateImage,
 isGenerating,
 onImageUpload,
 selectedImage,
@@ -80,7 +71,6 @@ const [aspectRatio, setAspectRatio] = useState('1:1');
 const handleSubmit = async () => {
 if (!input.trim() || isGenerating) return;
 
-
 const prompt = input.trim();
 
 if (mode === 'ad') {
@@ -90,6 +80,9 @@ if (mode === 'ad') {
   }
   await onGenerateAd(uploadedImageFile, prompt, aspectRatio);
   setInput('');
+} else if (mode === 'create') {
+  await onGenerateImage(chatModel, prompt, aspectRatio);
+  setInput('');
 } else if (mode === 'edit') {
   if (!selectedImage) {
     alert('Please select an image to edit');
@@ -98,7 +91,6 @@ if (mode === 'ad') {
   await onEditImage(chatModel, uploadedImageFile, selectedImage, prompt);
   setInput('');
 }
-
 
 };
 
@@ -126,13 +118,13 @@ value={input}
 onChange={(e) => setInput(e.target.value)}
 onKeyDown={handleKeyDown}
 className="w-full text-sm min-h-[112px] max-h-[300px] p-4 pr-24 shadow-lg bg-white rounded-lg text-gray-800 focus:outline-none focus:ring-1 focus:ring-gray-200 focus:border-transparent placeholder-gray-500 resize-none no-scrollbar"
-placeholder={mode === 'generate' ? 'Generate an image...' : 'Edit the uploaded image...'}
+placeholder={mode === 'create' ? 'Describe the image you want to create...' : 'Describe how to edit the image...'}
 />
 
 
     <div className="absolute inset-x-0 bottom-0 h-11 bg-white pointer-events-none rounded-b-2xl">
       <div className="flex items-center space-x-2 pointer-events-auto px-3">
-        {mode === 'edit' && (
+        {(mode === 'edit' || mode === 'create') && (
         <Select value={chatModel} onValueChange={setChatModel}>
           <SelectTrigger className="h-8">
             <SelectValue />
@@ -173,7 +165,8 @@ placeholder={mode === 'generate' ? 'Generate an image...' : 'Edit the uploaded i
         </Select>
       </div>
 
-      {/* Upload button */}
+      {/* Upload button — only in edit mode */}
+      {mode === 'edit' && (
       <button
         onClick={() => fileInputRef.current?.click()}
         className="absolute right-14 bottom-3 text-gray-600 hover:text-gray-800 p-1.5 hover:bg-gray-100 rounded-lg transition-colors pointer-events-auto"
@@ -181,6 +174,7 @@ placeholder={mode === 'generate' ? 'Generate an image...' : 'Edit the uploaded i
       >
         <Upload size={18} />
       </button>
+      )}
 
       {/* Submit button */}
       <button

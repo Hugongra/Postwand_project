@@ -19,11 +19,12 @@ FB_APP_SECRET = os.getenv('FB_APP_SECRET')
 
 def check_instagram_token_validity(access_token):
     try:
-        # Use the Instagram Graph API to check token validity
+        app_id = os.getenv('FB_APP_ID', '')
+        app_secret = os.getenv('FB_APP_SECRET', '')
         debug_url = (
             f"https://graph.facebook.com/debug_token"
             f"?input_token={access_token}"
-            f"&access_token=1058640226029478|f159582a1c1e3b8e8ed6afc062dbb22a"
+            f"&access_token={app_id}|{app_secret}"
         )
         response = requests.get(debug_url).json()
         return response.get('data', {}).get('is_valid', False)

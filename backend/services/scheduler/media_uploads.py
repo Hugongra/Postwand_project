@@ -10,13 +10,12 @@ from tusclient import client as tus_client
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from database import get_supabase_client, get_service_role_client
+from database import get_service_role_client
 from utils.image_utils import save_image_supabase
 
 SUPABASE_BUCKET = "post-videos"
 SUPABASE_SERVICE_ROLE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
 SUPABASE_URL = os.getenv("SUPABASE_URL")
-supabase = get_supabase_client()
 supabase_admin = get_service_role_client()
 
 def handle_image_upload(user_id, image_file):

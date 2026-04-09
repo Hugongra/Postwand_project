@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { API_BASE_URL } from '@services/api/config_url.js';
+import { getAuthorizationHeaderAsync } from '@services/api/authTokens';
 
 const TokenUsage = () => {
   const { t } = useTranslation();
@@ -15,7 +16,9 @@ const TokenUsage = () => {
     const fetchTokenUsage = async () => {
       try {
         setLoading(true);
+        const authHeaders = await getAuthorizationHeaderAsync();
         const response = await fetch(`${API_BASE_URL}/api/usage/tokens`, {
+          headers: { ...authHeaders },
           credentials: 'include'
         });
         

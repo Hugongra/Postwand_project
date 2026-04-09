@@ -1,9 +1,9 @@
 import requests
 import base64
 import uuid
-from backend.database import get_supabase_client
+from database import get_service_role_client
 
-supabase_admin = get_supabase_client()
+supabase_admin = get_service_role_client()
 
 def image_to_data_uri(image):
     try:

@@ -15,8 +15,7 @@ from .platforms.tiktok import post_to_tiktok
 
 from .get_token import get_token
 
-from database import get_supabase_client
-supabase = get_supabase_client()
+from .supabase_service import supabase_service as supabase
 
 platform_functions = {
     'facebook': post_to_facebook,
@@ -40,11 +39,13 @@ def execute_post(user_id, platform, postData, image_urls, video_url):
 
         token_data = get_token(platform, account_id, user_id)
         
+        # Inject user_id into postData so platform modules can access it
+        postData['user_id'] = user_id
+
         # Handle YouTube which returns (access_token, refresh_token)
         if platform == 'youtube' and isinstance(token_data, tuple):
             access_token = token_data[0]
             refresh_token = token_data[1]
-            # Pass both tokens separately for YouTube
             result = fn(postData, image_urls, video_url, access_token, refresh_token, account_id, user_id)
         else:
             access_token = token_data

@@ -3,6 +3,11 @@ import { X } from "lucide-react";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import { useTranslation } from "react-i18next";
 
+/**
+ * El vídeo se adjunta aquí y suele subirse vía API (FormData) con userId en servidor.
+ * Subida directa a Storage: usar @services/supabase → uploadFileToUserFolder con path `${userId}/archivo`.
+ */
+
 const VideoUploader = (
     {
         post,

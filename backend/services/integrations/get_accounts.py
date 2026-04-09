@@ -1,7 +1,4 @@
-from flask import session
-from database import get_supabase_client
-
-supabase = get_supabase_client()
+from database import get_supabase_client_for_request
 
 # Platform to table name mapping
 PLATFORM_TABLES = {
@@ -9,10 +6,12 @@ PLATFORM_TABLES = {
     'instagram': 'instagram_accounts',
     'linkedin': 'linkedin_accounts',
     'youtube': 'youtube_channels',
-    'tiktok': 'tiktok_accounts'
+    'tiktok': 'tiktok_accounts',
+    'threads': 'threads_accounts'
 }
 
 def get_accounts(user_id):
+    supabase = get_supabase_client_for_request()
     response_data = {}
     
     # Facebook - special case with auth_id relationship
@@ -41,20 +40,32 @@ def get_accounts(user_id):
     tiktok_accounts = supabase.table('tiktok_accounts').select('id, user_id, account_id, name, username, profile_picture, created_at').eq('user_id', user_id).execute()
     if tiktok_accounts.data:
         response_data['tiktok'] = {'accounts': tiktok_accounts.data}
-      
+
+    # Threads
+    threads_auth = supabase.table('threads_auth').select('id, user_id, created_at').eq('user_id', user_id).execute()
+    if threads_auth.data:
+        for auth in threads_auth.data:
+            threads_accs = supabase.table('threads_accounts').select('id, auth_id, account_id, name, profile_picture, created_at').eq('auth_id', auth['id']).execute()
+            response_data['threads'] = {'accounts': threads_accs.data}
+
     return response_data
 
 def disconnect_account(user_id, platform, account_id):
     try:
-        
+        supabase = get_supabase_client_for_request()
         table_name = PLATFORM_TABLES[platform]
         
         if platform == 'facebook':
             fb_auth = supabase.table('facebook_auth').select('id').eq('user_id', user_id).execute()
             if not fb_auth.data:
                 return {'error': 'Facebook authentication not found'}, 404
-            
             auth_id = fb_auth.data[0]['id']
+            result = supabase.table(table_name).delete().eq('account_id', account_id).eq('auth_id', auth_id).execute()
+        elif platform == 'threads':
+            th_auth = supabase.table('threads_auth').select('id').eq('user_id', user_id).execute()
+            if not th_auth.data:
+                return {'error': 'Threads authentication not found'}, 404
+            auth_id = th_auth.data[0]['id']
             result = supabase.table(table_name).delete().eq('account_id', account_id).eq('auth_id', auth_id).execute()
         else:
             result = supabase.table(table_name).delete().eq('account_id', account_id).eq('user_id', user_id).execute()

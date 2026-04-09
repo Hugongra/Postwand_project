@@ -15,16 +15,14 @@ TIKTOK_REDIRECT_URI = os.getenv('TIKTOK_REDIRECT_URI')
 
 def tiktok_auth(user_id):
     try:
-        # Get client key from environment variables
         client_key = TIKTOK_CLIENT_KEY
         if not client_key:
             return {'error': 'TikTok client key not configured'}, 500
 
-        # Generate CSRF state token
         state = secrets.token_urlsafe(32)
         
-        # Store state in session for verification
         session['tiktok_state'] = state
+        session['tiktok_user_id'] = user_id
 
         # Construct authorization URL with required parameters
         params = {

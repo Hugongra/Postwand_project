@@ -9,8 +9,8 @@ class OpenAIAdapter(BaseAdapter):
     def _run_completion(self, messages, **kwargs):
         response_model = kwargs.pop("response_model", None)
         response_format = kwargs.pop("response_format", None)
-        max_tokens = kwargs.get("max_tokens", 3000)
-        model = kwargs.get("model", "gpt-5-mini")
+        max_tokens = kwargs.get("max_tokens", 16000)
+        model = kwargs.get("model", "gpt-4.1-mini")
 
         params = {
             "model": model,
@@ -22,8 +22,15 @@ class OpenAIAdapter(BaseAdapter):
         if response_model:
             params["response_format"] = response_model
             completion = openai_client.beta.chat.completions.parse(**params)
+            parsed = completion.choices[0].message.parsed
+            if parsed is None:
+                finish = completion.choices[0].finish_reason
+                raise ValueError(
+                    f"Structured response incomplete (finish_reason={finish}). "
+                    "The model may need more tokens — try a shorter prompt or fewer platforms."
+                )
             return {
-                "content": completion.choices[0].message.parsed,
+                "content": parsed,
                 "tokens": getattr(completion.usage, "total_tokens", None),
             }
 

@@ -46,12 +46,6 @@ const Home = () => {
       titleKey: 'aiStudio.option.generatePost',
       descKey: 'aiStudio.option.generatePostDesc'
     },
-    { 
-      id: 'ad', 
-      route: '/create-ad',
-      titleKey: 'aiStudio.createAd.title',
-      descKey: 'aiStudio.createAd.subtitle'
-    },
   ];
   
   

@@ -19,7 +19,7 @@ def edit_image(model, prompt, aspect_ratio, num_images, images):
     return edit_models[model].process_image(prompt, aspect_ratio, num_images, images)
 
 def generate_image(model, prompt, aspect_ratio, num_images):
-    return generate_models[model].process_image(prompt, aspect_ratio, num_images)
+    return generate_models[model].process_image(prompt, aspect_ratio, num_images, None)
         
 def remove_background(image):
     return StabilityModel().remove_background(image)

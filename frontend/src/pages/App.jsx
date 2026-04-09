@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Routes, Route, useNavigate, Outlet, Navigate } from "react-router-dom";
-import { useTranslation } from 'react-i18next';
 
 import Login from "./auth/Login";
 import Integrations from "./integrations/Integrations.jsx";
@@ -19,7 +18,6 @@ import DeletionConfirmation from './auth/DeletionConfirmation';
 import CreateText from "./CreatePost/createText/CreateText";
 import EditImage from "./CreatePost/editImage/EditImage"; 
 import CreateVideo from "./CreatePost/CreateVideo/CreateVideo";
-import CreateAd from "./AiStudio/createAds/CreateAd";
 import ImageLibrary from './ImageLibrary/ImageLibrary';
 import Onboarding from './onboarding/Onboarding';
 
@@ -32,58 +30,54 @@ import TokenLimitModal from "@components/TokenLimitModal";
 import PricingTiers from '@components/pricing_tiers/pricing_tiers';
 
 import "../styles/App.css";
+import { clearAuthTokens } from "@services/api/authTokens";
+import { getSupabaseBrowserClient } from "@services/supabase/client";
+import { useAuth } from "../context/AuthContext";
+import { CreateTextProvider } from "../context/CreateTextContext";
 
 function App() {
-  const { i18n } = useTranslation();
+  const { authReady, user, isLoggedIn, applyUserFromStorage } = useAuth();
 
-  const [user, setUser] = useState(() => {
-    const storedUser = localStorage.getItem('user');
-    return storedUser ? JSON.parse(storedUser) : null;
-  });
-  
-  const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    return !!localStorage.getItem('user');
-  });
-
-  // Calculate trial expired from user.has_access
-  const trialExpired = user ? !user.has_access : false;
+  // has_access defaults to true when absent (trial disabled for now)
+  const trialExpired = user ? user.has_access === false : false;
 
   const navigate = useNavigate();
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    clearAuthTokens();
+    const supa = getSupabaseBrowserClient();
+    if (supa) {
+      try {
+        await supa.auth.signOut();
+      } catch {
+        /* ignore */
+      }
+    }
     localStorage.removeItem('user');
     window.dispatchEvent(new Event('user_logged_out'));
     navigate('/login');
   };
 
   useEffect(() => {
-    const syncAuthState = () => {
-      const user = localStorage.getItem('user');
-      const userData = user ? JSON.parse(user) : null;
-      setIsLoggedIn(!!user);
-      setUser(userData);
-      if (userData?.language) {
-        i18n.changeLanguage(userData.language);
-      }
-    };
-
     const handleSubscriptionRequired = () => {
-      syncAuthState(); // Refresh user state
+      applyUserFromStorage();
       navigate('/trial-end');
     };
 
-    syncAuthState();
-
-    window.addEventListener('user_logged_out', syncAuthState);
-    window.addEventListener('user_logged_in', syncAuthState);
     window.addEventListener('subscription_required', handleSubscriptionRequired);
 
     return () => {
-      window.removeEventListener('user_logged_out', syncAuthState);
-      window.removeEventListener('user_logged_in', syncAuthState);
       window.removeEventListener('subscription_required', handleSubscriptionRequired);
     };
-  }, [i18n, navigate]);
+  }, [navigate, applyUserFromStorage]);
+
+  if (!authReady) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-primary">
+        <p className="text-sm opacity-70">Loading…</p>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -135,12 +129,14 @@ function App() {
             <Navigate to="/login" replace /> :
             trialExpired ? 
               <Navigate to="/trial-end" replace /> : 
-              <div className="bg-primary min-h-screen flex relative">
-                <SideBar user={user} />
-                <div className="bg-primary flex-1 w-full lg:ml-60 pb-20 sm:pb-0 sm:pt-16 lg:pt-0 relative">
-                  <Outlet />
+              <CreateTextProvider>
+                <div className="bg-primary min-h-screen flex relative">
+                  <SideBar user={user} />
+                  <div className="bg-primary flex-1 w-full lg:ml-60 pb-20 sm:pb-0 sm:pt-16 lg:pt-0 relative">
+                    <Outlet />
+                  </div>
                 </div>
-              </div>
+              </CreateTextProvider>
         }>
 
           <Route path="/home" element={<Home />} />
@@ -150,7 +146,6 @@ function App() {
           <Route path="/edit-image" element={<EditImage />} />
           <Route path="/create-text" element={<CreateText />} />
           <Route path="/create-video" element={<CreateVideo />} />
-          <Route path="/create-ad" element={<CreateAd/>} />
 
           <Route path="/integrations" element={<Integrations />}/>
           <Route path="/image-library" element={<ImageLibrary />} />
