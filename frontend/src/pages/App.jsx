@@ -19,6 +19,7 @@ import CreateText from "./CreatePost/createText/CreateText";
 import EditImage from "./CreatePost/editImage/EditImage"; 
 import CreateVideo from "./CreatePost/CreateVideo/CreateVideo";
 import ImageLibrary from './ImageLibrary/ImageLibrary';
+import Agent from './agent/Agent';
 import Onboarding from './onboarding/Onboarding';
 
 import PrivacyPolicy from "@components/legal/PrivacyPolicy";
@@ -146,6 +147,7 @@ function App() {
           <Route path="/edit-image" element={<EditImage />} />
           <Route path="/create-text" element={<CreateText />} />
           <Route path="/create-video" element={<CreateVideo />} />
+          <Route path="/agent" element={<Agent />} />
 
           <Route path="/integrations" element={<Integrations />}/>
           <Route path="/image-library" element={<ImageLibrary />} />

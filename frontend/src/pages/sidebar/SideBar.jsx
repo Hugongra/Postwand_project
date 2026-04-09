@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { CalendarDays, Image, Share2, Images, Home, Type, Video } from "lucide-react";
+import { CalendarDays, Image, Share2, Images, Home, Type, Video, Bot } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { IoPricetagsOutline } from "react-icons/io5";
 import { useTranslation } from 'react-i18next';
@@ -26,7 +26,7 @@ export const SideBar = ({ user }) => {
     { path: "/brands", icon: <IoPricetagsOutline size={18} strokeWidth={1.5}/>, text: t('navigation.brands') },
     { path: "/edit-image", icon: <Image size={18} strokeWidth={1.5}/>, text: t('aiStudio.option.editImages') },
     { path: "/create-text", icon: <Type size={18} strokeWidth={1.5}/>, text: t('aiStudio.option.createCaptions') },
-    //{ path: "/create-video", icon: <Video size={18} strokeWidth={1.5}/>, text: t('aiStudio.option.generatePost') },
+    { path: "/agent", icon: <Bot size={18} strokeWidth={1.5}/>, text: "AI Agent" },
     { path: "/image-library", icon: <Images size={18} strokeWidth={1.5}/>, text: t('navigation.imageLibrary') },
     { path: "/integrations", icon: <Share2 size={18} strokeWidth={1.5}/>, text: t('navigation.socialAccounts') },
   ];

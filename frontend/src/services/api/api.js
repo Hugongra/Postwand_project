@@ -369,7 +369,10 @@ const DeleteBrand = (brandId) => {
     return api(`/api/user/update-language`, 'POST', { language });
   }
 
-
+  // AI Agent
+  const AgentRun = (message, history = []) => {
+    return api(`/api/agent/run`, 'POST', { message, history });
+  }
 
 
 export { Login, 
@@ -415,4 +418,5 @@ export { Login,
   ZernioGetAccounts,
   ZernioDisconnectAccount,
   ZernioPublishPost,
+  AgentRun,
 };

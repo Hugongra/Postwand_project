@@ -30,6 +30,7 @@ from backend.routes.images import images_bp
 from backend.routes.stripe import stripe_bp
 from backend.routes.usage import usage_bp
 from backend.routes.zernio import zernio_bp
+from backend.routes.agent import agent_bp
 from backend.post_api import post_api_bp
 
 app = Flask(__name__)
@@ -93,6 +94,7 @@ app.register_blueprint(images_bp, url_prefix=API_PREFIX)
 app.register_blueprint(stripe_bp, url_prefix=API_PREFIX)
 app.register_blueprint(usage_bp, url_prefix=API_PREFIX)
 app.register_blueprint(zernio_bp, url_prefix=API_PREFIX)
+app.register_blueprint(agent_bp, url_prefix=API_PREFIX)
 
 # Register API v1 blueprint (has its own prefix)
 app.register_blueprint(post_api_bp)
