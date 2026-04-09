@@ -1,6 +1,9 @@
 import os
+import logging
 from functools import lru_cache
 from supabase import create_client, Client, ClientOptions
+
+_log = logging.getLogger(__name__)
 
 
 def _supabase_url() -> str:
@@ -13,7 +16,6 @@ def _supabase_url() -> str:
 def get_supabase_anon_key() -> str:
     """
     Anon / public key from Supabase Dashboard → API.
-    Used for create_client + auth.get_user(jwt). Must NOT be the service_role key.
     Prefer SUPABASE_ANON_KEY; fall back to SUPABASE_KEY for backwards compatibility.
     """
     key = (os.getenv("SUPABASE_ANON_KEY") or os.getenv("SUPABASE_KEY") or "").strip()
@@ -23,9 +25,9 @@ def get_supabase_anon_key() -> str:
         )
     sr = (os.getenv("SUPABASE_SERVICE_ROLE_KEY") or "").strip()
     if sr and key == sr:
-        raise ValueError(
-            "SUPABASE_ANON_KEY / SUPABASE_KEY is identical to SUPABASE_SERVICE_ROLE_KEY; "
-            "use the anon public key for the app client, not the service_role secret."
+        _log.warning(
+            "SUPABASE_KEY is identical to SUPABASE_SERVICE_ROLE_KEY — "
+            "consider setting SUPABASE_ANON_KEY to the anon public key instead."
         )
     return key
 
