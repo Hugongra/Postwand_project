@@ -6,19 +6,7 @@ POSTWAND is a comprehensive full-stack Social Media Management platform designed
 
 ## 🎥 Demo
 
-GitHub **does not** turn a normal Markdown link to a file in the repo (for example `POSTWAND DEMO.mp4`) into an **inline player** in the README. That only works if the video is served from a URL GitHub allows in rich content (for example `raw.githubusercontent.com` or an asset URL created when you **drag‑and‑drop** the file into the README on the website).
-
-**Inline player** (works when the branch below matches the branch where the file lives; after merging to `main`, change `postwand2-main` to `main` if needed):
-
 <video src="https://github.com/user-attachments/assets/c053df65-ba33-41cc-a888-b321ad418fd6" controls muted playsinline width="100%"></video>
-
-**Direct file in this repo** (download / open raw):
-
-- [`POSTWAND DEMO.mp4`](POSTWAND%20DEMO.mp4?raw=1)
-
-**If the player above is blank** (branch rename, private repo, or GitHub strips the tag): open this README on GitHub → **Edit** → drag `POSTWAND DEMO.mp4` into the editor → GitHub inserts a hosted URL (often `github.com/user-attachments/assets/...`) → paste that URL into the `src` of the `<video>` tag (or leave GitHub’s generated Markdown). That is the most reliable way to get a **playable** demo inside the README.
-
-**Alternative**: upload the same clip to YouTube (unlisted) and add a thumbnail link, or use an animated GIF under ~10 MB for a zero‑config inline preview.
 
 ## 🔗 Quick links
 
