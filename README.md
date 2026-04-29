@@ -1,3 +1,5 @@
+
+
 # POSTWAND - Social Media Manager SaaS
 
 POSTWAND is a comprehensive full-stack Social Media Management platform designed to streamline content creation, scheduling, and multi-platform publishing. Leveraging AI, it helps brands automate their social media presence across Facebook, Instagram, LinkedIn, YouTube, TikTok, Threads, and more.
@@ -8,7 +10,7 @@ GitHub **does not** turn a normal Markdown link to a file in the repo (for examp
 
 **Inline player** (works when the branch below matches the branch where the file lives; after merging to `main`, change `postwand2-main` to `main` if needed):
 
-<video src="https://raw.githubusercontent.com/Hugongra/Postwand_project/postwand2-main/POSTWAND%20DEMO.mp4" controls muted playsinline width="100%"></video>
+<video src="https://github.com/user-attachments/assets/c053df65-ba33-41cc-a888-b321ad418fd6" controls muted playsinline width="100%"></video>
 
 **Direct file in this repo** (download / open raw):
 
