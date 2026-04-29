@@ -2,6 +2,10 @@
 
 POSTWAND2 is a comprehensive full-stack Social Media Management platform designed to streamline content creation, scheduling, and multi-platform publishing. Leveraging AI, it helps brands automate their social media presence across Facebook, Instagram, LinkedIn, and more.
 
+## 🎥 Demo
+
+- **Demo video**: [POSTWAND DEMO.mp4](POSTWAND%20DEMO.mp4)
+
 ## 🚀 Features
 
 - **Multi-Platform Scheduling**: Schedule posts for Facebook, Instagram, LinkedIn, and more from a single dashboard.
