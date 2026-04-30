@@ -4,6 +4,8 @@
 
 POSTWAND is a comprehensive full-stack Social Media Management platform designed to streamline content creation, scheduling, and multi-platform publishing. Leveraging AI, it helps brands automate their social media presence across Facebook, Instagram, LinkedIn, YouTube, TikTok, Threads, and more.
 
+Social scheduling and platform connectivity are powered in part by the **[Zernio](https://zernio.com)** API — “Social APIs for developers and AI agents.” Thanks to the **[@zernio-dev](https://github.com/zernio-dev)** team for the product and open SDKs; see their [GitHub organization](https://github.com/zernio-dev) for official clients (Node, Python, CLI, and more).
+
 ## 🎥 Demo
 
 <video src="https://github.com/user-attachments/assets/c053df65-ba33-41cc-a888-b321ad418fd6" controls muted playsinline width="100%"></video>
@@ -39,6 +41,7 @@ POSTWAND is a comprehensive full-stack Social Media Management platform designed
 - **Database & Auth**: Supabase (PostgreSQL), Google OAuth
 - **AI Services**: OpenAI API (text, images, video)
 - **Payments**: Stripe (checkout, subscriptions, billing portal, webhooks)
+- **Social API layer**: [Zernio](https://zernio.com) ([`zernio-dev` on GitHub](https://github.com/zernio-dev)) for unified social integrations used by scheduling and publishing flows
 - **SSL**: mkcert for local HTTPS development
 
 ## 🏗️ Architecture
@@ -66,7 +69,8 @@ flowchart LR
   end
 
   subgraph ext["External"]
-    SM["Social APIs\n(Meta, LinkedIn,\nYouTube, TikTok, Threads)"]
+    ZERN["Zernio API\n(zernio.com)"]
+    SM["Social networks\n(Meta, LinkedIn,\nYouTube, TikTok, Threads)"]
     OAI["OpenAI"]
     STR["Stripe"]
   end
@@ -76,7 +80,9 @@ flowchart LR
   API --> R
   W --> R
   B --> R
-  W --> SM
+  API --> ZERN
+  W --> ZERN
+  ZERN --> SM
   W --> SB
   API --> OAI
   API --> STR
