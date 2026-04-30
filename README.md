@@ -10,11 +10,11 @@ POSTWAND is a comprehensive full-stack Social Media Management platform designed
 
 ## 🔗 Quick links
 
-- [Features](#-features)
-- [Architecture](#-architecture)
-- [Getting Started](#-getting-started)
-- [Environment Variables](#-environment-variables)
-- [Supported Platforms](#-supported-platforms)
+- [Features](#features)
+- [Architecture](#architecture)
+- [Getting Started](#getting-started)
+- [Environment Variables](#environment-variables)
+- [Supported Platforms](#supported-platforms)
 
 ## 🚀 Features
 
@@ -42,6 +42,47 @@ POSTWAND is a comprehensive full-stack Social Media Management platform designed
 - **SSL**: mkcert for local HTTPS development
 
 ## 🏗️ Architecture
+
+High-level request flow (browser → API → data, async work offloaded to workers):
+
+```mermaid
+flowchart LR
+  subgraph client["Browser"]
+    UI["React SPA\n(Vite + Tailwind)"]
+  end
+
+  subgraph edge["API"]
+    API["Flask\n`/api` blueprints"]
+  end
+
+  subgraph data["Data & auth"]
+    SB[("Supabase\nPostgreSQL + Auth")]
+  end
+
+  subgraph async["Background"]
+    R[("Redis")]
+    W["Celery worker\n(posting, media)"]
+    B["Celery beat\n(schedules)"]
+  end
+
+  subgraph ext["External"]
+    SM["Social APIs\n(Meta, LinkedIn,\nYouTube, TikTok, Threads)"]
+    OAI["OpenAI"]
+    STR["Stripe"]
+  end
+
+  UI -->|HTTPS / REST| API
+  API --> SB
+  API --> R
+  W --> R
+  B --> R
+  W --> SM
+  W --> SB
+  API --> OAI
+  API --> STR
+```
+
+### Repository layout
 
 ```
 postwand2/
